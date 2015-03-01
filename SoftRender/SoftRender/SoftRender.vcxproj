@@ -64,13 +64,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="basewin.cpp" />
+    <ClCompile Include="inc\win.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="painter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="basewin.h" />
-    <ClInclude Include="painter.h" />
+    <ClInclude Include="inc\win.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

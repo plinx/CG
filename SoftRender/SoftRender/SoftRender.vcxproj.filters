@@ -18,18 +18,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="basewin.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="painter.cpp">
+    <ClCompile Include="inc\win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="basewin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="painter.h">
+    <ClInclude Include="inc\win.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
