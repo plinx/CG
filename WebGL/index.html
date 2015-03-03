@@ -6,7 +6,17 @@
 		html, body { width: 98%; height: 89%; }
 		</style>
 
-		<script src="render.js"></script>
+		<script type="text/javascript" src="Vector3.js"></script>
+	    <script type="text/javascript" src="Ray3.js"></script>
+	    <script type="text/javascript" src="IntersectResult.js"></script>
+	    <script type="text/javascript" src="Sphere.js"></script>
+	    <script type="text/javascript" src="Plane.js"></script>
+	    <script type="text/javascript" src="Union.js"></script>
+	    <script type="text/javascript" src="PerspectiveCamera.js"></script>
+	    <script type="text/javascript" src="Color.js"></script>
+	    <script type="text/javascript" src="LightSample.js"></script>    
+	    <script type="text/javascript" src="DirectionalLight.js"></script>
+	    <script type="text/javascript" src="RenderLight.js"></script>
 		<title>WebGL</title>
 	</head>
 
@@ -16,11 +26,19 @@
 		<script type="text/javascript">
 			function main()
 			{
-				renderDepth(
+				renderLight(
 					document.getElementById('cbox'),
-					new Sphere(new Vector3(0, 10, -10), 10),
-					new PerspectiveCamera(new Vector3(0, 10, 10), new Vector3(0, 0, -1), new Vector3(0, 1, 0), 90),
-					20);
+					new Union([
+						new Plane(new Vector3(0, 1, 0), 0),
+						new Plane(new Vector3(0, 0, 1), -50),
+				        new Plane(new Vector3(1, 0, 0), -20),
+				        new Sphere(new Vector3(0, 10, -10), 10)
+						]),
+					[new DirectionalLight(Color.white, new Vector3(-1.75, -1, -1.5))],
+   					 new PerspectiveCamera(new Vector3(0, 10, 10), 
+   					 	new Vector3(0, 0, -1), 
+   					 	new Vector3(0, 1, 0), 
+   					 	90));
 			}
 		</script>
 	</body>
