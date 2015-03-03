@@ -112,12 +112,3 @@ function renderDepth(canvas, scene, camera, maxDepth) {
     ctx.putImageData(imgdata, 0, 0);
 }
 
-function main()
-{
-	renderDepth(
-		document.getElementById('cbox'),
-		new Sphere(new Vector3(0, 10, -10), 10),
-		new PerspectiveCamera(new Vector3(0, 10, 10), new Vector3(0, 0, -1), new Vector3(0, 1, 0), 90),
-		20);
-}
-
