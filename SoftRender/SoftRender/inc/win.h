@@ -2,6 +2,16 @@
 #define win_h
 
 #include <Windows.h>
+/*#include "Sphere.h"
+#include "Camera.h"
+#include "Ray3.h"
+#include "Vec3.h"
+#include "IntersectResult.h"*/
+#include "Vec3.h"
+#include "Ray3.h"
+#include "Camera.h"
+#include "IntersectResult.h"
+#include "Sphere.h"
 
 class LWindow
 {
@@ -9,12 +19,14 @@ protected:
 	HWND m_hwnd;
 	HDC m_hDC, m_hDCmem;
 	int m_width, m_height;
+	PBYTE* ScanLine;
 
 public:
 	LWindow() { 
 		m_hwnd = NULL; 
 		m_hDC = m_hDCmem = NULL;
 		m_width = m_height = 0; 
+		//ScanLine = NULL;
 	}
 	virtual ~LWindow() = default;
 

@@ -93,26 +93,14 @@ HBITMAP LWindow::CreateDIB()
 
 	hBitmap = CreateDIBSection(NULL, Info, DIB_RGB_COLORS, (void **)&pBits, NULL, 0);
 	
-	/*int LineBits = m_width * 24;
-	int AlignBits = sizeof(DWORD) * 8;
-	LineBits += (AlignBits - LineBits%AlignBits) % AlignBits;
-	LineBits = LineBits / 8;*/
-
 	int BytesPerLine = m_width * 3;
 	if (BytesPerLine % 4 != 0)
 		BytesPerLine += 4 - BytesPerLine % 4;
-	PBYTE Line = NULL;
-	for (float y = 0; y < m_height; y++)
+
+	ScanLine = new PBYTE[m_height];
+	for (int i = 0; i < m_height; i++)
 	{
-		Line = pBits;
-		for (float x = 0; x < m_width; x++)
-		{
-			Line[0] = 0;
-			Line[1] = y / m_height * 255;
-			Line[2] = x / m_width * 255;
-			Line += 3;
-		}
-		pBits += BytesPerLine;
+		ScanLine[i] = pBits + BytesPerLine * i;
 	}
 
 	return hBitmap;
@@ -122,7 +110,6 @@ WPARAM LWindow::MsgLoop(void)
 {
 	MSG msg;
 	HBITMAP hBitmap;
-	RECT rect;
 
 	ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hwnd);
@@ -168,24 +155,38 @@ WPARAM LWindow::MsgLoop(void)
 
 void LWindow::Render(void)
 {
-	RECT rect;
-	HBRUSH hBrush;
-//	HPEN hPen;
-//	POINT apt[2];
-
 	if (m_width == 0 || m_height == 0)
 		return;
 
-	//SetRect(&rect, rand() % m_width, rand() % m_height,
-	//	rand() % m_width, rand() % m_height);
+	Sphere scene;
+	Camera camera;
+	Ray3 ray;
+	IntersectResult result;
+	PBYTE Line;
+	double sx, sy, depth;
 
-	//hBitmap = CreateCompatibleBitmap(hdc, cxClient, cyClient);
-	//hBrush = CreateSolidBrush(RGB(rand() % 255, rand() % 255, rand() % 255));
-	//FillRect(m_hDCmem, &rect, hBrush);
-	//apt[0].x = rand() % m_width;
-	//apt[0].y = rand() % m_height;
-	//apt[1].x = rand() % m_width;
-	//apt[1].y = rand() % m_height;
+	scene.initialize();
+	camera.initialize();
+
+	for (int y = 0; y < m_height; y++)
+	{
+		Line = ScanLine[y];
+		sy = 1 - (double)y / m_height;
+		for (double x = 0; x < m_width; x++)
+		{
+			sx = x / m_width;
+			ray = camera.generateRay(sx, sy);
+			result = scene.intersect(ray);
+			if (result.geometry) {
+				depth = 255 - min((result.distance / 20) * 255, 255);
+				Line[0] = (BYTE)depth;
+				Line[1] = (BYTE)depth;
+				Line[2] = (BYTE)depth;
+			}
+			Line += 3;
+		}
+	}
+
 	BitBlt(m_hDC, 0, 0, m_width, m_height,
 		m_hDCmem, 0, 0, SRCCOPY);
 }

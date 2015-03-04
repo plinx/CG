@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B27F10BC-B7DB-447F-B6F8-69B6D9E6A634}</ProjectGuid>
+    <ProjectGuid>{7A24C33B-FF95-4D3E-BE27-1E25381E50D9}</ProjectGuid>
     <RootNamespace>SoftRender</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,7 +68,13 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Camera.h" />
+    <ClInclude Include="inc\IntersectResult.h" />
+    <ClInclude Include="inc\Ray3.h" />
+    <ClInclude Include="inc\Sphere.h" />
+    <ClInclude Include="inc\Vec3.h" />
     <ClInclude Include="inc\win.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
