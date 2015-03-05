@@ -100,7 +100,7 @@ HBITMAP LWindow::CreateDIB()
 	ScanLine = new PBYTE[m_height];
 	for (int i = 0; i < m_height; i++)
 	{
-		ScanLine[i] = pBits + BytesPerLine * i;
+		ScanLine[m_height - i] = pBits + BytesPerLine * i;
 	}
 
 	return hBitmap;
@@ -158,32 +158,45 @@ void LWindow::Render(void)
 	if (m_width == 0 || m_height == 0)
 		return;
 
-	Sphere scene;
+	Plane plane(Vec3(0, 1, 0), 0);
+	CheckerMaterial material(0.1);
+	Pixel pixel;
+	//Sphere scene;
+	Color color;
 	Camera camera;
 	Ray3 ray;
 	IntersectResult result;
-	PBYTE Line;
-	double sx, sy, depth;
+	//PBYTE Line;
+	double sx, sy; // , depth;
 
-	scene.initialize();
+	//scene = Sphere(Vec3(0, 10, -10), 10);
+	camera = Camera(Vec3(0, 20, 10), Vec3(0, 0, -1), Vec3(0, 1, 0), 90);
+	//scene.initialize();
 	camera.initialize();
 
 	for (int y = 0; y < m_height; y++)
 	{
-		Line = ScanLine[y];
+		//Line = ScanLine[y];
+		pixel.setPoint(ScanLine[y]);
 		sy = 1 - (double)y / m_height;
 		for (double x = 0; x < m_width; x++)
 		{
 			sx = x / m_width;
 			ray = camera.generateRay(sx, sy);
-			result = scene.intersect(ray);
+			//result = scene.intersect(ray);
+			result = plane.intersect(ray);
 			if (result.geometry) {
-				depth = 255 - min((result.distance / 20) * 255, 255);
-				Line[0] = (BYTE)depth;
-				Line[1] = (BYTE)depth;
-				Line[2] = (BYTE)depth;
+				//depth = 255 - min((result.distance / 20) * 255, 255);
+				color = material.sample(ray, result.position, result.normal);
+				pixel.setR(color.getR() * 255);
+				pixel.setG(color.getG() * 255);
+				pixel.setB(color.getB() * 255);
+				//Line[0] = color.getR() * 255;
+				//Line[1] = color.getG() * 255;
+				//Line[2] = 255;
 			}
-			Line += 3;
+			//Line += 3;
+			pixel.Next();
 		}
 	}
 

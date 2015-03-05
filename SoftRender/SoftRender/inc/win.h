@@ -2,16 +2,7 @@
 #define win_h
 
 #include <Windows.h>
-/*#include "Sphere.h"
-#include "Camera.h"
-#include "Ray3.h"
-#include "Vec3.h"
-#include "IntersectResult.h"*/
-#include "Vec3.h"
-#include "Ray3.h"
-#include "Camera.h"
-#include "IntersectResult.h"
-#include "Sphere.h"
+#include "../stdafx.h"
 
 class LWindow
 {

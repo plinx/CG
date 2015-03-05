@@ -13,6 +13,10 @@ public:
 	Vec3(double fx, double fy, double fz) : x(fx), y(fy), z(fz) {}
 	~Vec3() = default;
 
+	double getx() { return x; }
+	double gety() { return y; }
+	double getz() { return z; }
+
 	Vec3 copy() { return Vec3(x, y, z); }
 	double length() { return sqrt(x * x + y * y + z * z); }
 	double sqrLength() { return x * x + y * y + z * z; }
