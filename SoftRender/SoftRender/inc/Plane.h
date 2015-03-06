@@ -20,7 +20,7 @@ public:
 			return IntersectResult();
 
 		auto b = normal.dot(ray.origin.sub(position));
-		auto result = IntersectResult();
+		IntersectResult result;
 		result.geometry = true;
 		result.distance = -b / a;
 		result.position = ray.getPoint(result.distance);

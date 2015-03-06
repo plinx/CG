@@ -11,9 +11,9 @@ public:
 	~Pixel() = default;
 
 	void setPoint(PBYTE p) { point = p; }
-	void setR(BYTE red) { point[3] = red; }
-	void setG(BYTE green) { point[2] = green; }
-	void setB(BYTE blue) { point[1] = blue; }
+	void setR(double red) { point[2] = (BYTE)red; }
+	void setG(double green) { point[1] = (BYTE)green; }
+	void setB(double blue) { point[0] = (BYTE)blue; }
 	void Next() { point += 3; }
 
 };

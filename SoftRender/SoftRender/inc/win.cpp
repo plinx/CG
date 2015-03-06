@@ -158,20 +158,19 @@ void LWindow::Render(void)
 	if (m_width == 0 || m_height == 0)
 		return;
 
-	Plane plane(Vec3(0, 1, 0), 0);
-	CheckerMaterial material(0.1);
 	Pixel pixel;
-	//Sphere scene;
-	Color color;
-	Camera camera;
+	Color color(0.5, 0.5, 0.5);
 	Ray3 ray;
-	IntersectResult result;
-	//PBYTE Line;
-	double sx, sy; // , depth;
+	IntersectResult result1, result2;
+	double sx, sy;
+	int f = 0;
 
-	//scene = Sphere(Vec3(0, 10, -10), 10);
-	camera = Camera(Vec3(0, 20, 10), Vec3(0, 0, -1), Vec3(0, 1, 0), 90);
-	//scene.initialize();
+	auto sphere = Sphere(Vec3(0, 10, -10), 10);
+	auto plane = Plane(Vec3(0, 1, 0), 0);
+	auto camera = Camera(Vec3(0, 10, 20), Vec3(0, 0, -1), Vec3(0, 1, 0), 90);
+	auto material1 = PhongMaterial(getColor(Color_RED), getColor(Color_WHITE), 26);
+	auto material2 = CheckerMaterial(0.1);
+	sphere.initialize();
 	camera.initialize();
 
 	for (int y = 0; y < m_height; y++)
@@ -183,19 +182,49 @@ void LWindow::Render(void)
 		{
 			sx = x / m_width;
 			ray = camera.generateRay(sx, sy);
-			//result = scene.intersect(ray);
-			result = plane.intersect(ray);
-			if (result.geometry) {
-				//depth = 255 - min((result.distance / 20) * 255, 255);
+			result1 = sphere.intersect(ray);
+			result2 = plane.intersect(ray);
+			if (result1.geometry && result2.geometry) 
+			{
+				if (result1.distance < result2.distance)
+				{
+					color = material1.sample(ray, result1.position, result1.normal);
+					pixel.setR(color.getR() * 255);
+					pixel.setG(color.getG() * 255);
+					pixel.setB(color.getB() * 255);
+				}
+				else
+				{
+					color = material2.sample(ray, result2.position, result2.normal);
+					pixel.setR(color.getR() * 255);
+					pixel.setG(color.getG() * 255);
+					pixel.setB(color.getB() * 255);
+				}
+			}
+			else if (result1.geometry)
+			{
+				color = material1.sample(ray, result1.position, result1.normal);
+				pixel.setR(color.getR() * 255);
+				pixel.setG(color.getG() * 255);
+				pixel.setB(color.getB() * 255);
+			}
+			else if (result2.geometry)
+			{
+				color = material2.sample(ray, result2.position, result2.normal);
+				pixel.setR(color.getR() * 255);
+				pixel.setG(color.getG() * 255);
+				pixel.setB(color.getB() * 255);
+			}
+
+			/*if (result.geometry) {
 				color = material.sample(ray, result.position, result.normal);
 				pixel.setR(color.getR() * 255);
 				pixel.setG(color.getG() * 255);
 				pixel.setB(color.getB() * 255);
-				//Line[0] = color.getR() * 255;
-				//Line[1] = color.getG() * 255;
-				//Line[2] = 255;
-			}
-			//Line += 3;
+				//pixel.setR(getColor(Color_RED).getB() * 255);
+				//pixel.setG(0);
+				//pixel.setB(0);
+			}*/
 			pixel.Next();
 		}
 	}
