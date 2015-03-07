@@ -6,7 +6,8 @@ enum {
 	Color_WHITE,
 	Color_RED,
 	Color_GREEN,
-	Color_BLUE
+	Color_BLUE,
+	Color_YELLOW
 };
 
 class Color
@@ -44,6 +45,8 @@ inline Color getColor(int s) {
 		return Color(0, 1, 0);
 	case Color_BLUE:
 		return Color(0, 0, 1);
+	case Color_YELLOW:
+		return Color(1, 1, 0);
 	default:
 		return Color(0, 0, 0);
 	}

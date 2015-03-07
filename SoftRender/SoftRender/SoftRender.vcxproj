@@ -72,10 +72,9 @@
     <ClInclude Include="inc\Color.h" />
     <ClInclude Include="inc\IntersectResult.h" />
     <ClInclude Include="inc\Material.h" />
+    <ClInclude Include="inc\Model.h" />
     <ClInclude Include="inc\Pixel.h" />
-    <ClInclude Include="inc\Plane.h" />
     <ClInclude Include="inc\Ray3.h" />
-    <ClInclude Include="inc\Sphere.h" />
     <ClInclude Include="inc\Vec3.h" />
     <ClInclude Include="inc\win.h" />
     <ClInclude Include="stdafx.h" />
