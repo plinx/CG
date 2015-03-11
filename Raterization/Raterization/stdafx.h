@@ -6,3 +6,4 @@
 #include <ctime>
 
 #include "inc\win.h"
+#include "inc\LMath.h"
