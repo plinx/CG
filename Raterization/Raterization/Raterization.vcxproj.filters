@@ -18,10 +18,22 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\win.h">
+    <ClInclude Include="inc\LMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\LMath.h">
+    <ClInclude Include="inc\Vec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Quat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\LWin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\TestCase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,7 +41,10 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="inc\win.cpp">
+    <ClCompile Include="inc\LWin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inc\TestCase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -66,11 +66,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="inc\LMath.h" />
-    <ClInclude Include="inc\win.h" />
+    <ClInclude Include="inc\Matrix.h" />
+    <ClInclude Include="inc\Quat.h" />
+    <ClInclude Include="inc\TestCase.h" />
+    <ClInclude Include="inc\Vec.h" />
+    <ClInclude Include="inc\LWin.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="inc\win.cpp" />
+    <ClCompile Include="inc\LWin.cpp" />
+    <ClCompile Include="inc\TestCase.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,13 +1,8 @@
 #include "stdafx.h"
 
-int main()
-{
+#define MATHTEST_MODE
 
-	return 0;
-}
-
-
-#if 0
+#ifndef MATHTEST_MODE
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	PSTR szCmdLine, int iCmdShow)
 {
@@ -18,4 +13,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	return 0;
 }
+
+#else
+
+int main()
+{
+	AutoTest();
+
+	return 0;
+}
+
 #endif
+
