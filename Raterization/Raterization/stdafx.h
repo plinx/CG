@@ -11,7 +11,7 @@
 
 #include "inc\LWin.h"
 #include "inc\Vec.h"
-//#include "inc\Matrix.h"
+#include "inc\Matrix.h"
 //#include "inc\Quat.h"
 //#include "inc\LMath.h"
 

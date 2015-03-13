@@ -5,5 +5,6 @@
 
 void AutoTest();
 void VectorTest(std::ofstream& log);
+void MatrixTest(std::ofstream& log);
 
 #endif
