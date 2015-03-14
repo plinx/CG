@@ -142,6 +142,28 @@ void VectorTest(std::ofstream& log)
 		err++;
 	}
 
+	/*auto p1 = new Point2D(0.0, 0.0);
+	auto p2 = new Point2D(1.0, 1.0);
+	auto v2 = Vector2(2.0, 2.0);
+	Vector2 v1;
+	v1 = Vector2(p1, p2);
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1.Normalize();
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1 = v2;
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1 = v1 + v2;
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1 += v2;
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1 -= v2;
+	std::cout << v1.x << " " << v1.x << std::endl;
+	v1 *= 2.0;
+	std::cout << v1.x << " " << v1.x << std::endl;
+	std::cout << v1.Dot(&v2) << std::endl;
+	std::cout << v1.Cos(&v2) << std::endl;
+	*/
+
 	std::cout << "VectorTest => Total : " << total;
 	std::cout << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
 	std::cout << " | Error : " << err << "(" << (float)err * 100 / total << "%)" << std::endl;

@@ -63,7 +63,7 @@ struct Matrix4x3
 		return *this;
 	}
 
-	void Swap(PMatrix1x4 m, int c) {
+	void Swap(Matrix1x4* m, int c) {
 		v[0][c] = m->v[0]; v[1][c] = m->v[1];
 		v[2][c] = m->v[2]; v[3][c] = m->v[3];
 	}
@@ -95,7 +95,7 @@ struct Matrix4x4
 		std::swap(v[2][3], v[3][2]);
 	}
 
-	void Swap(PMatrix1x4 m, int c) {
+	void Swap(Matrix1x4* m, int c) {
 		v[0][c] = m->v[0]; v[1][c] = m->v[1];
 		v[2][c] = m->v[2]; v[3][c] = m->v[3];
 	}
@@ -126,6 +126,11 @@ struct Matrix3x2
 	Matrix3x2() = default;
 	~Matrix3x2() = default;
 	Matrix3x2(const Matrix3x2& m) { *this = m; }
+	Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21) {
+		v[0][0] = m00; v[0][1] = m01; 
+		v[1][0] = m10; v[1][1] = m11;
+		v[2][0] = m20; v[2][1] = m21;
+	}
 
 	void Zero() { memset(v, 0, sizeof(v)); }
 
@@ -145,6 +150,13 @@ struct Matrix3x3
 	Matrix3x3() = default;
 	~Matrix3x3() = default;
 	Matrix3x3(const Matrix3x3& m) { *this = m; }
+	Matrix3x3(double m00, double m01, double m02,
+		double m10, double m11, double m12,
+		double m20, double m21, double m22) {
+		v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
+		v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
+		v[2][0] = m20; v[2][1] = m21; v[2][2] = m22;
+	}
 
 	void Zero() { memset(v, 0, sizeof(v)); }
 	void Init()	{ memcpy((void*)v, (void*)&Unit_M3x3, sizeof(v)); }
@@ -154,6 +166,18 @@ struct Matrix3x3
 		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1]; v[1][2] = m.v[1][2];
 		v[2][0] = m.v[2][0]; v[2][1] = m.v[2][1]; v[2][2] = m.v[2][2];
 		return *this;
+	}
+	Matrix3x3& operator+(const Matrix3x3& m) { return *this += m; }
+	Matrix3x3& operator+=(const Matrix3x3& m) {
+		v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1]; v[0][2] += m.v[0][2];
+		v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1]; v[1][2] += m.v[1][2];
+		v[2][0] += m.v[2][0]; v[2][1] += m.v[2][1]; v[2][2] += m.v[2][2];
+	}
+	Matrix3x3& operator*(const Matrix3x3& m) { return *this *= m; }
+	Matrix3x3& operator*=(const Matrix3x3& m) {
+		v[0][0] *= m.v[0][0]; v[0][1] *= m.v[0][1]; v[0][2] *= m.v[0][2];
+		v[1][0] *= m.v[1][0]; v[1][1] *= m.v[1][1]; v[1][2] *= m.v[1][2];
+		v[2][0] *= m.v[2][0]; v[2][1] *= m.v[2][1]; v[2][2] *= m.v[2][2];
 	}
 
 	void Transpose() {
@@ -177,6 +201,11 @@ struct Matrix1x2
 	Matrix1x2(const Matrix1x2& m) { *this = m; }
 
 	void Zero() { memset(v, 0, sizeof(v)); }
+	void Mul_3x2(const Matrix3x2* m) {
+		auto v1 = v[0] * m->v[0][0] + v[1] * m->v[1][0] + m->v[2][0];
+		auto v2 = v[0] * m->v[0][1] + v[1] * m->v[1][1] + m->v[2][1];
+		v[0] = v1; v[1] = v2;
+	}
 
 	Matrix1x2& operator=(const Matrix1x2& m) {
 		v[0] = m.v[0]; v[1] = m.v[1];
@@ -198,21 +227,51 @@ struct Matrix2x2
 
 	void Zero() { memset(v, 0, sizeof(v)); }
 	void Init() { memcpy((void*)v, (void*)&Unit_M2x2, sizeof(v)); }
+	void Transpose() {
+		std::swap(v[0][1], v[1][0]);
+	}
+	void Swap(Matrix1x2* m, int c) {
+		v[0][c] = m->v[0]; v[1][c] = m->v[1];
+	}
+	double Det() { return v[0][0] * v[1][1] - v[1][0] * v[0][1]; }
+	int Inverse(Matrix2x2* m) {
+		auto det = this->Det();
+		if (abs(det) < EPSILON_E5)
+			return 0;
+
+		auto det_inv = 1.0 / det;
+		m->v[0][0] = v[0][0] * det_inv;
+		m->v[0][1] = v[0][1] * det_inv;
+		m->v[1][0] = v[1][0] * det_inv;
+		m->v[1][1] = v[1][1] * det_inv;
+
+		return 1;
+	}
 
 	Matrix2x2& operator=(const Matrix2x2& m) {
 		v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1];
 		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1];
 		return *this;
 	}
-	//Matrix2x2& 
-
-	void Transpose() {
-		std::swap(v[0][1], v[1][0]);
+	Matrix2x2& operator+(const Matrix2x2& m) { return *this += m; }
+	Matrix2x2& operator+=(const Matrix2x2& m) {
+		v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1];
+		v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1];
+		return *this;
+	}
+	Matrix2x2& operator-(const Matrix2x2& m) { return *this -= m; }
+	Matrix2x2& operator-=(const Matrix2x2& m) {
+		v[0][0] -= m.v[0][0]; v[0][1] -= m.v[0][1];
+		v[1][0] -= m.v[1][0]; v[1][1] -= m.v[1][1];
+		return *this;
+	}
+	Matrix2x2& operator*(const Matrix2x2& m) { return *this *= m; }
+	Matrix2x2& operator*=(const Matrix2x2& m) {
+		v[0][0] *= m.v[0][0]; v[0][1] *= m.v[0][1];
+		v[1][0] *= m.v[1][0]; v[1][1] *= m.v[1][1];
+		return *this;
 	}
 
-	void Swap(PMatrix1x2 m, int c) {
-		v[0][c] = m->v[0]; v[1][c] = m->v[1];
-	}
 };
 typedef Matrix2x2* PMatrix2x2;
 

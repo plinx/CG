@@ -21,17 +21,12 @@ struct Vector2
 	Vector2(double dx, double dy) : x(dx), y(dy) {}
 	Vector2(const Vector2& v) { *this = v; }
 	// Build from Point2D
-	void Vector2_Build(const Vector2* begin, const Vector2* end) {
+	Vector2(const Vector2* begin, const Vector2* end) {
 		x = end->x - begin->x; y = end->y - begin->y;
 	}
 
-
 	void Zero() { x = y = 0.0; }
 	double Length() const { return sqrt(x*x + y*y); }
-	double Fast_Length() {
-		auto dx = abs(x); auto dy = abs(y); auto m = (int)MIN(dx, dy);
-		return (dx + dy - (m >> 1) - (m >> 2) + (m >> 4));
-	}
 	void Normalize() {
 		auto length = this->Length();
 		if (length < EPSILON_E5) return;
@@ -41,8 +36,12 @@ struct Vector2
 
 	Vector2& operator=(const Vector2& v) { x = v.x; y = v.y; return *this; }
 	Vector2& operator+(const Vector2& v) { x += v.x; y += v.y; return *this; }
+	Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
 	Vector2& operator-(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
+	Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
 	Vector2& operator*(double k) { x *= k; y *= k; return *this; }
+	Vector2& operator*=(double k) { x *= k; y *= k; return *this; }
+
 	double Dot(const Vector2* v) { return x * v->x + y * v->y; }
 	double Cos(const Vector2* v) { return this->Dot(v) / (this->Length() * v->Length()); }
 	
@@ -94,14 +93,21 @@ struct Vector3
 		auto length_inv = 1.0 / length;
 		x *= length_inv; y *= length_inv; z *= length_inv;
 	}
+
 	Vector3& operator=(const Vector3& v) { x = v.x; y = v.y; z = v.z; return *this; }
 	Vector3& operator+(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
 	Vector3& operator-(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
 	Vector3& operator*(double k) { x *= k; y *= k; z *= k; return *this; }
+	Vector3& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
+
 	double Dot(const Vector3* v) { return x * v->x + y * v->y + z * v->z; }
 	double Cos(const Vector3* v) { return this->Dot(v) / (this->Length() * v->Length()); }
 	void Cross(Vector3* v) {
-		x = (y * v->z) - (z * v->y); y = -((x * v->z) - (z * v->x)); z = (x * v->y) - (y * v->x);
+		Vector3 tmp;
+		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
+		*this = tmp;
 	}
 
 	bool operator==(const Vector3& v) {
@@ -154,15 +160,22 @@ struct Vector4
 		auto length_inv = 1.0 / length;
 		x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
 	}
+
 	Vector4& operator=(const Vector4& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
 	Vector4& operator+(const Vector4& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
+	Vector4& operator+=(const Vector4& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
 	Vector4& operator-(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
+	Vector4& operator-=(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
 	Vector4& operator*(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
+	Vector4& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
+
 	double Dot(const Vector4* v) { return (x * v->x) + (y * v->y) + (z * v->z); }
 	double Cos(const Vector4* v) { return  this->Dot(v) / (this->Length() * v->Length()); }
 	void Cross(const Vector4* v) {
-		x = (y * v->z) - (z * v->y); y = -((x * v->z) - (z * v->x));
-		y = (x * v->y) - (y * v->x); w = 1.0;
+		Vector4 tmp;
+		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
+		tmp.y = (x * v->y) - (y * v->x); tmp.w = 1.0;
+		*this = tmp;
 	}
 
 	bool operator==(const Vector4& v) {
