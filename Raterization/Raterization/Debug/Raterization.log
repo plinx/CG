@@ -1,9 +1,9 @@
-﻿  main.cpp
+﻿  LMath.cpp
   Generating Code...
   Compiling...
-  LMath.cpp
+  main.cpp
+  TestCase.cpp
   Generating Code...
   Skipping... (no relevant changes detected)
-  TestCase.cpp
   LWin.cpp
-LINK : fatal error LNK1104: cannot open file 'H:\DreamCode\CG\Raterization\Debug\Raterization.ilk'
+  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

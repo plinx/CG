@@ -192,6 +192,9 @@ struct Matrix2x2
 	Matrix2x2() = default;
 	~Matrix2x2() = default;
 	Matrix2x2(const Matrix2x2& m) { *this = m; }
+	Matrix2x2(double m00, double m01, double m10, double m11) {
+		v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
+	}
 
 	void Zero() { memset(v, 0, sizeof(v)); }
 	void Init() { memcpy((void*)v, (void*)&Unit_M2x2, sizeof(v)); }
@@ -201,6 +204,7 @@ struct Matrix2x2
 		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1];
 		return *this;
 	}
+	//Matrix2x2& 
 
 	void Transpose() {
 		std::swap(v[0][1], v[1][0]);
