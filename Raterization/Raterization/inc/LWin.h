@@ -1,8 +1,7 @@
 #ifndef LWin_h
 #define LWin_h
-
 #include <Windows.h>
-#include "../stdafx.h"
+//#include "../stdafx.h"
 
 class LWindow
 {

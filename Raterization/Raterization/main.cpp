@@ -2,6 +2,9 @@
 
 #define MATHTEST_MODE
 
+extern double sin_table[361];
+extern double cos_table[361];
+
 #ifndef MATHTEST_MODE
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	PSTR szCmdLine, int iCmdShow)
@@ -18,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 int main()
 {
-	AutoTest();
+	//AutoTest();
 
 	return 0;
 }

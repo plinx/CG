@@ -74,6 +74,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="inc\LMath.cpp" />
     <ClCompile Include="inc\LWin.cpp" />
     <ClCompile Include="inc\TestCase.cpp" />
     <ClCompile Include="main.cpp" />
