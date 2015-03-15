@@ -10,7 +10,7 @@
 #include "Vec.h"
 #include "Matrix.h"
 #include "Quat.h"
-//#include "LMath.h"
+#include "LMath.h"
 
 void AutoTest();
 void VectorTest(std::ofstream& log);

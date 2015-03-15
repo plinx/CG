@@ -10,7 +10,7 @@
 #define EPSILON_E5 (double)(1E-5)
 #define EPSILON_E6 (double)(1E-6)
 
-// Vector2, PVector2, Point2D, PPoint2D
+// Vector2, PVector2, Point2, PPoint2
 struct Vector2
 {
 	double x, y;
@@ -20,7 +20,7 @@ struct Vector2
 	// Constructor
 	Vector2(double dx, double dy) : x(dx), y(dy) {}
 	Vector2(const Vector2& v) { *this = v; }
-	// Build from Point2D
+	// Build from Point2
 	Vector2(const Vector2* begin, const Vector2* end) {
 		x = end->x - begin->x; y = end->y - begin->y;
 	}
@@ -57,10 +57,10 @@ struct Vector2
 	}
 };
 typedef Vector2* PVector2;
-typedef Vector2 Point2D;
-typedef Point2D* PPoint2D;
+typedef Vector2 Point2;
+typedef Point2* PPoint2;
 
-// Vector3, PVector3, Point3D, PPoint3D
+// Vector3, PVector3, Point3, PPoint3
 struct Vector3
 {
 	double x, y, z;
@@ -70,7 +70,7 @@ struct Vector3
 	// Constructor
 	Vector3(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
 	Vector3(const Vector3& v) { *this = v; }
-	// Build from Point3D
+	// Build from Point3
 	Vector3(const Vector3* begin, const Vector3* end) {
 		x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
 	}
@@ -122,8 +122,8 @@ struct Vector3
 	}
 };
 typedef Vector3* PVector3;
-typedef Vector3 Point3D;
-typedef Point3D* PPoint3D;
+typedef Vector3 Point3;
+typedef Point3* PPoint3;
 
 // Vector4, PVector4, Point4D, PPoint4D
 struct Vector4
