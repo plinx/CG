@@ -1,80 +1,67 @@
 #include "TestCase.h"
+#include <string>
+
+/*void TestLog(const std::string log)
+{
+	//static std::ofstream testlog("log/TestLog.txt", std::ofstream::app);
+	std::cout << log << std::endl;
+}*/
 
 void AutoTest()
 {
-	std::ofstream testlog("log/TestLog.txt", std::ofstream::app);
-
+	TestLog log("log/TestLog.txt");
 	// AutoTest start
 	SYSTEMTIME time;
 	GetLocalTime(&time);
-	std::cout << "******* AutoTest start : ";
-	std::cout << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
-	std::cout << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	std::cout << " *******" << std::endl;
-
-	testlog << "******* AutoTest start : ";
-	testlog << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
-	testlog << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	testlog << " *******" << std::endl;
+	log << "******* AutoTest start : ";
+	log << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
+	log << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
+	log << " *******\n";
 
 	// Test Cases
-	VectorTest(testlog);
-	MatrixTest(testlog);
+	VectorTest(log);
+	//MatrixTest(testlog);
 
 	// AutoTest end
 	GetLocalTime(&time);
-	std::cout << "******* AutoTest end   : ";
-	std::cout << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
-	std::cout << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	std::cout << " *******" << std::endl;
-
-	testlog << "******* AutoTest end   : ";
-	testlog << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
-	testlog << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	testlog << " *******" << std::endl;
-
+	log << "******* AutoTest end   : ";
+	log << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
+	log << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
+	log << " *******\n";
+	log.Close();
 }
 
-void VectorTest(std::ofstream& log)
+void VectorTest(TestLog& log)
 {
-	int total = 12, err = 0;
+	int total = 11, err = 0;
 
 	// Vector2 test : 4
+	Vector2 v20;
 	Vector2 v21(1.0, 1.0);
 	Vector2 v22(v21);
-	Vector2 v23 = v21;
+	Vector2 v23 = v22;
 
-	if (v21.x != 1 || v21.y != 1)
-	{
-		std::cout << "Vector2 constructor error." << std::endl;
-		log << "Vector2 constructor error." << std::endl;
-		err++;
-	}
+	v20.Zero();
+	if (v20.x != 0 || v20.y != 0) { log << "Vector2 default constructor error.\n"; err++; }
+	if (v21.x != 1 || v21.y != 1) { log << "Vector2 assign constructor error.\n"; err++; }
+	if (v22 != v21) { log << "Vector2 constructor error.\n"; err++; }
+	if (v23 != v21) { log << "Vector2 operator= error.\n"; err++; }
+	v21.x = 3; v21.y = 4;
+	if (v21.Length() != 5) { log << "Vector2 Length() error.\n"; err++; }
+	v21.Normalize();
+	if (v21.x != 0.6) { log << "Vector2 Normalize() error.\n"; err++; }
+	if (v22.Dot(&v21) != 1.4) { log << "Vector2 Dot() error.\n"; err++; }
+	if (v22.Cos(&v23) != 1) { log << "Vector2 Cos() error.\n"; err++; }
+	v22 = v22 + v23;
+	if (v22.x != 2 || v22.y != 2) { log << "Vector2 operator+/+= error.\n"; err++; }
+	v22 = v22 - v23;
+	if (v22.x != 1 || v22.y != 1) { log << "Vector2 operator-/-= error.\n"; err++; }
+	v22 = v22 * 3;
+	if (v22.x != 3 || v22.y != 3) { log << "Vector2 operator*/*= error.\n"; err++; }
 
-	if (v22 != v21)
-	{
-		std::cout << "Vector2 constructor error." << std::endl;
-		log << "Vector2 constructor error." << std::endl;
-		err++;
-	}
-
-	if (v23 != v21)
-	{
-		std::cout << "Vector2 operator= error." << std::endl;
-		log << "Vector2 operator= error." << std::endl;
-		err++;
-	}
-
-	v21.Zero();
-	if (v21.x != 0 || v21.y != 0)
-	{
-		std::cout << "Vector2 Zero() error." << std::endl;
-		log << "Vector2 Zero() error." << std::endl;
-		err++;
-	}
 	
 	// Vector3 test : 4
-	Vector3 v31(1.0, 1.0, 1.0);
+	/*Vector3 v31(1.0, 1.0, 1.0);
 	Vector3 v32(v31);
 	Vector3 v33 = v31;
 	
@@ -140,7 +127,7 @@ void VectorTest(std::ofstream& log)
 		std::cout << "Vector4 Zero error." << std::endl;
 		log << "Vector4 Zero error." << std::endl;
 		err++;
-	}
+	}*/
 
 	/*auto p1 = new Point2D(0.0, 0.0);
 	auto p2 = new Point2D(1.0, 1.0);
@@ -164,13 +151,9 @@ void VectorTest(std::ofstream& log)
 	std::cout << v1.Cos(&v2) << std::endl;
 	*/
 
-	std::cout << "VectorTest => Total : " << total;
-	std::cout << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	std::cout << " | Error : " << err << "(" << (float)err * 100 / total << "%)" << std::endl;
-
 	log << "VectorTest => Total : " << total;
 	log << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)" << std::endl;
+	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)\n";
 }
 
 void MatrixTest(std::ofstream& log)

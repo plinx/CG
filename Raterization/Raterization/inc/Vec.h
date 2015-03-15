@@ -20,7 +20,7 @@ struct Vector2
 	// Constructor
 	Vector2(double dx, double dy) : x(dx), y(dy) {}
 	Vector2(const Vector2& v) { *this = v; }
-	// Build from Point2
+	// Construct from Point2
 	Vector2(const Vector2* begin, const Vector2* end) {
 		x = end->x - begin->x; y = end->y - begin->y;
 	}
@@ -28,22 +28,21 @@ struct Vector2
 	void Zero() { x = y = 0.0; }
 	double Length() const { return sqrt(x*x + y*y); }
 	void Normalize() {
-		auto length = this->Length();
+		double length = this->Length();
 		if (length < EPSILON_E5) return;
-		auto length_inv = 1.0 / length;
+		double length_inv = 1.0 / length;
 		x = x * length_inv; y = y * length_inv;
 	}
-
-	Vector2& operator=(const Vector2& v) { x = v.x; y = v.y; return *this; }
-	Vector2& operator+(const Vector2& v) { x += v.x; y += v.y; return *this; }
-	Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
-	Vector2& operator-(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
-	Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
-	Vector2& operator*(double k) { x *= k; y *= k; return *this; }
-	Vector2& operator*=(double k) { x *= k; y *= k; return *this; }
-
 	double Dot(const Vector2* v) { return x * v->x + y * v->y; }
 	double Cos(const Vector2* v) { return this->Dot(v) / (this->Length() * v->Length()); }
+
+	Vector2& operator=(const Vector2& v) { x = v.x; y = v.y; return *this; }
+	Vector2& operator+(const Vector2& v) { return *this += v; }
+	Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
+	Vector2& operator-(const Vector2& v) { return *this -= v; }
+	Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
+	Vector2& operator*(double k) { return *this *= k; }
+	Vector2& operator*=(double k) { x *= k; y *= k; return *this; }
 	
 	bool operator==(const Vector2& v) {
 		if (x == v.x && y == v.y)
