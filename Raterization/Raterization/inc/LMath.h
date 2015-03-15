@@ -12,7 +12,7 @@
 
 enum 
 {
-	Line_NoIntersect = 0,
+	Line_No_Intersect = 0,
 	Line_Intersect_In_Segment,
 	Line_Intersect_Out_Segment,
 	Line_Intersect_Everywhere
@@ -30,16 +30,47 @@ struct Vertex2
 	double x, y;
 };
 
-struct Line2
+struct Line2D
 {
 	Point2D p0, p1;
-	Vector2 v;
+	Vector2 vec;
+
+	Line2D() = default;
+	~Line2D() = default;
+	Line2D(Point2D pb, Point2D pe, Vector2 v) : p0(pb), p1(pe), vec(v) {}
+	void Compute(double t, Point2D* point) {
+		point->x = p0.x + vec.x * t;
+		point->y = p0.y + vec.y * t;
+	}
+	int Intersect(Line2D* line, double *t1, double *t2) {
+		auto det_line = (vec.x * line->vec.y - vec.y * line->vec.x);
+		if (abs(det_line) <= EPSILON_E5)
+			return Line_No_Intersect;
+
+		*t1 = (vec.x * (p0.y - line->p0.y) - vec.y * (p0.x - line->p0.x)) / det_line;
+		*t2 = (vec.x * (p1.y - line->p1.y) - vec.y * (p1.x - line->p1.x)) / det_line;
+
+		if ((0 <= *t1) && (*t1 <= 1) && (0 <= *t2) && (*t2 <= 0))
+			return Line_Intersect_In_Segment;
+		else
+			return Line_Intersect_Out_Segment;
+	}
 };
+typedef Line2D* PLine2D;
 
 struct Line3
 {
 	Point3D p0, p1;
-	Vector3 v;
+	Vector3 vec;
+
+	Line3() = default;
+	~Line3() = default;
+	Line3(Point3D pb, Point3D pe, Vector3 v) : p0(pb), p1(pe), vec(v) {}
+	void Compute(double t, Point3D* point) {
+		point->x = p0.x + vec.x * t;
+		point->y = p0.y + vec.y * t;
+		point->z = p0.z + vec.z * t;
+	}
 };
 
 struct Plane3

@@ -1,7 +1,2 @@
 ﻿  main.cpp
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(213): error C2061: syntax error : identifier 'matrix2x2'
-  TestCase.cpp
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(213): error C2061: syntax error : identifier 'matrix2x2'
-  LWin.cpp
-  LMath.cpp
-  Generating Code...
+  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe
