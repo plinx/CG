@@ -21,20 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 int main()
 {
-	//AutoTest();
-
-	double x, y, z, zz;
-	x = 5.0f;
-	y = 1.0 / x;
-	z = zz = 3;
-	z *= y;
-	zz /= x;
-	std::cout.precision(25);
-	std::cout << z << " " << zz << std::endl;
-	if (z == zz)
-		std::cout << "equal" << std::endl;
-	else
-		std::cout << "non-equal" << std::endl;
+	AutoTest();
 
 	return 0;
 }

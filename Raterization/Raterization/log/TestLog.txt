@@ -10,3 +10,5 @@ Vector2 Dot() error.
 Vector2 Cos() error.
 VectorTest => Total : 11 | Pass : 6(54.55%) | Error : 12(100%)
 ******* AutoTest end   : 2015/3/16 2:54:26 *******
+******* AutoTest start : 2015/3/17 2:54:19 *******
+******* AutoTest start : 2015/3/17 2:54:19 *******
