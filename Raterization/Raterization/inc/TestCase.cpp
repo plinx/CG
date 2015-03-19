@@ -3,7 +3,7 @@
 
 std::ofstream TestLog("log/LMathlog.txt", std::ofstream::app);
 
-#define LMATH_Debug(judge, output) if (judge) { \
+#define UT_Debug(judge, output) if (judge) { \
 	std::cout << output << std::endl; \
 	TestLog << output << std::endl; \
 }
@@ -43,22 +43,22 @@ void VectorTest()
 	Vector2 v23 = v22;
 
 	v20.Zero();
-	LMATH_Debug(v20.x != 0 || v20.y != 0, "Vector2 default constructor error.\n");
-	LMATH_Debug(v21.x != 1 || v21.y != 1, "Vector2 assign constructor error.\n");
-	LMATH_Debug(v22 != v21, "Vector2 constructor error.");
-	LMATH_Debug(v23 != v21, "Vector2 operator= error.");
+	UT_Debug(v20.x != 0 || v20.y != 0, "Vector2 default constructor error.\n");
+	UT_Debug(v21.x != 1 || v21.y != 1, "Vector2 assign constructor error.\n");
+	UT_Debug(v22 != v21, "Vector2 constructor error.");
+	UT_Debug(v23 != v21, "Vector2 operator= error.");
 	v21.x = 3; v21.y = 4;
-	LMATH_Debug(v21.Length() < 4.98, "Vector2 Length() error.\n");
+	UT_Debug(v21.Length() < 4.98, "Vector2 Length() error.\n");
 	v21.Normalize();
-	LMATH_Debug(v21.x < 0.598, "Vector2 Normalize() error.\n");
-	LMATH_Debug(v22.Dot(&v21) < 1.398, "Vector2 Dot() error.\n");
-	LMATH_Debug(v22.Cos(&v23) < 0.98, "Vector2 Cos() error.\n");
+	UT_Debug(v21.x < 0.598, "Vector2 Normalize() error.\n");
+	UT_Debug(v22.Dot(&v21) < 1.398, "Vector2 Dot() error.\n");
+	UT_Debug(v22.Cos(&v23) < 0.98, "Vector2 Cos() error.\n");
 	v22 = v22 + v23;
-	LMATH_Debug(v22.x < 1.98 || v22.y < 1.98, "Vector2 operator+/+= error.\n");
+	UT_Debug(v22.x < 1.98 || v22.y < 1.98, "Vector2 operator+/+= error.\n");
 	v22 = v22 - v23;
-	LMATH_Debug(v22.x < 0.98 || v22.y < 0.98, "Vector2 operator-/-= error.\n");
+	UT_Debug(v22.x < 0.98 || v22.y < 0.98, "Vector2 operator-/-= error.\n");
 	v22 = v22 * 3;
-	LMATH_Debug(v22.x < 2.98 || v22.y < 2.98, "Vector2 operator*/*= error.\n");
+	UT_Debug(v22.x < 2.98 || v22.y < 2.98, "Vector2 operator*/*= error.\n");
 }
 
 	

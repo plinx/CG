@@ -21,7 +21,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 int main()
 {
-	AutoTest();
+	//AutoTest();
 
 	return 0;
 }
