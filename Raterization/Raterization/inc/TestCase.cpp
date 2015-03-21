@@ -36,55 +36,55 @@ void AutoTest()
 
 void VectorTest()
 {
-	// Vector2 test : 4
-	Vector2 v20;
-	Vector2 v21(1.0, 1.0);
-	Vector2 v22(v21);
-	Vector2 v23 = v22;
+	// Vector2D test : 4
+	Vector2D v20;
+	Vector2D v21(1.0, 1.0);
+	Vector2D v22(v21);
+	Vector2D v23 = v22;
 
 	v20.Zero();
-	UT_Debug(v20.x != 0 || v20.y != 0, "Vector2 default constructor error.\n");
-	UT_Debug(v21.x != 1 || v21.y != 1, "Vector2 assign constructor error.\n");
-	UT_Debug(v22 != v21, "Vector2 constructor error.");
-	UT_Debug(v23 != v21, "Vector2 operator= error.");
+	UT_Debug(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.\n");
+	UT_Debug(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.\n");
+	UT_Debug(v22 != v21, "Vector2D constructor error.");
+	UT_Debug(v23 != v21, "Vector2D operator= error.");
 	v21.x = 3; v21.y = 4;
-	UT_Debug(v21.Length() < 4.98, "Vector2 Length() error.\n");
+	UT_Debug(v21.Length() < 4.98, "Vector2D Length() error.\n");
 	v21.Normalize();
-	UT_Debug(v21.x < 0.598, "Vector2 Normalize() error.\n");
-	UT_Debug(v22.Dot(&v21) < 1.398, "Vector2 Dot() error.\n");
-	UT_Debug(v22.Cos(&v23) < 0.98, "Vector2 Cos() error.\n");
+	UT_Debug(v21.x < 0.598, "Vector2D Normalize() error.\n");
+	UT_Debug(v22.Dot(&v21) < 1.398, "Vector2D Dot() error.\n");
+	UT_Debug(v22.Cos(&v23) < 0.98, "Vector2D Cos() error.\n");
 	v22 = v22 + v23;
-	UT_Debug(v22.x < 1.98 || v22.y < 1.98, "Vector2 operator+/+= error.\n");
+	UT_Debug(v22.x < 1.98 || v22.y < 1.98, "Vector2D operator+/+= error.\n");
 	v22 = v22 - v23;
-	UT_Debug(v22.x < 0.98 || v22.y < 0.98, "Vector2 operator-/-= error.\n");
+	UT_Debug(v22.x < 0.98 || v22.y < 0.98, "Vector2D operator-/-= error.\n");
 	v22 = v22 * 3;
-	UT_Debug(v22.x < 2.98 || v22.y < 2.98, "Vector2 operator*/*= error.\n");
+	UT_Debug(v22.x < 2.98 || v22.y < 2.98, "Vector2D operator*/*= error.\n");
 }
 
 	
-	// Vector3 test : 4
-	/*Vector3 v31(1.0, 1.0, 1.0);
-	Vector3 v32(v31);
-	Vector3 v33 = v31;
+	// Vector3D test : 4
+	/*Vector3D v31(1.0, 1.0, 1.0);
+	Vector3D v32(v31);
+	Vector3D v33 = v31;
 	
 	if (v31.x != 1 || v32.y != 1 || v32.z != 1)
 	{
-		std::cout << "Vector3 constructor error." << std::endl;
-		log << "Vector3 constructor error." << std::endl;
+		std::cout << "Vector3D constructor error." << std::endl;
+		log << "Vector3D constructor error." << std::endl;
 		err++;
 	}
 
 	if (v32 != v31)
 	{
-		std::cout << "Vector3 copy constructor error." << std::endl;
-		log << "Vector3 copy constructor error." << std::endl;
+		std::cout << "Vector3D copy constructor error." << std::endl;
+		log << "Vector3D copy constructor error." << std::endl;
 		err++;
 	}
 
 	if (v33 != v31)
 	{
-		std::cout << "Vector3 operator= error." << std::endl;
-		log << "Vector3 operator= error." << std::endl;
+		std::cout << "Vector3D operator= error." << std::endl;
+		log << "Vector3D operator= error." << std::endl;
 		err++;
 		
 	}
@@ -92,50 +92,50 @@ void VectorTest()
 	v31.Zero();
 	if (v31.x != 0 || v31.y != 0 || v31.z != 0)
 	{
-		std::cout << "Vector3 Zero error." << std::endl;
-		log << "Vector3 Zero error." << std::endl;
+		std::cout << "Vector3D Zero error." << std::endl;
+		log << "Vector3D Zero error." << std::endl;
 		err++;
 	}
 
-	// Vector4 test : 4
-	Vector4 v41(1.0, 1.0, 1.0, 1.0);
-	Vector4 v42(v41);
-	Vector4 v43 = v41;
+	// Vector4D test : 4
+	Vector4D v41(1.0, 1.0, 1.0, 1.0);
+	Vector4D v42(v41);
+	Vector4D v43 = v41;
 
 	if (v41.x != 1 || v41.y != 1 || v41.z != 1 || v41.w != 1)
 	{
-		std::cout << "Vector4 constructor error." << std::endl;
-		log << "Vector4 constructor error." << std::endl;
+		std::cout << "Vector4D constructor error." << std::endl;
+		log << "Vector4D constructor error." << std::endl;
 		err++;
 	}
 
 	if (v42 != v41)
 	{
-		std::cout << "Vector4 copy constructor error." << std::endl;
-		log << "Vector4 copy constructor error." << std::endl;
+		std::cout << "Vector4D copy constructor error." << std::endl;
+		log << "Vector4D copy constructor error." << std::endl;
 		err++;
 	}
 
 	if (v43 != v41)
 	{
-		std::cout << "Vector4 operator= error." << std::endl;
-		log << "Vector4 operator= error." << std::endl;
+		std::cout << "Vector4D operator= error." << std::endl;
+		log << "Vector4D operator= error." << std::endl;
 		err++;
 	}
 
 	v41.Zero();
 	if (v41.x != 0 || v41.y != 0 || v41.z != 0 || v41.w != 1)
 	{
-		std::cout << "Vector4 Zero error." << std::endl;
-		log << "Vector4 Zero error." << std::endl;
+		std::cout << "Vector4D Zero error." << std::endl;
+		log << "Vector4D Zero error." << std::endl;
 		err++;
 	}
 
 	auto p1 = new Point2D(0.0, 0.0);
 	auto p2 = new Point2D(1.0, 1.0);
-	auto v2 = Vector2(2.0, 2.0);
-	Vector2 v1;
-	v1 = Vector2(p1, p2);
+	auto v2 = Vector2D(2.0, 2.0);
+	Vector2D v1;
+	v1 = Vector2D(p1, p2);
 	std::cout << v1.x << " " << v1.x << std::endl;
 	v1.Normalize();
 	std::cout << v1.x << " " << v1.x << std::endl;

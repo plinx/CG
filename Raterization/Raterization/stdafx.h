@@ -13,7 +13,10 @@
 #include "inc\Matrix.h"
 #include "inc\Quat.h"
 #include "inc\LMath.h"
+#include "inc\Pipeline.h"
 
 
+#ifndef TestCase_h
 #include "inc\TestCase.h"
+#endif
 

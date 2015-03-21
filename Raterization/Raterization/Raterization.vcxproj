@@ -67,6 +67,7 @@
   <ItemGroup>
     <ClInclude Include="inc\LMath.h" />
     <ClInclude Include="inc\Matrix.h" />
+    <ClInclude Include="inc\Pipeline.h" />
     <ClInclude Include="inc\Quat.h" />
     <ClInclude Include="inc\TestCase.h" />
     <ClInclude Include="inc\Vec.h" />

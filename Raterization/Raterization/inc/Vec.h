@@ -10,18 +10,18 @@
 #define EPSILON_E5 (double)(1E-5)
 #define EPSILON_E6 (double)(1E-6)
 
-// Vector2, PVector2, Point2, PPoint2
-struct Vector2
+// Vector2D, PVector2D, Point2D, PPoint2D
+struct Vector2D
 {
 	double x, y;
 
-	Vector2() = default;
-	~Vector2() = default;
+	Vector2D() = default;
+	~Vector2D() = default;
 	// Constructor
-	Vector2(double dx, double dy) : x(dx), y(dy) {}
-	Vector2(const Vector2& v) { *this = v; }
-	// Construct from Point2
-	Vector2(const Vector2* begin, const Vector2* end) {
+	Vector2D(double dx, double dy) : x(dx), y(dy) {}
+	Vector2D(const Vector2D& v) { *this = v; }
+	// Construct from Point2D
+	Vector2D(const Vector2D* begin, const Vector2D* end) {
 		x = end->x - begin->x; y = end->y - begin->y;
 	}
 
@@ -33,44 +33,44 @@ struct Vector2
 		double length_inv = 1.0 / length;
 		x = x * length_inv; y = y * length_inv;
 	}
-	double Dot(const Vector2* v) { return x * v->x + y * v->y; }
-	double Cos(const Vector2* v) { return this->Dot(v) / (this->Length() * v->Length()); }
+	double Dot(const Vector2D* v) { return x * v->x + y * v->y; }
+	double Cos(const Vector2D* v) { return this->Dot(v) / (this->Length() * v->Length()); }
 
-	Vector2& operator=(const Vector2& v) { x = v.x; y = v.y; return *this; }
-	Vector2& operator+(const Vector2& v) { return *this += v; }
-	Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
-	Vector2& operator-(const Vector2& v) { return *this -= v; }
-	Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
-	Vector2& operator*(double k) { return *this *= k; }
-	Vector2& operator*=(double k) { x *= k; y *= k; return *this; }
+	Vector2D& operator=(const Vector2D& v) { x = v.x; y = v.y; return *this; }
+	Vector2D& operator+(const Vector2D& v) { return *this += v; }
+	Vector2D& operator+=(const Vector2D& v) { x += v.x; y += v.y; return *this; }
+	Vector2D& operator-(const Vector2D& v) { return *this -= v; }
+	Vector2D& operator-=(const Vector2D& v) { x -= v.x; y -= v.y; return *this; }
+	Vector2D& operator*(double k) { return *this *= k; }
+	Vector2D& operator*=(double k) { x *= k; y *= k; return *this; }
 	
-	bool operator==(const Vector2& v) {
+	bool operator==(const Vector2D& v) {
 		if (x == v.x && y == v.y)
 			return true;
 		return false;
 	}
-	bool operator!=(const Vector2& v) {
+	bool operator!=(const Vector2D& v) {
 		if (*this == v)
 			return false;
 		return true;
 	}
 };
-typedef Vector2* PVector2;
-typedef Vector2 Point2;
-typedef Point2* PPoint2;
+typedef Vector2D* PVector2D;
+typedef Vector2D Point2D;
+typedef Point2D* PPoint2D;
 
-// Vector3, PVector3, Point3, PPoint3
-struct Vector3
+// Vector3D, PVector3D, Point3D, PPoint3D
+struct Vector3D
 {
 	double x, y, z;
 
-	Vector3() = default;
-	~Vector3() = default;
+	Vector3D() = default;
+	~Vector3D() = default;
 	// Constructor
-	Vector3(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
-	Vector3(const Vector3& v) { *this = v; }
-	// Build from Point3
-	Vector3(const Vector3* begin, const Vector3* end) {
+	Vector3D(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
+	Vector3D(const Vector3D& v) { *this = v; }
+	// Build from Point3D
+	Vector3D(const Vector3D* begin, const Vector3D* end) {
 		x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
 	}
 
@@ -93,50 +93,50 @@ struct Vector3
 		x *= length_inv; y *= length_inv; z *= length_inv;
 	}
 
-	Vector3& operator=(const Vector3& v) { x = v.x; y = v.y; z = v.z; return *this; }
-	Vector3& operator+(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
-	Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
-	Vector3& operator-(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-	Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-	Vector3& operator*(double k) { x *= k; y *= k; z *= k; return *this; }
-	Vector3& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
+	Vector3D& operator=(const Vector3D& v) { x = v.x; y = v.y; z = v.z; return *this; }
+	Vector3D& operator+(const Vector3D& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vector3D& operator+=(const Vector3D& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vector3D& operator-(const Vector3D& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vector3D& operator-=(const Vector3D& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vector3D& operator*(double k) { x *= k; y *= k; z *= k; return *this; }
+	Vector3D& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
 
-	double Dot(const Vector3* v) { return x * v->x + y * v->y + z * v->z; }
-	double Cos(const Vector3* v) { return this->Dot(v) / (this->Length() * v->Length()); }
-	void Cross(Vector3* v) {
-		Vector3 tmp;
+	double Dot(const Vector3D* v) { return x * v->x + y * v->y + z * v->z; }
+	double Cos(const Vector3D* v) { return this->Dot(v) / (this->Length() * v->Length()); }
+	void Cross(Vector3D* v) {
+		Vector3D tmp;
 		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
 		*this = tmp;
 	}
 
-	bool operator==(const Vector3& v) {
+	bool operator==(const Vector3D& v) {
 		if (x == v.x && y == v.y && z == v.z)
 			return true;
 		return false;
 	}
-	bool operator!=(const Vector3& v) {
+	bool operator!=(const Vector3D& v) {
 		if (*this == v)
 			return false;
 		return true;
 	}
 };
-typedef Vector3* PVector3;
-typedef Vector3 Point3;
-typedef Point3* PPoint3;
+typedef Vector3D* PVector3D;
+typedef Vector3D Point3D;
+typedef Point3D* PPoint3D;
 
-// Vector4, PVector4, Point4D, PPoint4D
-struct Vector4
+// Vector4D, PVector4D, Point4D, PPoint4D
+struct Vector4D
 {
 	double x, y, z, w;
 
-	Vector4(){}
-	~Vector4() = default;
+	Vector4D(){}
+	~Vector4D() = default;
 	// Constructor
-	Vector4(double dx, double dy, double dz, double dw)
+	Vector4D(double dx, double dy, double dz, double dw)
 		: x(dx), y(dy), z(dz), w(dw) {}
-	Vector4(const Vector4& v) { *this = v; }
+	Vector4D(const Vector4D& v) { *this = v; }
 	// Build from Point4D
-	Vector4(const Vector4* begin, const Vector4* end) {
+	Vector4D(const Vector4D* begin, const Vector4D* end) {
 		x = end->x - begin->x; y = end->y - begin->y;
 		z = end->z - begin->z; w = 1.0;
 	}
@@ -160,36 +160,36 @@ struct Vector4
 		x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
 	}
 
-	Vector4& operator=(const Vector4& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
-	Vector4& operator+(const Vector4& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
-	Vector4& operator+=(const Vector4& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
-	Vector4& operator-(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
-	Vector4& operator-=(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
-	Vector4& operator*(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
-	Vector4& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
+	Vector4D& operator=(const Vector4D& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
+	Vector4D& operator+(const Vector4D& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
+	Vector4D& operator+=(const Vector4D& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
+	Vector4D& operator-(const Vector4D& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
+	Vector4D& operator-=(const Vector4D& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
+	Vector4D& operator*(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
+	Vector4D& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; }
 
-	double Dot(const Vector4* v) { return (x * v->x) + (y * v->y) + (z * v->z); }
-	double Cos(const Vector4* v) { return  this->Dot(v) / (this->Length() * v->Length()); }
-	void Cross(const Vector4* v) {
-		Vector4 tmp;
+	double Dot(const Vector4D* v) { return (x * v->x) + (y * v->y) + (z * v->z); }
+	double Cos(const Vector4D* v) { return  this->Dot(v) / (this->Length() * v->Length()); }
+	void Cross(const Vector4D* v) {
+		Vector4D tmp;
 		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
 		tmp.y = (x * v->y) - (y * v->x); tmp.w = 1.0;
 		*this = tmp;
 	}
 
-	bool operator==(const Vector4& v) {
+	bool operator==(const Vector4D& v) {
 		if (x == v.x && y == v.y && z == v.z && w == v.w)
 			return true;
 		return false;
 	}
-	bool operator!=(const Vector4& v) {
+	bool operator!=(const Vector4D& v) {
 		if (*this == v)
 			return false;
 		return true;
 	}
 };
-typedef Vector4* PVector4;
-typedef Vector4 Point4D;
+typedef Vector4D* PVector4D;
+typedef Vector4D Point4D;
 typedef Point4D* PPoint4D;
 
 #endif

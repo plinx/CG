@@ -8,13 +8,13 @@ struct Quat
 
 	Quat() = default;
 	~Quat() = default;
-	Quat(double r, Vector3 i) : real(r), x(i.x), y(i.y), z(i.z) {}
+	Quat(double r, Vector3D i) : real(r), x(i.x), y(i.y), z(i.z) {}
 	Quat(double r, double dx, double dy, double dz)
 		: real(r), x(dx), y(dy), z(dz) {}
 
 	Quat(const Quat& q) { *this = q; }
 	void Zero() { real = 0; x = 0; y = 0; z = 0; }
-	void From_Vector3Theta(Vector3* v, double theta) {
+	void From_Vector3DTheta(Vector3D* v, double theta) {
 		auto theta_div2 = theta / 2;
 		auto sin_theta = sin(theta_div2);
 		x = sin_theta * v->x;
@@ -22,7 +22,7 @@ struct Quat
 		z = sin_theta * v->z;
 		real = cos(theta_div2);
 	}
-	void To_Vector3Theta(Vector3* v, double* theta) {
+	void To_Vector3DTheta(Vector3D* v, double* theta) {
 		*theta = acos(real);
 		auto theta_inv = 1.0 / sin(*theta);
 		v->x = x * theta_inv;

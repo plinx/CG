@@ -54,15 +54,15 @@ struct Matrix4x3
 
 	void Zero() { memset(v, 0, sizeof(v)); }
 	void Init()	{ memcpy((void*)v, (void*)&Unit_M4x3, sizeof(v)); }
-	void Mul_Vector3(Vector3* vec) {
-		Vector3 tmp;
+	void Mul_Vector3D(Vector3D* vec) {
+		Vector3D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z;
 		*vec = tmp;
 	}
-	void Mul_Vector4(Vector4* vec) {
-		Vector4 tmp;
+	void Mul_Vector4D(Vector4D* vec) {
+		Vector4D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z + v[3][0] * vec->w;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z + v[3][1] * vec->w;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z + v[3][2] * vec->w;
@@ -151,15 +151,15 @@ struct Matrix4x4
 		tmp.v[3] = v[0][3] * m->v[0] + v[1][3] * m->v[1] + v[2][3] * m->v[2] + v[3][3] * m->v[3];
 		*m = tmp;
 	}
-	void Mul_Vector3(Vector3* vec) {
-		Vector3 tmp;
+	void Mul_Vector3D(Vector3D* vec) {
+		Vector3D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z;
 		*vec = tmp;
 	}
-	void Mul_Vector4(Vector4* vec) {
-		Vector4 tmp;
+	void Mul_Vector4D(Vector4D* vec) {
+		Vector4D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z + v[3][0] * vec->w;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z + v[3][1] * vec->w;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z + v[3][2] * vec->w;
