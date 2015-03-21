@@ -9,15 +9,15 @@
 #include <fstream>
 #include <sstream>
 
-#include "inc\LWin.h"
-#include "inc\Vec.h"
-#include "inc\Matrix.h"
-#include "inc\Quat.h"
-#include "inc\LMath.h"
-#include "inc\Pipeline.h"
-
+#include "inc/LWin.h"
+#include "inc/Vec.h"
+#include "inc/Matrix.h"
+#include "inc/Quat.h"
+#include "inc/LMath.h"
+#include "inc/Pipeline.h"
+#include "inc/Camera.h"
 
 #ifndef TestCase_h
-#include "inc\TestCase.h"
+#include "inc/TestCase.h"
 #endif
 

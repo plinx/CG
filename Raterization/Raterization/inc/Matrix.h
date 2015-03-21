@@ -143,28 +143,28 @@ struct Matrix4x4
 		m->v[3][2] = -(v[3][0] * v[0][2] + v[3][1] * v[1][2] + v[3][2] * v[2][2]);
 		m->v[3][3] = 1.0f;
 	}
-	void mul_1x4(Matrix1x4* m) {
+	Matrix1x4 mul(Matrix1x4* m) {
 		Matrix1x4 tmp;
 		tmp.v[0] = v[0][0] * m->v[0] + v[1][0] * m->v[1] + v[2][0] * m->v[2] + v[3][0] * m->v[3];
 		tmp.v[1] = v[0][1] * m->v[0] + v[1][1] * m->v[1] + v[2][1] * m->v[2] + v[3][1] * m->v[3];
 		tmp.v[2] = v[0][2] * m->v[0] + v[1][2] * m->v[1] + v[2][2] * m->v[2] + v[3][2] * m->v[3];
 		tmp.v[3] = v[0][3] * m->v[0] + v[1][3] * m->v[1] + v[2][3] * m->v[2] + v[3][3] * m->v[3];
-		*m = tmp;
+		return tmp;
 	}
-	void mul_Vector3D(Vector3D* vec) {
+	Vector3D mul(Vector3D* vec) {
 		Vector3D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z;
-		*vec = tmp;
+		return tmp;
 	}
-	void mul_Vector4D(Vector4D* vec) {
+	Vector4D mul(Vector4D* vec) {
 		Vector4D tmp;
 		tmp.x = v[0][0] * vec->x + v[1][0] * vec->y + v[2][0] * vec->z + v[3][0] * vec->w;
 		tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z + v[3][1] * vec->w;
 		tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z + v[3][2] * vec->w;
 		tmp.w = v[0][3] * vec->x + v[1][3] * vec->y + v[2][3] * vec->z + v[3][3] * vec->w;
-		*vec = tmp;
+		return tmp;
 	}
 
 	Matrix4x4& operator=(const Matrix4x4& m) {

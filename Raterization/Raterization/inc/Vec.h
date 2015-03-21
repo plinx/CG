@@ -37,11 +37,23 @@ struct Vector2D
 	double cos(const Vector2D* v) { return this->dot(v) / (this->length() * v->length()); }
 
 	Vector2D& operator=(const Vector2D& v) { x = v.x; y = v.y; return *this; }
-	Vector2D& operator+(const Vector2D& v) { return *this += v; }
+	Vector2D operator+(const Vector2D& v) { 
+		Vector2D tmp;
+		tmp.x = x + v.x; tmp.y = y + v.y;
+		return tmp;
+	}
 	Vector2D& operator+=(const Vector2D& v) { x += v.x; y += v.y; return *this; }
-	Vector2D& operator-(const Vector2D& v) { return *this -= v; }
+	Vector2D operator-(const Vector2D& v) { 
+		Vector2D tmp;
+		tmp.x = x - v.x; tmp.y = y - v.y;
+		return tmp;
+	}
 	Vector2D& operator-=(const Vector2D& v) { x -= v.x; y -= v.y; return *this; }
-	Vector2D& operator*(double k) { return *this *= k; }
+	Vector2D operator*(double k) {
+		Vector2D tmp;
+		tmp.x = x * k; tmp.y = y * k;
+		return tmp;
+	}
 	Vector2D& operator*=(double k) { x *= k; y *= k; return *this; }
 	
 	bool operator==(const Vector2D& v) {
@@ -75,6 +87,7 @@ struct Vector3D
 	}
 
 	void zero() { x = y = z = 0.0; }
+	void init(double ix, double iy, double iz) { x = ix; y = iy; z = iz; }
 	double length() const { return sqrt(x*x + y*y + z*z); }
 	double Fast_length() {
 		int ix, iy, iz;
@@ -94,11 +107,23 @@ struct Vector3D
 	}
 
 	Vector3D& operator=(const Vector3D& v) { x = v.x; y = v.y; z = v.z; return *this; }
-	Vector3D& operator+(const Vector3D& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	Vector3D operator+(const Vector3D& v) {
+		Vector3D tmp;
+		tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z; 
+		return tmp; 
+	}
 	Vector3D& operator+=(const Vector3D& v) { x += v.x; y += v.y; z += v.z; return *this; }
-	Vector3D& operator-(const Vector3D& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	Vector3D operator-(const Vector3D& v) {
+		Vector3D tmp;
+		tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z; 
+		return tmp; 
+	}
 	Vector3D& operator-=(const Vector3D& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-	Vector3D& operator*(double k) { x *= k; y *= k; z *= k; return *this; }
+	Vector3D operator*(double k) {
+		Vector3D tmp;
+		tmp.x = x * k; tmp.y = y * k; tmp.z = z * k; 
+		return tmp; 
+	}
 	Vector3D& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
 
 	double dot(const Vector3D* v) { return x * v->x + y * v->y + z * v->z; }
@@ -142,6 +167,9 @@ struct Vector4D
 	}
 
 	void zero() { x = y = z = 0.0; w = 1.0; }
+	void init(double dx, double dy, double dz) {
+		x = dx; y = dy; z = dz; w = 1.0;
+	}
 	double length() const { return sqrt(x*x + y*y + z*z); }
 	double Fast_length() {
 		int ix, iy, iz;
@@ -161,11 +189,23 @@ struct Vector4D
 	}
 
 	Vector4D& operator=(const Vector4D& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
-	Vector4D& operator+(const Vector4D& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
+	Vector4D operator+(const Vector4D& v) { 
+		Vector4D tmp;
+		tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z; tmp.w = 1.0; 
+		return tmp; 
+	}
 	Vector4D& operator+=(const Vector4D& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
-	Vector4D& operator-(const Vector4D& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
+	Vector4D operator-(const Vector4D& v) { 
+		Vector4D tmp;
+		tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z; tmp.w = 1.0; 
+		return tmp; 
+	}
 	Vector4D& operator-=(const Vector4D& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
-	Vector4D& operator*(const double k) { x *= k; y *= k; z *= k; w = 1.0; return *this; }
+	Vector4D operator*(const double k) { 
+		Vector4D tmp;
+		tmp.x = x * k; tmp.y = y * k; tmp.z = z * k; tmp.w = 1.0;
+		return *this; 
+	}
 	Vector4D& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; return *this; }
 
 	double dot(const Vector4D* v) { return (x * v->x) + (y * v->y) + (z * v->z); }

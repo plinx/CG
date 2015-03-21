@@ -65,6 +65,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\LMath.h" />
     <ClInclude Include="inc\Matrix.h" />
     <ClInclude Include="inc\Pipeline.h" />
