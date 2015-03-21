@@ -7,6 +7,7 @@
 #include <vector>
 #include <ctime>
 #include <fstream>
+#include <sstream>
 
 #include "inc\LWin.h"
 #include "inc\Vec.h"

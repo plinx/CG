@@ -1,9 +1,2 @@
 ﻿  main.cpp
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2059: syntax error : '}'
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2143: syntax error : missing ';' before '}'
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2238: unexpected token(s) preceding ';'
-  TestCase.cpp
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2059: syntax error : '}'
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2143: syntax error : missing ';' before '}'
-h:\dreamcode\cg\raterization\raterization\inc\pipeline.h(46): error C2238: unexpected token(s) preceding ';'
-  Generating Code...
+  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

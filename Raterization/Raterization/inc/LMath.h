@@ -97,7 +97,7 @@ struct Plane3
 	Plane3() = default;
 	~Plane3() = default;
 	Plane3(Point3D point, Vector3D n, int normalize) : p(point), normal(n) {
-		if (normalize) normal.Normalize();
+		if (normalize) normal.normalize();
 	}
 	double Compute(Point3D* point) {
 		return (normal.x * (point->x - p.x) + 
@@ -105,7 +105,7 @@ struct Plane3
 			normal.z * (point->z - p.z));
 	}
 	int Intersect(Line3* line, double* t, Point3D* point) {
-		auto dot = normal.Dot(&line->vec);
+		auto dot = normal.dot(&line->vec);
 		if (abs(dot) <= EPSILON_E5) {
 			if (abs(this->Compute(&line->p0)) <= EPSILON_E5)
 				return Line_Intersect_Everywhere;

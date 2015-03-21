@@ -3,7 +3,7 @@
 
 std::ofstream TestLog("log/LMathlog.txt", std::ofstream::app);
 
-#define UT_Debug(judge, output) if (judge) { \
+#define UT_ASSERT(condition, output) if (condition) { \
 	std::cout << output << std::endl; \
 	TestLog << output << std::endl; \
 }
@@ -42,23 +42,23 @@ void VectorTest()
 	Vector2D v22(v21);
 	Vector2D v23 = v22;
 
-	v20.Zero();
-	UT_Debug(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.\n");
-	UT_Debug(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.\n");
-	UT_Debug(v22 != v21, "Vector2D constructor error.");
-	UT_Debug(v23 != v21, "Vector2D operator= error.");
+	v20.zero();
+	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.\n");
+	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.\n");
+	UT_ASSERT(v22 != v21, "Vector2D constructor error.");
+	UT_ASSERT(v23 != v21, "Vector2D operator= error.");
 	v21.x = 3; v21.y = 4;
-	UT_Debug(v21.Length() < 4.98, "Vector2D Length() error.\n");
-	v21.Normalize();
-	UT_Debug(v21.x < 0.598, "Vector2D Normalize() error.\n");
-	UT_Debug(v22.Dot(&v21) < 1.398, "Vector2D Dot() error.\n");
-	UT_Debug(v22.Cos(&v23) < 0.98, "Vector2D Cos() error.\n");
+	UT_ASSERT(v21.length() < 4.98, "Vector2D Length() error.\n");
+	v21.normalize();
+	UT_ASSERT(v21.x < 0.598, "Vector2D Normalize() error.\n");
+	UT_ASSERT(v22.dot(&v21) < 1.398, "Vector2D Dot() error.\n");
+	UT_ASSERT(v22.cos(&v23) < 0.98, "Vector2D Cos() error.\n");
 	v22 = v22 + v23;
-	UT_Debug(v22.x < 1.98 || v22.y < 1.98, "Vector2D operator+/+= error.\n");
+	UT_ASSERT(v22.x < 1.98 || v22.y < 1.98, "Vector2D operator+/+= error.\n");
 	v22 = v22 - v23;
-	UT_Debug(v22.x < 0.98 || v22.y < 0.98, "Vector2D operator-/-= error.\n");
+	UT_ASSERT(v22.x < 0.98 || v22.y < 0.98, "Vector2D operator-/-= error.\n");
 	v22 = v22 * 3;
-	UT_Debug(v22.x < 2.98 || v22.y < 2.98, "Vector2D operator*/*= error.\n");
+	UT_ASSERT(v22.x < 2.98 || v22.y < 2.98, "Vector2D operator*/*= error.\n");
 }
 
 	
