@@ -1,5 +1,20 @@
 #ifndef Camera_h
 #define Camera_h
+#define CAM_ROT_SEQ_XYZ  0
+#define CAM_ROT_SEQ_YXZ  1
+#define CAM_ROT_SEQ_XZY  2
+#define CAM_ROT_SEQ_YZX  3
+#define CAM_ROT_SEQ_ZYX  4
+#define CAM_ROT_SEQ_ZXY  5
+
+#define UVN_MODE_SIMPLE            0 
+#define UVN_MODE_SPHERICAL         1
+
+// general culling flags
+#define CULL_OBJECT_X_PLANE           0x0001 // cull on the x clipping planes
+#define CULL_OBJECT_Y_PLANE           0x0002 // cull on the y clipping planes
+#define CULL_OBJECT_Z_PLANE           0x0004 // cull on the z clipping planes
+#define CULL_OBJECT_XYZ_PLANES        (CULL_OBJECT_X_PLANE | CULL_OBJECT_Y_PLANE | CULL_OBJECT_Z_PLANE)
 
 struct Cam4DV1
 {
@@ -38,9 +53,9 @@ struct Cam4DV1
 		viewport_cx = (viewport_width - 1) / 2;
 		viewport_cy = (viewport_height - 1) / 2;
 		aspect_ratio = viewport_width / viewplane_height;
-		mcam.init(); 
-		mper.init();
-		mscr.init();
+		mcam.unit(); 
+		mper.unit();
+		mscr.unit();
 		viewplane_width = 2.0;
 		viewplane_height = 2.0 / aspect_ratio;
 		double tan_fov_div2 = tan(DEG_TO_RAD(fov / 2));
@@ -69,7 +84,302 @@ struct Cam4DV1
 			vn.init(0, -view_dist, -viewplane_width / 2.0);
 			bottom_plane.init(pt_origin, vn, 1);
 		}
+	}
+
+	void build_Euler(int cam_rot_seq)
+	{
+		Matrix4x4 mt_inv, mx_inv, my_inv, mz_inv, mrot, mtmp;
+		mt_inv.init(1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			-pos.x, -pos.y, -pos.z, 1);
+
+		double theta_x = dir.x;
+		double theta_y = dir.y;
+		double theta_z = dir.z;
+
+		double cos_theta = Fast_cos(theta_x);
+		double sin_theta = -Fast_sin(theta_x);
+		mx_inv.init(1, 0, 0, 0,
+			0, cos_theta, sin_theta, 0,
+			0, -sin_theta, cos_theta, 0,
+			0, 0, 0, 1);
+
+		cos_theta = Fast_cos(theta_y);
+		sin_theta = -Fast_sin(theta_y);
+		my_inv.init(cos_theta, 0, -sin_theta, 0,
+			0, 1, 0, 0,
+			sin_theta, 0, cos_theta, 0,
+			0, 0, 0, 1);
+
+		cos_theta = Fast_cos(theta_z);
+		sin_theta = -Fast_sin(theta_z);
+		mz_inv.init(cos_theta, sin_theta, 0, 0,
+			-sin_theta, cos_theta, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1);
+
+		switch (cam_rot_seq)
+		{
+		case CAM_ROT_SEQ_XYZ:
+			mtmp = mx_inv * my_inv;
+			mrot = mtmp * mz_inv;
+			break;
+		case CAM_ROT_SEQ_YXZ:
+			mtmp = my_inv * mx_inv;
+			mrot = mtmp * mz_inv;
+			break;
+		case CAM_ROT_SEQ_XZY:
+			mtmp = mx_inv * mz_inv;
+			mrot = mtmp * my_inv;
+			break;
+		case CAM_ROT_SEQ_YZX:
+			mtmp = my_inv * mz_inv;
+			mrot = mtmp * mx_inv;
+			break;
+		case CAM_ROT_SEQ_ZYX:
+			mtmp = mz_inv * my_inv;
+			mrot = mtmp * mx_inv;
+			break;
+		case CAM_ROT_SEQ_ZXY:
+			mtmp = mz_inv * mx_inv;
+			mrot = mtmp * my_inv;
+			break;
+		default:
+			break;
+		}
+		mcam = mt_inv * mrot;
+	}
+
+	void build_UVN(int mode)
+	{
+		Matrix4x4 mt_inv, mt_uvn;// , mtmp;
+		mt_inv.init(1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			-pos.x, -pos.y, -pos.z, 1);
+
+		if (mode == UVN_MODE_SPHERICAL)
+		{
+			double phi = dir.x;
+			double theta = dir.y;
+
+			double sin_phi = Fast_sin(phi);
+			double cos_phi = Fast_cos(phi);
+
+			double sin_theta = Fast_sin(theta);
+			double cos_theta = Fast_cos(theta);
+
+			target.x = -1.0 * sin_phi * sin_theta;
+			target.y = 1.0 * cos_phi;
+			target.z = 1.0 * sin_phi * cos_theta;
+		}
+		n = target - pos;
+		v.init(0, 1, 0);
+		u = v.cross(&n);
+		v = n.cross(&u);
+
+		u.normalize();
+		v.normalize();
+		n.normalize();
+
+		mt_uvn.init(u.x, v.x, n.x, 0,
+			u.y, v.y, n.y, 0,
+			u.z, v.z, n.z, 0,
+			0, 0, 0, 1);
+
+		mcam = mt_inv * mt_uvn;
+	}
+
+	void transformWorld(PObject4DV1 obj)
+	{
+		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
+		{
+			obj->vlist_trans[vertex] = mcam.mul(&obj->vlist_trans[vertex]);
+		}
+	}
+
+	void transformWorld(PRenderList4DV1 rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex] = mcam.mul(&curr_poly->tvlist[vertex]);
+			}
+		}
+	}
+
+	int cull(PObject4DV1 obj, int cull_flag)
+	{
+		Point4D sphere_pos;
+		sphere_pos = mcam.mul(&obj->world_pos);
+
+		if (cull_flag & CULL_OBJECT_Z_PLANE)
+		{
+			if (((sphere_pos.z - obj->max_radius) > far_clip) ||
+				((sphere_pos.z + obj->max_radius) < near_clip))
+			{
+				obj->state |= OBJECT4DV1_STATE_CULLED;
+				return 1;
+			}
+		}
+
+		if (cull_flag & CULL_OBJECT_X_PLANE)
+		{
+			double z_test = (0.5) * viewplane_width * sphere_pos.z / view_dist;
+			if (((sphere_pos.x - obj->max_radius) > z_test) ||
+				((sphere_pos.x + obj->max_radius) < -z_test))
+			{
+				obj->state |= OBJECT4DV1_STATE_CULLED;
+				return 1;
+			}
+		}
+
+		if (cull_flag & CULL_OBJECT_Y_PLANE)
+		{
+			double z_test = (0.5) * viewplane_height * sphere_pos.z / view_dist;
+			if (((sphere_pos.x - obj->max_radius) > z_test) ||
+				((sphere_pos.x + obj->max_radius) < -z_test))
+			{
+				obj->state |= OBJECT4DV1_STATE_CULLED;
+				return 1;
+			}
+		}
+		return 0;
+	}
+
+	void perspective(PObject4DV1 obj)
+	{
+		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
+		{
+			double z = obj->vlist_trans[vertex].z;
+
+			obj->vlist_trans[vertex].x = horizon * obj->vlist_trans[vertex].x / z;
+			obj->vlist_trans[vertex].y = vertical * obj->vlist_trans[vertex].y * aspect_ratio / z;
+		}
+	}
+
+	void perspective(PRenderList4DV1 rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				double z = curr_poly->tvlist[vertex].z;
+				curr_poly->tvlist[vertex].x = horizon * curr_poly->vlist[vertex].x / z;
+				curr_poly->tvlist[vertex].y = vertical * curr_poly->vlist[vertex].y * aspect_ratio / z;
+			}
+		}
+	}
+
+	void build_Perspective_Matrix4x4(PMatrix4x4 m)
+	{
+		m->init(horizon, 0, 0, 0,
+			0, vertical * aspect_ratio, 0, 0,
+			0, 0, 1, 1,
+			0, 0, 0, 0);
+	}
+
+	void toScreen(PObject4DV1 obj)
+	{
+		double alpha = 0.5 * viewport_width - 0.5;
+		double beta = 0.5 * viewport_height - 0.5;
+
+		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
+		{
+			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x;
+			obj->vlist_trans[vertex].x = beta + beta * obj->vlist_trans[vertex].y;
+		}
+	}
+
+	void build_Screen_Matrix4x4(PMatrix4x4 m)
+	{
+		double alpha = 0.5 * viewport_width - 0.5;
+		double beta = 0.5 * viewport_height - 0.5;
+		m->init(alpha, 0, 0, 0,
+			0, -beta, 0, 0,
+			alpha, beta, 1, 0,
+			0, 0, 0, 1);
+	}
+
+	void perspective_to_Renderlist(PRenderList4DV1 rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				continue;
+
+			double alpha = 0.5 * viewport_width - 0.5;
+			double beta = 0.5 * viewport_height - 0.5;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
+				curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
+			}
+
+		}
+	}
+
+	void to_Perspective_Screen(PObject4DV1 obj)
+	{
+		double alpha = 0.5 * viewport_width - 0.5;
+		double beta = 0.5 * viewport_height - 0.5;
+
+		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
+		{
+			double z = obj->vlist_trans[vertex].z;
+			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x /z;
+			obj->vlist_trans[vertex].x = beta + beta * obj->vlist_trans[vertex].y * aspect_ratio / z;
 		
+			obj->vlist_trans[vertex].x = obj->vlist_trans[vertex].x + alpha;
+			obj->vlist_trans[vertex].y = -obj->vlist_trans[vertex].y + beta;
+		}
+	}
+
+	void to_Perspective_Screen(PRenderList4DV1 rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				continue;
+
+			double alpha = 0.5 * viewport_width - 0.5;
+			double beta = 0.5 * viewport_height - 0.5;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex].x = curr_poly->tvlist[vertex].x + alpha;
+				curr_poly->tvlist[vertex].y = -curr_poly->tvlist[vertex].y + beta;
+			}
+		}
 	}
 };
 typedef Cam4DV1* PCam4DV1;

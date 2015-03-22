@@ -18,28 +18,28 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\LMath.h">
+    <ClInclude Include="inc\LWin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Vec.h">
+    <ClInclude Include="inc\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\LMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\Matrix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Quat.h">
+    <ClInclude Include="inc\Pipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\LWin.h">
+    <ClInclude Include="inc\Quat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\TestCase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Pipeline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\Camera.h">
+    <ClInclude Include="inc\Vec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +50,10 @@
     <ClCompile Include="inc\LWin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="inc\TestCase.cpp">
+    <ClCompile Include="inc\LMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="inc\LMath.cpp">
+    <ClCompile Include="inc\TestCase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

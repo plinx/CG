@@ -3,7 +3,7 @@
 
 #define OBJECT4DV1_MAX_VERTICES 1024
 #define OBJECT4DV1_MAX_POLYS 1024
-#define RENDERLIST4DV1_MAX_POLYS 32768
+#define RENDERLIST4DV1_MAX_POLYS 1024
 
 #define OBJECT4DV1_STATE_ACTIVE           0x0001
 #define OBJECT4DV1_STATE_VISIBLE          0x0002 
@@ -120,6 +120,30 @@ struct Object4DV1
 	~Object4DV1() = default;
 
 	void clear() { memset(this, 0, sizeof(Object4DV1)); }
+	void reset() 
+	{
+		state &= ~OBJECT4DV1_STATE_CULLED;
+
+		for (int poly = 0; poly < num_poly; poly++)
+		{
+			PPoly4DV1 curr_poly = &plist[poly];
+
+			if (!(curr_poly->state & POLY4DV1_STATE_ACTIVE))
+				continue;
+
+			state &= ~POLY4DV1_STATE_CLIPPED;
+			state &= ~POLY4DV1_STATE_BACKFACE;
+		}
+	}
+	void convert() 
+	{
+		for (int vertex = 0; vertex < num_vertices; vertex++)
+		{
+			vlist_trans[vertex].x /= vlist_trans[vertex].w;
+			vlist_trans[vertex].y /= vlist_trans[vertex].w;
+			vlist_trans[vertex].z /= vlist_trans[vertex].w;
+		}
+	}
 	double compute_radius() {
 		avg_radius = 0;
 		max_radius = 0;
@@ -198,6 +222,29 @@ struct RenderList4DV1
 	PPolyF4DV1 poly_ptrs[RENDERLIST4DV1_MAX_POLYS];
 	PolyF4DV1 poly_data[RENDERLIST4DV1_MAX_POLYS];
 
+	RenderList4DV1() = default;
+	~RenderList4DV1() = default;
+
+	void convert()
+	{
+		for (int poly = 0; poly < num_polys; poly++)
+		{
+			PPolyF4DV1 curr_poly = poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex].x /= curr_poly->tvlist[vertex].w;
+				curr_poly->tvlist[vertex].y /= curr_poly->tvlist[vertex].w;
+				curr_poly->tvlist[vertex].z /= curr_poly->tvlist[vertex].w;
+			}
+		}
+	}
 	void transform(PMatrix4x4 m, int select) 
 	{
 		switch (select)

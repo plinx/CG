@@ -1,7 +1,7 @@
 #ifndef LWin_h
 #define LWin_h
-#include <Windows.h>
-//#include "../stdafx.h"
+//#include <Windows.h>
+#include "../stdafx.h"
 
 class LWindow
 {
@@ -28,7 +28,8 @@ public:
 	HBITMAP CreateDIB();
 	WPARAM MsgLoop(void);
 
-	void Render();
+	void Init();
+	void Render(HBITMAP& hBitmap);
 };
 
 #endif

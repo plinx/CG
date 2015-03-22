@@ -47,7 +47,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,12 +67,12 @@
   <ItemGroup>
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\LMath.h" />
+    <ClInclude Include="inc\LWin.h" />
     <ClInclude Include="inc\Matrix.h" />
     <ClInclude Include="inc\Pipeline.h" />
     <ClInclude Include="inc\Quat.h" />
     <ClInclude Include="inc\TestCase.h" />
     <ClInclude Include="inc\Vec.h" />
-    <ClInclude Include="inc\LWin.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
