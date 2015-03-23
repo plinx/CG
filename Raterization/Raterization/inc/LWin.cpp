@@ -167,14 +167,14 @@ void LWindow::Render(HBITMAP& hBitmap)
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
-	Cam4DV1 camera;
-	RenderList4DV1 rlist;
-	PolyF4DV1 poly1;
+	Camera camera;
+	RenderList4D rlist;
+	PolyFace4D poly1;
 	Point4D poly_pos(0, 0, 100, 1);
 
 	Build_SinCos_Tables();
 
-	poly1.state = POLY4DV1_STATE_ACTIVE;
+	poly1.state = POLY4D_STATE_ACTIVE;
 	poly1.attr = 0;
 	poly1.color = RGB(0, 0, 0);
 
@@ -196,7 +196,7 @@ void LWindow::Render(HBITMAP& hBitmap)
 	poly1.next = NULL;
 	poly1.prev = NULL;
 
-	camera = Cam4DV1(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 480, 480);
+	camera = Camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 480, 480);
 
 	static Matrix4x4 mrot;
 	static double ang_y = 0;

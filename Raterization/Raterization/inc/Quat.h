@@ -14,7 +14,9 @@ struct Quat
 
 	Quat(const Quat& q) { *this = q; }
 	void zero() { real = 0; x = 0; y = 0; z = 0; }
-	void From_Vector3DTheta(Vector3D* v, double theta) {
+	//void From_Vector3DTheta(Vector3D* v, double theta)
+	void from(Vector3D* v, double theta)
+	{
 		auto theta_div2 = theta / 2;
 		auto sin_theta = sin(theta_div2);
 		x = sin_theta * v->x;
@@ -22,7 +24,9 @@ struct Quat
 		z = sin_theta * v->z;
 		real = cos(theta_div2);
 	}
-	void To_Vector3DTheta(Vector3D* v, double* theta) {
+	//void To_Vector3DTheta(Vector3D* v, double* theta)
+	void to(Vector3D* v, double* theta)
+	{
 		*theta = acos(real);
 		auto theta_inv = 1.0 / sin(*theta);
 		v->x = x * theta_inv;
@@ -30,7 +34,9 @@ struct Quat
 		v->z = z * theta_inv;
 		*theta *= 2;
 	}
-	void From_ThetaXYZ(double thetax, double thetay, double thetaz) {
+	//void From_ThetaXYZ(double thetax, double thetay, double thetaz)
+	void from(double thetax, double thetay, double thetaz)
+	{
 		auto cosx_div2 = 0.5 * cos(thetax);
 		auto cosy_div2 = 0.5 * cos(thetay);
 		auto cosz_div2 = 0.5 * cos(thetaz);
@@ -44,21 +50,24 @@ struct Quat
 		y = cosx_div2 * siny_div2 * cosz_div2 + sinx_div2 * cosy_div2 * sinz_div2;
 		z = cosx_div2 * cosy_div2 * sinz_div2 - sinx_div2 * siny_div2 * cosz_div2;
 	}
-	void Conjugate(Quat* q) { q->real = real; q->x = -x; q->y = -y; q->z = -z; }
-	Quat Conjugate() { Quat q; q.real = real; q.x = -x; q.y = -y; q.z = -z; return q; }
-	double Norm() { return sqrt(real * real + x * x + y * y + z * z); }
-	double Norm2() { return (real * real + x * x + y * y + z * z); }
-	void Normalize() {
-		auto norm_inv = 1.0 / this->Norm();
+	void conjugate(Quat* q) { q->real = real; q->x = -x; q->y = -y; q->z = -z; }
+	Quat conjugate() { Quat q; q.real = real; q.x = -x; q.y = -y; q.z = -z; return q; }
+	double norm() { return sqrt(real * real + x * x + y * y + z * z); }
+	double norm2() { return (real * real + x * x + y * y + z * z); }
+	void normalize()
+	{
+		auto norm_inv = 1.0 / this->norm();
 		real *= norm_inv; x *= norm_inv; y *= norm_inv; z *= norm_inv;
 	}
-	void Unit_Inverse() { x = -x; y = -y; z = -z; }
-	void Inverse() {
-		auto norm2_inv = 1.0 / this->Norm2();
+	void unit_inverse() { x = -x; y = -y; z = -z; }
+	void inverse()
+	{
+		auto norm2_inv = 1.0 / this->norm2();
 		real *= norm2_inv; x *= norm2_inv; y *= norm2_inv; z *= norm2_inv;
 	}
-	void Scale(const double k) { real *= k; x *= k; y *= k; z *= k; }
-	void Triple_Product(const Quat& q1, const Quat& q2) {
+	void scale(const double k) { real *= k; x *= k; y *= k; z *= k; }
+	void triple_product(const Quat& q1, const Quat& q2)
+	{
 		*this *= q1; *this *= q2;
 	}
 
@@ -70,7 +79,8 @@ struct Quat
 	Quat& operator*(const Quat& q) { *this *= q; }
 	Quat& operator*(const double k) { *this *= k; }
 	Quat& operator*=(const double k) { real *= k; x *= x; y *= y; z *= z; }
-	Quat& operator*=(const Quat& q) { 
+	Quat& operator*=(const Quat& q) 
+	{ 
 		Quat tmp;
 		tmp.real = real * q.real - x * q.x - y * q.y - z * q.z;
 		tmp.x = real * q.x + x * q.real + y * q.z - z * q.y;

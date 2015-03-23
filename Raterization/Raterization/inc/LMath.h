@@ -15,10 +15,10 @@
 
 enum 
 {
-	Line_No_Intersect = 0,
-	Line_Intersect_In_Segment,
-	Line_Intersect_Out_Segment,
-	Line_Intersect_Everywhere
+	LINE_NO_INTERSECT,
+	LINE_INTERSECT_IN_SEGMENT,
+	LINE_INTERSECT_OUT_SEGMENT,
+	LINE_INTERSECT_EVERYWHERE
 };
 
 extern double sin_table[361];
@@ -41,27 +41,30 @@ struct Line2D
 	Line2D() = default;
 	~Line2D() = default;
 	Line2D(Point2D pb, Point2D pe, Vector2D v) : p0(pb), p1(pe), vec(v) {}
-	void Compute(double t, Point2D* point) {
+	void compute(double t, Point2D* point) 
+	{
 		point->x = p0.x + vec.x * t;
 		point->y = p0.y + vec.y * t;
 	}
-	int Intersect(Line2D* line, double *t1, double *t2) {
+	int intersect(Line2D* line, double *t1, double *t2)
+	{
 		auto det_line = (vec.x * line->vec.y - vec.y * line->vec.x);
 		if (abs(det_line) <= EPSILON_E5)
-			return Line_No_Intersect;
+			return LINE_NO_INTERSECT;
 
 		*t1 = (vec.x * (p0.y - line->p0.y) - vec.y * (p0.x - line->p0.x)) / det_line;
 		*t2 = (vec.x * (p1.y - line->p1.y) - vec.y * (p1.x - line->p1.x)) / det_line;
 
 		if ((0 <= *t1) && (*t1 <= 1) && (0 <= *t2) && (*t2 <= 0))
-			return Line_Intersect_In_Segment;
+			return LINE_INTERSECT_IN_SEGMENT;
 		else
-			return Line_Intersect_Out_Segment;
+			return LINE_INTERSECT_OUT_SEGMENT;
 	}
-	int Intersect(Line2D* line, Point2D* point) {
+	int intersect(Line2D* line, Point2D* point)
+	{
 		auto det_line = (vec.x * line->vec.y - vec.y * line->vec.x);
 		if (abs(det_line) <= EPSILON_E5)
-			return Line_No_Intersect;
+			return LINE_NO_INTERSECT;
 
 		auto t1 = (vec.x * (p0.y - line->p0.y) - vec.y * (p0.x - line->p0.x)) / det_line;
 		auto t2 = (vec.x * (p1.y - line->p1.y) - vec.y * (p1.x - line->p1.x)) / det_line;
@@ -69,9 +72,9 @@ struct Line2D
 		point->y = p0.y + vec.y * t1;
 
 		if ((0 <= t1) && (t1 <= 1) && (0 <= t2) && (t2 <= 0))
-			return Line_Intersect_In_Segment;
+			return LINE_INTERSECT_IN_SEGMENT;
 		else
-			return Line_Intersect_Out_Segment;
+			return LINE_INTERSECT_OUT_SEGMENT;
 	}
 };
 typedef Line2D* PLine2D;
@@ -84,10 +87,12 @@ struct Line3D
 	Line3D() = default;
 	~Line3D() = default;
 	Line3D(Point3D pb, Point3D pe, Vector3D v) : p0(pb), p1(pe), vec(v) {}
-	void init(Point3D pb, Point3D pe, Vector3D v) {
+	void init(Point3D pb, Point3D pe, Vector3D v)
+	{
 		p0 = pb; p1 = pe; vec = v;
 	}
-	void Compute(double t, Point3D* point) {
+	void compute(double t, Point3D* point)
+	{
 		point->x = p0.x + vec.x * t;
 		point->y = p0.y + vec.y * t;
 		point->z = p0.z + vec.z * t;
@@ -102,25 +107,30 @@ struct Plane3D
 
 	Plane3D() = default;
 	~Plane3D() = default;
-	Plane3D(Point3D point, Vector3D n, int normalize) : p(point), normal(n) {
+	Plane3D(Point3D point, Vector3D n, int normalize) : p(point), normal(n)
+	{
 		if (normalize) normal.normalize();
 	}
-	void init(Point3D point, Vector3D n, int normalize) {
+	void init(Point3D point, Vector3D n, int normalize)
+	{
 		p = point; normal = n; 
 		if (normalize) normal.normalize();
 	}
-	double Compute(Point3D* point) {
+	double compute(Point3D* point)
+	{
 		return (normal.x * (point->x - p.x) + 
 			normal.y * (point->y - p.y) + 
 			normal.z * (point->z - p.z));
 	}
-	int Intersect(Line3D* line, double* t, Point3D* point) {
+	int intersect(Line3D* line, double* t, Point3D* point)
+	{
 		auto dot = normal.dot(&line->vec);
-		if (abs(dot) <= EPSILON_E5) {
-			if (abs(this->Compute(&line->p0)) <= EPSILON_E5)
-				return Line_Intersect_Everywhere;
+		if (abs(dot) <= EPSILON_E5)
+		{
+			if (abs(this->compute(&line->p0)) <= EPSILON_E5)
+				return LINE_INTERSECT_EVERYWHERE;
 			else
-				return Line_No_Intersect;
+				return LINE_NO_INTERSECT;
 		}
 
 		*t = -(normal.x * line->p0.x + normal.y * line->p0.y + normal.z * line->p0.z
@@ -130,9 +140,9 @@ struct Plane3D
 		point->z = line->p0.z + line->vec.z * (*t);
 
 		if (0.0 <= *t && *t <= 1.0)
-			return Line_Intersect_In_Segment;
+			return LINE_INTERSECT_IN_SEGMENT;
 		else
-			return Line_Intersect_Out_Segment;
+			return LINE_INTERSECT_OUT_SEGMENT;
 	}
 };
 
@@ -145,7 +155,8 @@ struct Polar2D
 
 	Polar2D(double dr, double dt) : r(dr), theta(dt) {}
 	Polar2D(const Polar2D& p) { *this = p; }
-	Polar2D& operator=(const Polar2D& p) {
+	Polar2D& operator=(const Polar2D& p)
+	{
 		r = p.r; theta = p.theta;
 	}
 };

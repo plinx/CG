@@ -1,14 +1,20 @@
 #ifndef Camera_h
 #define Camera_h
-#define CAM_ROT_SEQ_XYZ  0
-#define CAM_ROT_SEQ_YXZ  1
-#define CAM_ROT_SEQ_XZY  2
-#define CAM_ROT_SEQ_YZX  3
-#define CAM_ROT_SEQ_ZYX  4
-#define CAM_ROT_SEQ_ZXY  5
+enum 
+{
+	CAM_ROT_SEQ_XYZ,
+	CAM_ROT_SEQ_YXZ,
+	CAM_ROT_SEQ_XZY,
+	CAM_ROT_SEQ_YZX,
+	CAM_ROT_SEQ_ZYX,
+	CAM_ROT_SEQ_ZXY
+};
 
-#define UVN_MODE_SIMPLE            0 
-#define UVN_MODE_SPHERICAL         1
+enum 
+{
+	UVN_MODE_SIMPLE,
+	UVN_MODE_SPHERICAL
+};
 
 // general culling flags
 #define CULL_OBJECT_X_PLANE           0x0001 // cull on the x clipping planes
@@ -16,7 +22,7 @@
 #define CULL_OBJECT_Z_PLANE           0x0004 // cull on the z clipping planes
 #define CULL_OBJECT_XYZ_PLANES        (CULL_OBJECT_X_PLANE | CULL_OBJECT_Y_PLANE | CULL_OBJECT_Z_PLANE)
 
-struct Cam4DV1
+struct Camera
 {
 	int state;
 	int attr;
@@ -40,9 +46,9 @@ struct Cam4DV1
 
 	Matrix4x4 mcam, mper, mscr;
 
-	Cam4DV1() = default;
-	~Cam4DV1() = default;
-	Cam4DV1(int a, Point4D p, Vector4D d, Point4D t,
+	Camera() = default;
+	~Camera() = default;
+	Camera(int a, Point4D p, Vector4D d, Point4D t,
 		double nc, double fc, double f, double w, double h)
 		: attr(a), pos(p), dir(d), target(t),
 		near_clip(nc), far_clip(fc), fov(f), viewport_width(w), viewport_height(h)
@@ -191,7 +197,7 @@ struct Cam4DV1
 		mcam = mt_inv * mt_uvn;
 	}
 
-	void transformWorld(PObject4DV1 obj)
+	void transformWorld(PModel4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -199,16 +205,16 @@ struct Cam4DV1
 		}
 	}
 
-	void transformWorld(PRenderList4DV1 rlist)
+	void transformWorld(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
-			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
-				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
-				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
-				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
 			for (int vertex = 0; vertex < 3; vertex++)
@@ -218,7 +224,7 @@ struct Cam4DV1
 		}
 	}
 
-	int cull(PObject4DV1 obj, int cull_flag)
+	int cull(PModel4D obj, int cull_flag)
 	{
 		Point4D sphere_pos;
 		sphere_pos = mcam.mul(&obj->world_pos);
@@ -228,7 +234,7 @@ struct Cam4DV1
 			if (((sphere_pos.z - obj->max_radius) > far_clip) ||
 				((sphere_pos.z + obj->max_radius) < near_clip))
 			{
-				obj->state |= OBJECT4DV1_STATE_CULLED;
+				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
 			}
 		}
@@ -239,7 +245,7 @@ struct Cam4DV1
 			if (((sphere_pos.x - obj->max_radius) > z_test) ||
 				((sphere_pos.x + obj->max_radius) < -z_test))
 			{
-				obj->state |= OBJECT4DV1_STATE_CULLED;
+				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
 			}
 		}
@@ -250,14 +256,14 @@ struct Cam4DV1
 			if (((sphere_pos.x - obj->max_radius) > z_test) ||
 				((sphere_pos.x + obj->max_radius) < -z_test))
 			{
-				obj->state |= OBJECT4DV1_STATE_CULLED;
+				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
 			}
 		}
 		return 0;
 	}
 
-	void perspective(PObject4DV1 obj)
+	void perspective(PModel4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -268,16 +274,16 @@ struct Cam4DV1
 		}
 	}
 
-	void perspective(PRenderList4DV1 rlist)
+	void perspective(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
-			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
-				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
-				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
-				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
 			for (int vertex = 0; vertex < 3; vertex++)
@@ -297,7 +303,7 @@ struct Cam4DV1
 			0, 0, 0, 0);
 	}
 
-	void toScreen(PObject4DV1 obj)
+	void toScreen(PModel4D obj)
 	{
 		double alpha = 0.5 * viewport_width - 0.5;
 		double beta = 0.5 * viewport_height - 0.5;
@@ -319,16 +325,16 @@ struct Cam4DV1
 			0, 0, 0, 1);
 	}
 
-	void perspective_to_Renderlist(PRenderList4DV1 rlist)
+	void perspective_to_Renderlist(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
-			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
-				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
-				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
-				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
 			double alpha = 0.5 * viewport_width - 0.5;
@@ -343,7 +349,7 @@ struct Cam4DV1
 		}
 	}
 
-	void to_Perspective_Screen(PObject4DV1 obj)
+	void to_Perspective_Screen(PModel4D obj)
 	{
 		double alpha = 0.5 * viewport_width - 0.5;
 		double beta = 0.5 * viewport_height - 0.5;
@@ -359,16 +365,16 @@ struct Cam4DV1
 		}
 	}
 
-	void to_Perspective_Screen(PRenderList4DV1 rlist)
+	void to_Perspective_Screen(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
-			PPolyF4DV1 curr_poly = rlist->poly_ptrs[poly];
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
-				!(curr_poly->state & POLY4DV1_STATE_ACTIVE) ||
-				(curr_poly->state & POLY4DV1_STATE_CLIPPED) ||
-				(curr_poly->state & POLY4DV1_STATE_BACKFACE))
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
 			double alpha = 0.5 * viewport_width - 0.5;
@@ -382,6 +388,6 @@ struct Cam4DV1
 		}
 	}
 };
-typedef Cam4DV1* PCam4DV1;
+typedef Camera* PCamera;
 
 #endif
