@@ -27,6 +27,7 @@ struct Vector2D
 	}
 
 	void zero() { x = y = 0.0; }
+	void init(int ix, int iy) { x = ix; y = iy; }
 	double length() const { return sqrt(x*x + y*y); }
 	void normalize()
 	{
@@ -45,8 +46,7 @@ struct Vector2D
 		tmp.x = x + v.x; tmp.y = y + v.y;
 		return tmp;
 	}
-	Vector2D& operator+=(const Vector2D& v)
-	{ x += v.x; y += v.y; return *this; }
+	Vector2D& operator+=(const Vector2D& v) { x += v.x; y += v.y; return *this; }
 	Vector2D operator-(const Vector2D& v)
 	{ 
 		Vector2D tmp;
@@ -185,10 +185,7 @@ struct Vector4D
 	}
 
 	void zero() { x = y = z = 0.0; w = 1.0; }
-	void init(double dx, double dy, double dz)
-	{
-		x = dx; y = dy; z = dz; w = 1.0;
-	}
+	void init(double dx, double dy, double dz) { x = dx; y = dy; z = dz; w = 1.0; }
 	double length() const { return sqrt(x*x + y*y + z*z); }
 	double Fast_length()
 	{

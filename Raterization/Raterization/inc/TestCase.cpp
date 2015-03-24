@@ -17,7 +17,7 @@ void AutoTest()
 	TestLog << "******* AutoTest start : ";
 	TestLog << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
 	TestLog << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	TestLog << " *******\n";
+	TestLog << " *******" << std::endl;
 
 	// Test Cases
 	VectorTest();
@@ -29,74 +29,65 @@ void AutoTest()
 	TestLog << "******* AutoTest start : ";
 	TestLog << time.wYear << "/" << time.wMonth << "/" << time.wDay << " ";
 	TestLog << time.wHour << ":" << time.wMinute << ":" << time.wSecond;
-	TestLog << " *******\n";
+	TestLog << " *******" << std::endl;
 
 	TestLog.close();
 }
 
 void VectorTest()
 {
-	// Vector2D test : 4
+	// Vector2D unittest
 	Vector2D v20;
 	Vector2D v21(1.0, 1.0);
 	Vector2D v22(v21);
 	Vector2D v23 = v22;
 
-	v20.zero();
-	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.\n");
-	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.\n");
+	v20.init(0, 0);
+	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.");
+	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.");
 	UT_ASSERT(v22 != v21, "Vector2D constructor error.");
 	UT_ASSERT(v23 != v21, "Vector2D operator= error.");
-	v21.x = 3; v21.y = 4;
-	UT_ASSERT(v21.length() < 4.98, "Vector2D Length() error.\n");
+	v21.zero();
+	UT_ASSERT(v21.x != 0 || v21.y != 0, "Vector2D zero() error.");
+	v21.init(3, 4);
+	UT_ASSERT(v21.length() < 4.98 || 5.01 < v21.length(), "Vector2D Length() error.");
 	v21.normalize();
-	UT_ASSERT(v21.x < 0.598, "Vector2D Normalize() error.\n");
-	UT_ASSERT(v22.dot(&v21) < 1.398, "Vector2D Dot() error.\n");
-	UT_ASSERT(v22.cos(&v23) < 0.98, "Vector2D Cos() error.\n");
+	UT_ASSERT(v21.x < 0.598 || 0.601 < v21.x, "Vector2D Normalize() error.");
+	UT_ASSERT(v22.dot(&v21) < 1.398 || 1.401 < v22.dot(&v21), "Vector2D Dot() error.");
+	UT_ASSERT(v22.cos(&v23) < 0.98 || 1.01 < v22.cos(&v23), "Vector2D Cos() error.");
 	v22 = v22 + v23;
-	UT_ASSERT(v22.x < 1.98 || v22.y < 1.98, "Vector2D operator+/+= error.\n");
+	UT_ASSERT(v22.x < 1.98 || 2.01 < v22.x  || v22.y < 1.98 || 2.01 < v22.y, "Vector2D operator+ error.");
+	v22 += v23;
+	UT_ASSERT(v22.x < 2.98 || 3.01 < v22.x || v22.y < 2.98 || 3.01 < v22.y, "Vector2D operator+= error.");
 	v22 = v22 - v23;
-	UT_ASSERT(v22.x < 0.98 || v22.y < 0.98, "Vector2D operator-/-= error.\n");
+	UT_ASSERT(v22.x < 1.98 || 2.01 < v22.x || v22.y < 1.98 || 2.01 < v22.y, "Vector2D operator- error.");
+	v22 -= v23;
+	UT_ASSERT(v22.x < 0.98 || 1.01 < v22.x || v22.y < 0.98 || 1.01 < v22.y, "Vector2D operator-= error.");
 	v22 = v22 * 3;
-	UT_ASSERT(v22.x < 2.98 || v22.y < 2.98, "Vector2D operator*/*= error.\n");
-}
+	UT_ASSERT(v22.x < 2.98 || 3.01 < v22.x || v22.y < 2.98 || 3.01 < v22.y, "Vector2D operator* error.");
+	v22 *= 3;
+	UT_ASSERT(v22.x < 8.98 || 9.01 < v22.x || v22.y < 8.98 || 9.01 < v22.y, "Vector2D operator*= error.");
 
-	
-	// Vector3D test : 4
-	/*Vector3D v31(1.0, 1.0, 1.0);
+	// Vector3D test 
+	Vector3D v30;
+	Vector3D v31(1.0, 1.0, 1.0);
 	Vector3D v32(v31);
 	Vector3D v33 = v31;
-	
-	if (v31.x != 1 || v32.y != 1 || v32.z != 1)
-	{
-		std::cout << "Vector3D constructor error." << std::endl;
-		log << "Vector3D constructor error." << std::endl;
-		err++;
-	}
 
-	if (v32 != v31)
-	{
-		std::cout << "Vector3D copy constructor error." << std::endl;
-		log << "Vector3D copy constructor error." << std::endl;
-		err++;
-	}
+	v30.init(0, 0, 0);
+	UT_ASSERT(v30.x != 0 || v30.y != 0 || v30.z != 0, "Vector3D default constructor error.");
+	UT_ASSERT(v31.x != 1 || v31.y != 1 || v31.z != 1, "Vector3D assign constructor error.");
+	UT_ASSERT(v32 != v31, "Vector3D copy constructor error.");
+	UT_ASSERT(v33 != v31, "Vector3D operator= error.");
 
-	if (v33 != v31)
-	{
-		std::cout << "Vector3D operator= error." << std::endl;
-		log << "Vector3D operator= error." << std::endl;
-		err++;
-		
-	}
+	v31.zero();
+	UT_ASSERT(v31.x != 0 || v31.y != 0 || v31.z != 0, "Vector3D zero() error.");
+	v31.init(1.732, 1.732, 1.732);
+	UT_ASSERT(v31.length() < 2.98 || 3.01 < v31.length(), "Vector3D length() error.");
 
-	v31.Zero();
-	if (v31.x != 0 || v31.y != 0 || v31.z != 0)
-	{
-		std::cout << "Vector3D Zero error." << std::endl;
-		log << "Vector3D Zero error." << std::endl;
-		err++;
-	}
+}
 
+	/*
 	// Vector4D test : 4
 	Vector4D v41(1.0, 1.0, 1.0, 1.0);
 	Vector4D v42(v41);
@@ -155,7 +146,7 @@ void VectorTest()
 
 	log << "VectorTest => Total : " << total;
 	log << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)\n";
+	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)";
 }
 
 void MatrixTest(std::ofstream& log)

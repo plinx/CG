@@ -1,16 +1,16 @@
 #include "stdafx.h"
 
-/*std::ofstream RunLog("log/Runlog.txt", std::ofstream::app);
+std::ofstream RunLog("log/Runlog.txt", std::ofstream::app);
 
 #define RUN_ASSERT(condition, output) if (condition) { \
 	std::cout << output << std::endl; \
 	RunLog << output << std::endl; \
-}*/
+}
 
-#undef UNITTEST_MODE 
+#define UNITTEST_MODE 
 
-//extern double sin_table[361];
-//extern double cos_table[361];
+extern double sin_table[361];
+extern double cos_table[361];
 
 #ifndef UNITTEST_MODE
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -28,19 +28,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 int main()
 {
-	//AutoTest();
-	Point4D cam_pos(0, 0, -100, 1);
+	AutoTest();
+	/*Point4D cam_pos(0, 0, -100, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
-	Cam4DV1 camera;
-	RenderList4DV1 rlist;
-	PolyF4DV1 poly1;
+	Camera camera;
+	RenderList4D rlist;
+	PolyFace4D poly1;
 	Point4D poly_pos(0, 0, 100, 1);
 
 	Build_SinCos_Tables();
 
-	poly1.state = POLY4DV1_STATE_ACTIVE;
+	poly1.state = POLY4D_STATE_ACTIVE;
 	poly1.attr = 0;
 	poly1.color = RGB(0, 0, 0);
 
@@ -62,7 +62,7 @@ int main()
 	poly1.next = NULL;
 	poly1.prev = NULL;
 
-	camera = Cam4DV1(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 480, 480);
+	camera = Camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 480, 480);
 	
 	for (int i = 0; i < 300; i++)
 	{
@@ -82,7 +82,7 @@ int main()
 		std::cout << mrot.v[0][0] << " " << mrot.v[0][1] << " " << mrot.v[0][2] << " " << mrot.v[0][3] << std::endl
 			<< mrot.v[1][0] << " " << mrot.v[1][1] << " " << mrot.v[1][2] << " " << mrot.v[1][3] << std::endl
 			<< mrot.v[2][0] << " " << mrot.v[2][1] << " " << mrot.v[2][2] << " " << mrot.v[2][3] << std::endl
-			<< mrot.v[3][0] << " " << mrot.v[3][1] << " " << mrot.v[3][2] << " " << mrot.v[3][3] << std::endl;*/
+			<< mrot.v[3][0] << " " << mrot.v[3][1] << " " << mrot.v[3][2] << " " << mrot.v[3][3] << std::endl;
 		if (++ang_y >= 360.0) ang_y = 0;
 		rlist.transform(&mrot, TRANSFORM_LOCAL_ONLY);
 		rlist.transformWorld(&poly_pos);
@@ -103,7 +103,7 @@ int main()
 			<< rlist.poly_data[0].vlist[2].y << " "
 			<< rlist.poly_data[0].vlist[2].z << std::endl;
 
-	}
+	}*/
 
 	return 0;
 }

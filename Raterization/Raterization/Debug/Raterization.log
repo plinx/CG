@@ -1,14 +1,2 @@
-﻿  LMath.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  TestCase.cpp
-  LWin.cpp
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(227): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(228): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(229): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(230): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(231): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(232): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
-  Generating Code...
+﻿  TestCase.cpp
   Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe
