@@ -11,3 +11,5 @@ Vector3D default constructor error.
 ******* AutoTest start : 2015/3/25 2:46:25 *******
 ******* AutoTest start : 2015/3/25 2:47:40 *******
 ******* AutoTest start : 2015/3/25 2:47:40 *******
+******* AutoTest start : 2015/3/27 2:47:50 *******
+******* AutoTest start : 2015/3/27 2:47:50 *******

@@ -1,2 +1,8 @@
 ﻿  TestCase.cpp
-  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe
+h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(99): error C2660: 'Vector3D::init' : function does not take 2 arguments
+          h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(80) : see reference to function template instantiation 'void VectorTest<Vector3D>(T &,T &,T &,T &)' being compiled
+          with
+          [
+              T=Vector3D
+          ]
+h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(106): error C2660: 'Vector3D::init' : function does not take 2 arguments

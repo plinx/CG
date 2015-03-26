@@ -42,6 +42,8 @@ void VectorTest()
 	Vector2D v22(v21);
 	Vector2D v23 = v22;
 
+	VectorTest(v20, v21, v22, v23);
+
 	v20.init(0, 0);
 	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.");
 	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.");
@@ -73,6 +75,8 @@ void VectorTest()
 	Vector3D v31(1.0, 1.0, 1.0);
 	Vector3D v32(v31);
 	Vector3D v33 = v31;
+
+	VectorTest(v30, v31, v32, v33);
 
 	v30.init(0, 0, 0);
 	UT_ASSERT(v30.x != 0 || v30.y != 0 || v30.z != 0, "Vector3D default constructor error.");
