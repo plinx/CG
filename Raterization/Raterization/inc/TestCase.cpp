@@ -42,8 +42,6 @@ void VectorTest()
 	Vector2D v22(v21);
 	Vector2D v23 = v22;
 
-	VectorTest(v20, v21, v22, v23);
-
 	v20.init(0, 0);
 	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.");
 	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.");
@@ -52,31 +50,29 @@ void VectorTest()
 	v21.zero();
 	UT_ASSERT(v21.x != 0 || v21.y != 0, "Vector2D zero() error.");
 	v21.init(3, 4);
-	UT_ASSERT(v21.length() < 4.98 || 5.01 < v21.length(), "Vector2D Length() error.");
+	UT_ASSERT(v21.length() < 4.99 || 5.01 < v21.length(), "Vector2D length() error.");
 	v21.normalize();
-	UT_ASSERT(v21.x < 0.598 || 0.601 < v21.x, "Vector2D Normalize() error.");
-	UT_ASSERT(v22.dot(&v21) < 1.398 || 1.401 < v22.dot(&v21), "Vector2D Dot() error.");
-	UT_ASSERT(v22.cos(&v23) < 0.98 || 1.01 < v22.cos(&v23), "Vector2D Cos() error.");
+	UT_ASSERT(v21.x < 0.599 || 0.601 < v21.x, "Vector2D normalize() error.");
+	UT_ASSERT(v22.dot(&v21) < 1.399 || 1.401 < v22.dot(&v21), "Vector2D dot() error.");
+	UT_ASSERT(v22.cos(&v23) < 0.99 || 1.01 < v22.cos(&v23), "Vector2D cos() error.");
 	v22 = v22 + v23;
-	UT_ASSERT(v22.x < 1.98 || 2.01 < v22.x  || v22.y < 1.98 || 2.01 < v22.y, "Vector2D operator+ error.");
+	UT_ASSERT(v22.x < 1.99 || 2.01 < v22.x  || v22.y < 1.99 || 2.01 < v22.y, "Vector2D operator+ error.");
 	v22 += v23;
-	UT_ASSERT(v22.x < 2.98 || 3.01 < v22.x || v22.y < 2.98 || 3.01 < v22.y, "Vector2D operator+= error.");
+	UT_ASSERT(v22.x < 2.99 || 3.01 < v22.x || v22.y < 2.99 || 3.01 < v22.y, "Vector2D operator+= error.");
 	v22 = v22 - v23;
-	UT_ASSERT(v22.x < 1.98 || 2.01 < v22.x || v22.y < 1.98 || 2.01 < v22.y, "Vector2D operator- error.");
+	UT_ASSERT(v22.x < 1.99 || 2.01 < v22.x || v22.y < 1.99 || 2.01 < v22.y, "Vector2D operator- error.");
 	v22 -= v23;
-	UT_ASSERT(v22.x < 0.98 || 1.01 < v22.x || v22.y < 0.98 || 1.01 < v22.y, "Vector2D operator-= error.");
+	UT_ASSERT(v22.x < 0.99 || 1.01 < v22.x || v22.y < 0.99 || 1.01 < v22.y, "Vector2D operator-= error.");
 	v22 = v22 * 3;
-	UT_ASSERT(v22.x < 2.98 || 3.01 < v22.x || v22.y < 2.98 || 3.01 < v22.y, "Vector2D operator* error.");
+	UT_ASSERT(v22.x < 2.99 || 3.01 < v22.x || v22.y < 2.99 || 3.01 < v22.y, "Vector2D operator* error.");
 	v22 *= 3;
-	UT_ASSERT(v22.x < 8.98 || 9.01 < v22.x || v22.y < 8.98 || 9.01 < v22.y, "Vector2D operator*= error.");
+	UT_ASSERT(v22.x < 8.99 || 9.01 < v22.x || v22.y < 8.99 || 9.01 < v22.y, "Vector2D operator*= error.");
 
 	// Vector3D test 
 	Vector3D v30;
 	Vector3D v31(1.0, 1.0, 1.0);
 	Vector3D v32(v31);
 	Vector3D v33 = v31;
-
-	VectorTest(v30, v31, v32, v33);
 
 	v30.init(0, 0, 0);
 	UT_ASSERT(v30.x != 0 || v30.y != 0 || v30.z != 0, "Vector3D default constructor error.");
@@ -87,7 +83,15 @@ void VectorTest()
 	v31.zero();
 	UT_ASSERT(v31.x != 0 || v31.y != 0 || v31.z != 0, "Vector3D zero() error.");
 	v31.init(1.732, 1.732, 1.732);
-	UT_ASSERT(v31.length() < 2.98 || 3.01 < v31.length(), "Vector3D length() error.");
+	UT_ASSERT(v31.length() < 2.99 || 3.01 < v31.length(), "Vector3D length() error.");
+	v31.normalize();
+	UT_ASSERT(v31.x < 0.576 || 0.578 < v31.x, "Vector3D normalize() error.");
+	UT_ASSERT(v31.dot(&v32) < 1.731 || 1.733 < v31.dot(&v32), "Vector3D dot() error.");
+	UT_ASSERT(v31.cos(&v32) < 0.332 || 0.333 < v31.cos(&v32), "Vector3D cos() error.");
+	v33 = v31.cross(&v32);
+	UT_ASSERT(v33.x < -0.01 || 0.01 < v33.x, "Vector3D cross() error.");
+
+
 
 }
 

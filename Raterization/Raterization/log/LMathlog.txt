@@ -13,3 +13,6 @@ Vector3D default constructor error.
 ******* AutoTest start : 2015/3/25 2:47:40 *******
 ******* AutoTest start : 2015/3/27 2:47:50 *******
 ******* AutoTest start : 2015/3/27 2:47:50 *******
+******* AutoTest start : 2015/3/28 23:34:13 *******
+Vector3D cos() error.
+******* AutoTest start : 2015/3/28 23:34:13 *******

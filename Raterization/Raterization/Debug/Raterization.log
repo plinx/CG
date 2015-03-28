@@ -1,8 +1,15 @@
 ﻿  TestCase.cpp
-h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(99): error C2660: 'Vector3D::init' : function does not take 2 arguments
-          h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(80) : see reference to function template instantiation 'void VectorTest<Vector3D>(T &,T &,T &,T &)' being compiled
-          with
-          [
-              T=Vector3D
-          ]
-h:\dreamcode\cg\raterization\raterization\inc\testcase.cpp(106): error C2660: 'Vector3D::init' : function does not take 2 arguments
+  Generating Code...
+  Compiling...
+  main.cpp
+  LWin.cpp
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(227): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(228): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(229): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(230): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(231): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(232): warning C4244: '=' : conversion from 'double' to 'LONG', possible loss of data
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  LMath.cpp
+  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

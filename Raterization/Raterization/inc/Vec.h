@@ -116,6 +116,14 @@ struct Vector3D
 		auto length_inv = 1.0 / length;
 		x *= length_inv; y *= length_inv; z *= length_inv;
 	}
+	double dot(const Vector3D* v) { return x * v->x + y * v->y + z * v->z; }
+	double cos(const Vector3D* v) { return this->dot(v) / (this->length() * v->length()); }
+	Vector3D cross(Vector3D* v)
+	{
+		Vector3D tmp;
+		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
+		return tmp;
+	}
 
 	Vector3D& operator=(const Vector3D& v) { x = v.x; y = v.y; z = v.z; return *this; }
 	Vector3D operator+(const Vector3D& v)
@@ -139,15 +147,6 @@ struct Vector3D
 		return tmp; 
 	}
 	Vector3D& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
-
-	double dot(const Vector3D* v) { return x * v->x + y * v->y + z * v->z; }
-	double cos(const Vector3D* v) { return this->dot(v) / (this->length() * v->length()); }
-	Vector3D cross(Vector3D* v)
-	{
-		Vector3D tmp;
-		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
-		return tmp;
-	}
 
 	bool operator==(const Vector3D& v)
 	{
