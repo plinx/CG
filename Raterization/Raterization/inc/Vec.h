@@ -27,7 +27,7 @@ struct Vector2D
 	}
 
 	void zero() { x = y = 0.0; }
-	void init(int ix, int iy) { x = ix; y = iy; }
+	void init(double ix, double iy) { x = ix; y = iy; }
 	double length() const { return sqrt(x*x + y*y); }
 	void normalize()
 	{

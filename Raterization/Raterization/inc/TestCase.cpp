@@ -22,6 +22,8 @@ void AutoTest()
 	// Test Cases
 	VectorTest();
 	MatrixTest();
+	CoordinateTest();
+	LineTest();
 
 	// AutoTest end
 	GetLocalTime(&time);
@@ -352,5 +354,99 @@ void MatrixTest()
 	UT_ASSERT(m221.v[0][0] != 2.0, "Matrix2x2 operator* error.");
 	m221 *= m222;
 	UT_ASSERT(m221.v[0][0] != 4.0, "Matrix2x2 operator*= error.");
-
 }
+
+void CoordinateTest()
+{
+	// Polar2D test
+	Polar2D polar0;
+	Polar2D polar1(2.0, PI_DIV_4);
+	Polar2D polar2(polar1);
+	
+	polar0.init(2.0, PI_DIV_4);
+	UT_ASSERT(polar0.r != 2.0 || polar0.theta != PI_DIV_4, "Polar2D default constructor error.");
+	UT_ASSERT(polar1.r != 2.0 || polar1.theta != PI_DIV_4, "Polar2D assign constructor error.");
+	UT_ASSERT(polar2.r != 2.0 || polar2.theta != PI_DIV_4, "Polar2D copy constructor error.");
+	Point2D tmp2D = polar0.toPoint2D();
+	UT_ASSERT(tmp2D.x < 1.413 || 1.415 < tmp2D.x, "Polar2D toPoint() error.");
+	polar0.init(&tmp2D);
+	UT_ASSERT(polar0.r != 2.0 || polar0.theta != PI_DIV_4, "Polar2D init() error.");
+	double tmpx, tmpy;
+	polar0.toXY(&tmpx, &tmpy);
+	UT_ASSERT(tmpx < 1.413 || 1.415 < tmpx, "Polar2D toXY() error.");
+	polar0.init(0, PI);
+	polar0 = polar2;
+	UT_ASSERT(polar0.r != 2.0 || polar0.theta != PI_DIV_4, "Polar2D operator= error.");
+
+	// Cylindrical3D test
+	Cylindrical3D cy0;
+	Cylindrical3D cy1(2.0, PI_DIV_4, 2.0);
+	Cylindrical3D cy2(cy1);
+
+	cy0.init(2.0, PI_DIV_4, 2.0);
+	UT_ASSERT(cy0.r != 2.0 || cy0.z != 2.0, "Cylindrical3D default constructor error.");
+	UT_ASSERT(cy1.r != 2.0 || cy1.z != 2.0, "Cylindrical3D assign constructor error.");
+	UT_ASSERT(cy2.r != 2.0 || cy2.z != 2.0, "Cylindrical3D copy constructor error.");
+	Point3D tmp3D = cy0.toPoint3D();
+	UT_ASSERT(tmp3D.x < 1.413 || 1.415 < tmp3D.x || tmp3D.z != 2.0, "Cylindrical3D toPoint() error.");
+	cy0.init(&tmp3D);
+	UT_ASSERT(cy0.r != 2.0 || cy0.z != 2.0, "Cylindrical3D init() error.");
+	double tmpz;
+	cy0.toXYZ(&tmpx, &tmpy, &tmpz);
+	UT_ASSERT(tmpx < 1.413 || 1.415 < tmpx || tmpz != 2.0, "Cylindrical3D toXYZ() error.");
+	cy0.init(0.0, PI, 0.0);
+	cy0 = cy1;
+	UT_ASSERT(cy0.r != 2.0 || cy0.z != 2.0, "Cylindrical3D operator= error.");
+	
+	// Spherical3D test
+	Spherical3D sp0;
+	Spherical3D sp1(2.0, PI_DIV_4, PI_DIV_4);
+	Spherical3D sp2(sp1);
+
+	sp0.init(2.0, PI_DIV_4, PI_DIV_4);
+	UT_ASSERT(sp0.pos != 2.0 || sp0.theta != PI_DIV_4, "Spherical3D default constructor error.");
+	UT_ASSERT(sp1.pos != 2.0 || sp1.theta != PI_DIV_4, "Spherical3D assign constructor error.");
+	UT_ASSERT(sp2.pos != 2.0 || sp2.theta != PI_DIV_4, "Spherical3D copy constructor error.");
+	tmp3D = sp0.toPoint3D();
+	UT_ASSERT(tmp3D.x < 0.99 || 1.01 < tmp3D.x, "Spherical3D toPoint() error.");
+	sp0.init(&tmp3D);
+	UT_ASSERT(sp0.pos < 1.99 || 2.01 < sp0.pos, "Spherical3D init() error.");
+	sp0.toXYZ(&tmpx, &tmpy, &tmpz);
+	UT_ASSERT(tmpx < 0.99 || 1.01 < tmpx, "Spherical3D toXYZ() error.");
+	sp0.init(0.0, PI, PI);
+	sp0 = sp1;
+	UT_ASSERT(sp0.pos != 2.0 || sp0.theta != PI_DIV_4, "Spherical3D operator= error.");
+}
+
+void LineTest()
+{
+	// Line2D test
+	Point2D pbegin1, pbegin2, pend1, pend2;
+	pbegin1.init(0.0, 0.0); pend1.init(2.0, 2.0);
+	pbegin2.init(0.0, 2.0); pend2.init(2.0, 0.0);
+
+	Line2D line1;
+	Line2D line2(pbegin2, pend2, pend2 - pbegin2);
+	line1.init(pbegin1, pend1, pend1 - pbegin1);
+
+	UT_ASSERT(line1.p0.x != 0.0 || line1.p1.x != 2.0, "Line2D default contructor error.");
+	UT_ASSERT(line2.p0.x != 0.0 || line2.p1.x != 2.0, "Line2D assign constructor error.");
+	Point2D tmp2D = line1.compute(0.5);
+	UT_ASSERT(tmp2D.x != 1.0 || tmp2D.y != 1.0, "Line2D compute() error.");
+	UT_ASSERT(line1.intersect(&line2, &tmp2D) != LINE_INTERSECT_IN_SEGMENT, "Line2D intersect() error.");
+	UT_ASSERT(tmp2D.x != 1.0 || tmp2D.y != 1.0, "Line2D intersect() error.");
+
+	// Line3D test
+	Point3D pbegin3, pbegin4, pend3, pend4;
+	pbegin3.init(0.0, 0.0, 0.0); pend3.init(2.0, 2.0, 2.0);
+	pbegin4.init(0.0, 0.0, 2.0); pend4.init(2.0, 2.0, 0.0);
+	Line3D line3;
+	Line3D line4(pbegin4, pend4, pend4 - pbegin4);
+	line3.init(pbegin3, pend3, pend3 - pbegin3);
+
+	UT_ASSERT(line3.p0.x != 0.0 || line3.p1.x != 2.0, "Line3D default constructor error.");
+	UT_ASSERT(line4.p0.x != 0.0 || line4.p1.x != 2.0, "Line3D assign constructor error.");
+	Point3D tmp3D = line3.compute(0.5);
+	UT_ASSERT(tmp3D.x != 1.0 || tmp3D.y != 1.0, "Line3D compute() error.");
+}
+

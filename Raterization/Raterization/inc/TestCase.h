@@ -6,5 +6,7 @@
 void AutoTest();
 void VectorTest();
 void MatrixTest();
+void CoordinateTest();
+void LineTest();
 
 #endif

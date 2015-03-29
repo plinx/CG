@@ -41,21 +41,28 @@ struct Line2D
 	Line2D() = default;
 	~Line2D() = default;
 	Line2D(Point2D pb, Point2D pe, Vector2D v) : p0(pb), p1(pe), vec(v) {}
-	void compute(double t, Point2D* point) 
+	void init(Point2D pb, Point2D pe, Vector2D v)
 	{
-		point->x = p0.x + vec.x * t;
-		point->y = p0.y + vec.y * t;
+		p0 = pb; p1 = pe; vec = v;
+	}
+	Point2D compute(double t) 
+	{
+		Point2D tmp;
+		tmp.x = p0.x + vec.x * t;
+		tmp.y = p0.y + vec.y * t;
+		return tmp;
 	}
 	int intersect(Line2D* line, double *t1, double *t2)
 	{
 		auto det_line = (vec.x * line->vec.y - vec.y * line->vec.x);
 		if (abs(det_line) <= EPSILON_E5)
 			return LINE_NO_INTERSECT;
+		auto det_line_inv = 1 / det_line;
 
-		*t1 = (vec.x * (p0.y - line->p0.y) - vec.y * (p0.x - line->p0.x)) / det_line;
-		*t2 = (vec.x * (p1.y - line->p1.y) - vec.y * (p1.x - line->p1.x)) / det_line;
+		*t1 = (line->vec.x * (p0.y - line->p0.y) - line->vec.y * (p0.x - line->p0.x)) * det_line_inv;
+		*t2 = (line->vec.x * (p0.y - line->p0.y) - line->vec.y * (p0.x - line->p0.x)) * det_line_inv;
 
-		if ((0 <= *t1) && (*t1 <= 1) && (0 <= *t2) && (*t2 <= 0))
+		if ((0 <= *t1) && (*t1 <= 1) && (0 <= *t2) && (*t2 <= 1))
 			return LINE_INTERSECT_IN_SEGMENT;
 		else
 			return LINE_INTERSECT_OUT_SEGMENT;
@@ -65,13 +72,14 @@ struct Line2D
 		auto det_line = (vec.x * line->vec.y - vec.y * line->vec.x);
 		if (abs(det_line) <= EPSILON_E5)
 			return LINE_NO_INTERSECT;
+		auto det_line_inv = 1 / det_line;
 
-		auto t1 = (vec.x * (p0.y - line->p0.y) - vec.y * (p0.x - line->p0.x)) / det_line;
-		auto t2 = (vec.x * (p1.y - line->p1.y) - vec.y * (p1.x - line->p1.x)) / det_line;
+		auto t1 = (line->vec.x * (p0.y - line->p0.y) - line->vec.y * (p0.x - line->p0.x)) * det_line_inv;
+		auto t2 = (line->vec.x * (p0.y - line->p0.y) - line->vec.y * (p0.x - line->p0.x)) * det_line_inv;
 		point->x = p0.x + vec.x * t1;
-		point->y = p0.y + vec.y * t1;
+		point->y = p0.y + vec.y * t2;
 
-		if ((0 <= t1) && (t1 <= 1) && (0 <= t2) && (t2 <= 0))
+		if ((0 <= t1) && (t1 <= 1) && (0 <= t2) && (t2 <= 1))
 			return LINE_INTERSECT_IN_SEGMENT;
 		else
 			return LINE_INTERSECT_OUT_SEGMENT;
@@ -91,11 +99,13 @@ struct Line3D
 	{
 		p0 = pb; p1 = pe; vec = v;
 	}
-	void compute(double t, Point3D* point)
+	Point3D compute(double t)
 	{
-		point->x = p0.x + vec.x * t;
-		point->y = p0.y + vec.y * t;
-		point->z = p0.z + vec.z * t;
+		Point3D tmp;
+		tmp.x = p0.x + vec.x * t;
+		tmp.y = p0.y + vec.y * t;
+		tmp.z = p0.z + vec.z * t;
+		return tmp;
 	}
 };
 typedef Line3D* PLine3D;
@@ -153,11 +163,35 @@ struct Polar2D
 	Polar2D() = default;
 	~Polar2D() = default;
 
-	Polar2D(double dr, double dt) : r(dr), theta(dt) {}
 	Polar2D(const Polar2D& p) { *this = p; }
+	Polar2D(double dr, double dt) : r(dr), theta(dt) {}
+	
+	void init(double dr, double dt)
+	{
+		r = dr; theta = dt;
+	}
+	void init(Point2D* point)
+	{
+		r = sqrt((point->x * point->x) + (point->y * point->y));
+		theta = atan(point->y / point->x);
+	}
+	Point2D toPoint2D()
+	{
+		Point2D tmp;
+		tmp.x = r * cos(theta);
+		tmp.y = r * sin(theta);
+		return tmp;
+	}
+	void toXY(double *dx, double *dy)
+	{
+		*dx = r * cos(theta);
+		*dy = r * sin(theta);
+	}
+
 	Polar2D& operator=(const Polar2D& p)
 	{
 		r = p.r; theta = p.theta;
+		return *this;
 	}
 };
 typedef Polar2D* PPolar2D;
@@ -165,62 +199,101 @@ typedef Polar2D* PPolar2D;
 struct Cylindrical3D
 {
 	double r, theta, z;
+
+	Cylindrical3D() = default;
+	~Cylindrical3D() = default;
+
+	Cylindrical3D(double dr, double dt, double dz) : r(dr), theta(dt), z(dz) {}
+
+	void init(double dr, double dt, double dz)
+	{
+		r = dr; theta = dt; z = dz;
+	}
+	void init(Point3D* point)
+	{
+		r = sqrt((point->x * point->x) + (point->y * point->y));
+		theta = atan(point->y / point->x);
+		z = point->z;
+	}
+	Point3D toPoint3D()
+	{
+		Point3D tmp;
+		tmp.x = r * cos(theta);
+		tmp.y = r * sin(theta);
+		tmp.z = z;
+		return tmp;
+	}
+	void toXYZ(double *dx, double *dy, double *dz)
+	{
+		*dy = r * cos(theta);
+		*dz = r * sin(theta);
+		*dz = z;
+	}
+
+	Cylindrical3D& operator=(const Cylindrical3D& c)
+	{
+		r = c.r; theta = c.theta; z = c.z;
+		return *this;
+	}
 };
 typedef Cylindrical3D* PCylindrical3D;
 
 struct Spherical3D
 {
 	double pos, theta, phi;
+
+	Spherical3D() = default;
+	~Spherical3D() = default;
+
+	Spherical3D(double dpos, double dt, double dphi) : pos(dpos), theta(dt), phi(dphi) {}
+
+	void init(double dpos, double dt, double dphi)
+	{
+		pos = dpos; theta = dt; phi = dphi;
+	}
+	void init(Point3D* point)
+	{
+		pos = sqrt((point->x * point->x) + (point->y * point->y) + (point->z * point->z));
+		theta = atan(point->y / point->x);
+		phi = acos(point->z / pos);
+	}
+	Point3D toPoint3D()
+	{
+		Point3D tmp;
+		double r;
+		r = pos * sin(phi);
+		tmp.z = pos * cos(phi);
+
+		tmp.x = r * cos(theta);
+		tmp.y = r * sin(theta);
+
+		return tmp;
+	}
+	void toXYZ(double *dx, double *dy, double *dz)
+	{
+		double r;
+		r = pos * sin(phi);
+		*dz = pos * cos(phi);
+
+		*dx = r * cos(theta);
+		*dy = r * sin(theta);
+	}
+
+	Spherical3D& operator=(const Spherical3D& s)
+	{
+		pos = s.pos; theta = s.theta; phi = s.phi;
+		return *this;
+	}
 };
 typedef Spherical3D* PSpherical3D;
 
 // Transform functions
 
 // 2 Transform
-inline void Polar2D_To_Point2D(PPolar2D polar, PPoint2D point)
-{
-	point->x = polar->r * cos(polar->theta);
-	point->y = polar->r * sin(polar->theta);
-}
-
-inline void Polar2D_To_XY(PPolar2D polar, double *x, double *y)
-{
-	*x = polar->r * cos(polar->theta);
-	*y = polar->r * sin(polar->theta);
-}
-
-inline void Point2D_To_Polar2D(PPoint2D point, PPolar2D polar)
-{
-	polar->r = sqrt((point->x * point->x) + (point->y * point->y));
-	polar->theta = atan(point->y / point->x);
-}
-
 inline void Point2D_To_RTheta(PPoint2D point, double *r, double *theta)
 {
 	*r = sqrt((point->x * point->x) + (point->y * point->y));
 	*theta = atan(point->y / point->x);
-}
-
-// 3 Transform
-inline void Cylindrical3D_To_Point3D(PCylindrical3D cylindrical, PPoint3D point)
-{
-	point->x = cylindrical->r * cos(cylindrical->theta);
-	point->y = cylindrical->r * sin(cylindrical->theta);
-	point->z = cylindrical->z;
-}
-
-inline void Cylindrical3D_To_XYZ(PCylindrical3D cylindrical, double *x, double *y, double *z)
-{
-	*y = cylindrical->r * cos(cylindrical->theta);
-	*z = cylindrical->r * sin(cylindrical->theta);
-	*z = cylindrical->z;
-}
-
-inline void Point3D_To_Cylindrical3D(PPoint3D point, PCylindrical3D cylindrical)
-{
-	cylindrical->r = sqrt((point->x * point->x) + (point->y * point->y));
-	cylindrical->theta = atan(point->y / point->x);
-	cylindrical->z = point->z;
 }
 
 inline void Point3D_To_RThetaZ(PPoint3D point, double *r, double *theta, double *z)
@@ -228,33 +301,6 @@ inline void Point3D_To_RThetaZ(PPoint3D point, double *r, double *theta, double 
 	*r = sqrt((point->x * point->x) + (point->y * point->y));
 	*theta = atan(point->y / point->x);
 	*z = point->z;
-}
-
-inline void Spherical3D_To_Point3D(PSpherical3D sphere, PPoint3D point)
-{
-	double r;
-	r = sphere->pos * sin(sphere->phi);
-	point->z = sphere->pos * cos(sphere->phi);
-
-	point->x = r * cos(sphere->theta);
-	point->y = r * sin(sphere->theta);
-}
-
-inline void Spherical3D_To_XYZ(PSpherical3D sphere, double *x, double *y, double *z)
-{
-	double r;
-	r = sphere->pos * sin(sphere->phi);
-	*z = sphere->pos * cos(sphere->phi);
-
-	*x = r * cos(sphere->theta);
-	*y = r * sin(sphere->theta);
-}
-
-inline void Point3D_To_Spherical3(PPoint3D point, PSpherical3D sphere)
-{
-	sphere->pos = sqrt((point->x * point->x) + (point->y * point->y) + (point->z * point->z));
-	sphere->theta = atan(point->y / point->x);
-	sphere->phi = acos(point->z / sphere->pos);
 }
 
 inline void Point3D_To_PosThetaPhi(PPoint3D point, double *pos, double *theta, double *phi)

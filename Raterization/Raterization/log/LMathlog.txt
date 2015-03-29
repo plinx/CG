@@ -211,3 +211,108 @@ Matrix2x2 operator*= error.
 ******* AutoTest start : 2015/3/29 21:15:15 *******
 ******* AutoTest start : 2015/3/29 21:15:33 *******
 ******* AutoTest start : 2015/3/29 21:15:33 *******
+******* AutoTest start : 2015/3/30 0:31:29 *******
+Line2D compute() error.
+******* AutoTest start : 2015/3/30 0:31:29 *******
+******* AutoTest start : 2015/3/30 0:32:52 *******
+******* AutoTest start : 2015/3/30 0:32:52 *******
+******* AutoTest start : 2015/3/30 0:33:44 *******
+******* AutoTest start : 2015/3/30 0:33:44 *******
+******* AutoTest start : 2015/3/30 0:35:45 *******
+******* AutoTest start : 2015/3/30 0:35:45 *******
+******* AutoTest start : 2015/3/30 0:36:45 *******
+******* AutoTest start : 2015/3/30 0:36:45 *******
+******* AutoTest start : 2015/3/30 0:37:48 *******
+******* AutoTest start : 2015/3/30 0:37:48 *******
+******* AutoTest start : 2015/3/30 0:38:15 *******
+******* AutoTest start : 2015/3/30 0:38:15 *******
+******* AutoTest start : 2015/3/30 0:39:10 *******
+******* AutoTest start : 2015/3/30 0:39:10 *******
+******* AutoTest start : 2015/3/30 0:39:24 *******
+Line2D compute() error.
+******* AutoTest start : 2015/3/30 0:39:24 *******
+******* AutoTest start : 2015/3/30 0:39:33 *******
+******* AutoTest start : 2015/3/30 0:39:33 *******
+******* AutoTest start : 2015/3/30 0:39:49 *******
+******* AutoTest start : 2015/3/30 0:39:49 *******
+******* AutoTest start : 2015/3/30 0:40:27 *******
+******* AutoTest start : 2015/3/30 0:40:27 *******
+******* AutoTest start : 2015/3/30 0:41:55 *******
+******* AutoTest start : 2015/3/30 0:41:55 *******
+******* AutoTest start : 2015/3/30 0:43:9 *******
+Line2D intersect() error.
+******* AutoTest start : 2015/3/30 0:43:9 *******
+******* AutoTest start : 2015/3/30 0:45:22 *******
+******* AutoTest start : 2015/3/30 0:45:22 *******
+******* AutoTest start : 2015/3/30 0:48:49 *******
+******* AutoTest start : 2015/3/30 0:48:49 *******
+******* AutoTest start : 2015/3/30 1:22:2 *******
+******* AutoTest start : 2015/3/30 1:22:2 *******
+******* AutoTest start : 2015/3/30 1:55:30 *******
+******* AutoTest start : 2015/3/30 1:55:30 *******
+******* AutoTest start : 2015/3/30 1:55:47 *******
+******* AutoTest start : 2015/3/30 1:55:47 *******
+******* AutoTest start : 2015/3/30 1:56:54 *******
+Line2D intersect() error.
+******* AutoTest start : 2015/3/30 1:56:54 *******
+******* AutoTest start : 2015/3/30 1:57:10 *******
+Line2D intersect() error.
+******* AutoTest start : 2015/3/30 1:57:10 *******
+******* AutoTest start : 2015/3/30 1:57:57 *******
+Line2D intersect() error.
+******* AutoTest start : 2015/3/30 1:57:57 *******
+******* AutoTest start : 2015/3/30 1:58:38 *******
+Line2D intersect() error.
+******* AutoTest start : 2015/3/30 1:58:38 *******
+******* AutoTest start : 2015/3/30 1:59:24 *******
+******* AutoTest start : 2015/3/30 1:59:24 *******
+******* AutoTest start : 2015/3/30 1:59:36 *******
+******* AutoTest start : 2015/3/30 1:59:36 *******
+******* AutoTest start : 2015/3/30 1:59:43 *******
+******* AutoTest start : 2015/3/30 1:59:43 *******
+******* AutoTest start : 2015/3/30 2:8:1 *******
+******* AutoTest start : 2015/3/30 2:8:1 *******
+******* AutoTest start : 2015/3/30 2:9:54 *******
+******* AutoTest start : 2015/3/30 2:9:54 *******
+******* AutoTest start : 2015/3/30 2:35:29 *******
+******* AutoTest start : 2015/3/30 2:35:29 *******
+******* AutoTest start : 2015/3/30 2:35:44 *******
+******* AutoTest start : 2015/3/30 2:35:44 *******
+******* AutoTest start : 2015/3/30 2:37:50 *******
+******* AutoTest start : 2015/3/30 2:37:50 *******
+******* AutoTest start : 2015/3/30 2:38:52 *******
+******* AutoTest start : 2015/3/30 2:38:52 *******
+******* AutoTest start : 2015/3/30 2:39:58 *******
+******* AutoTest start : 2015/3/30 2:39:58 *******
+******* AutoTest start : 2015/3/30 2:43:5 *******
+******* AutoTest start : 2015/3/30 2:43:5 *******
+******* AutoTest start : 2015/3/30 3:6:21 *******
+Cylindrical3D default constructor error.
+Cylindrical3D assing constructor error.
+Cylindrical3D copy constructor error.
+Cylindrical3D toPoint() error.
+******* AutoTest start : 2015/3/30 3:6:21 *******
+******* AutoTest start : 2015/3/30 3:7:8 *******
+Cylindrical3D default constructor error.
+Cylindrical3D assing constructor error.
+Cylindrical3D copy constructor error.
+Cylindrical3D toPoint() error.
+******* AutoTest start : 2015/3/30 3:7:8 *******
+******* AutoTest start : 2015/3/30 3:8:11 *******
+******* AutoTest start : 2015/3/30 3:8:11 *******
+******* AutoTest start : 2015/3/30 3:9:3 *******
+Cylindrical3D default constructor error.
+******* AutoTest start : 2015/3/30 3:9:3 *******
+******* AutoTest start : 2015/3/30 3:10:8 *******
+******* AutoTest start : 2015/3/30 3:10:8 *******
+******* AutoTest start : 2015/3/30 3:10:33 *******
+******* AutoTest start : 2015/3/30 3:10:33 *******
+******* AutoTest start : 2015/3/30 3:13:24 *******
+******* AutoTest start : 2015/3/30 3:13:24 *******
+******* AutoTest start : 2015/3/30 3:18:0 *******
+******* AutoTest start : 2015/3/30 3:18:0 *******
+******* AutoTest start : 2015/3/30 3:22:42 *******
+Spherical3D init() error.
+******* AutoTest start : 2015/3/30 3:22:42 *******
+******* AutoTest start : 2015/3/30 3:23:44 *******
+******* AutoTest start : 2015/3/30 3:23:44 *******
