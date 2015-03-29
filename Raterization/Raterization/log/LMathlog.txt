@@ -16,3 +16,198 @@ Vector3D default constructor error.
 ******* AutoTest start : 2015/3/28 23:34:13 *******
 Vector3D cos() error.
 ******* AutoTest start : 2015/3/28 23:34:13 *******
+******* AutoTest start : 2015/3/29 13:28:8 *******
+1
+******* AutoTest start : 2015/3/29 13:28:8 *******
+******* AutoTest start : 2015/3/29 13:28:28 *******
+1.73205
+******* AutoTest start : 2015/3/29 13:28:28 *******
+******* AutoTest start : 2015/3/29 13:28:47 *******
+1
+******* AutoTest start : 2015/3/29 13:28:47 *******
+******* AutoTest start : 2015/3/29 13:34:9 *******
+******* AutoTest start : 2015/3/29 13:34:9 *******
+******* AutoTest start : 2015/3/29 13:41:18 *******
+Vector4D dot() error.
+Vector4D operator*= error()
+******* AutoTest start : 2015/3/29 13:41:18 *******
+******* AutoTest start : 2015/3/29 13:43:8 *******
+1.73205
+Vector4D operator*= error()
+******* AutoTest start : 2015/3/29 13:43:8 *******
+******* AutoTest start : 2015/3/29 13:43:41 *******
+Vector4D operator*= error()
+******* AutoTest start : 2015/3/29 13:43:41 *******
+******* AutoTest start : 2015/3/29 13:43:55 *******
+******* AutoTest start : 2015/3/29 13:43:55 *******
+******* AutoTest start : 2015/3/29 13:44:2 *******
+Vector4D operator*= error()
+******* AutoTest start : 2015/3/29 13:44:2 *******
+******* AutoTest start : 2015/3/29 13:44:41 *******
+******* AutoTest start : 2015/3/29 13:44:41 *******
+******* AutoTest start : 2015/3/29 14:0:35 *******
+Matrix1x4 default constructor error.
+Matrix1x4 default constructor error.
+******* AutoTest start : 2015/3/29 14:0:35 *******
+******* AutoTest start : 2015/3/29 14:1:48 *******
+Matrix1x4 copy constructor error.
+Matrix1x4 operator= error.
+******* AutoTest start : 2015/3/29 14:1:48 *******
+******* AutoTest start : 2015/3/29 14:3:27 *******
+******* AutoTest start : 2015/3/29 14:3:27 *******
+******* AutoTest start : 2015/3/29 14:3:35 *******
+******* AutoTest start : 2015/3/29 14:3:35 *******
+******* AutoTest start : 2015/3/29 14:26:6 *******
+Matrix4x3 assign constructor erorr.
+Matrix4x3 copy constructor erorr.
+Matrix4x3 operator= erorr.
+******* AutoTest start : 2015/3/29 14:26:6 *******
+******* AutoTest start : 2015/3/29 14:31:48 *******
+Matrix4x3 swap() error.
+******* AutoTest start : 2015/3/29 14:31:48 *******
+******* AutoTest start : 2015/3/29 14:32:37 *******
+1
+******* AutoTest start : 2015/3/29 14:32:37 *******
+******* AutoTest start : 2015/3/29 14:32:46 *******
+1
+******* AutoTest start : 2015/3/29 14:32:46 *******
+******* AutoTest start : 2015/3/29 14:34:16 *******
+******* AutoTest start : 2015/3/29 14:34:16 *******
+******* AutoTest start : 2015/3/29 14:34:55 *******
+******* AutoTest start : 2015/3/29 14:34:55 *******
+******* AutoTest start : 2015/3/29 14:35:4 *******
+******* AutoTest start : 2015/3/29 14:35:4 *******
+******* AutoTest start : 2015/3/29 16:57:24 *******
+******* AutoTest start : 2015/3/29 16:57:24 *******
+******* AutoTest start : 2015/3/29 19:12:28 *******
+Matrix4x4 operator+ error.
+Matrix4x4 operator+ error.
+Matrix4x4 operator+ error.
+Matrix4x4 operator+ error.
+******* AutoTest start : 2015/3/29 19:12:28 *******
+******* AutoTest start : 2015/3/29 19:13:30 *******
+Matrix4x4 operator+ error.
+Matrix4x4 operator+= error.
+Matrix4x4 operator* error.
+Matrix4x4 operator*= error.
+******* AutoTest start : 2015/3/29 19:13:30 *******
+******* AutoTest start : 2015/3/29 19:14:58 *******
+Matrix4x4 operator*= error.
+******* AutoTest start : 2015/3/29 19:14:58 *******
+******* AutoTest start : 2015/3/29 19:25:14 *******
+******* AutoTest start : 2015/3/29 19:25:14 *******
+******* AutoTest start : 2015/3/29 19:45:42 *******
+Matrix4x4 simple_det() error.
+******* AutoTest start : 2015/3/29 19:45:42 *******
+******* AutoTest start : 2015/3/29 19:52:15 *******
+Matrix4x4 simple_det() error.
+Matrix4x4 simple_det() error.
+Matrix4x4 mul() error.
+******* AutoTest start : 2015/3/29 19:52:15 *******
+******* AutoTest start : 2015/3/29 19:54:20 *******
+Matrix4x4 mul() error.
+******* AutoTest start : 2015/3/29 19:54:20 *******
+******* AutoTest start : 2015/3/29 19:54:39 *******
+******* AutoTest start : 2015/3/29 19:54:39 *******
+******* AutoTest start : 2015/3/29 19:57:2 *******
+Matrix3x3 det() error.
+******* AutoTest start : 2015/3/29 19:57:2 *******
+******* AutoTest start : 2015/3/29 19:57:37 *******
+******* AutoTest start : 2015/3/29 19:57:37 *******
+******* AutoTest start : 2015/3/29 20:4:34 *******
+******* AutoTest start : 2015/3/29 20:6:0 *******
+******* AutoTest start : 2015/3/29 20:6:27 *******
+******* AutoTest start : 2015/3/29 20:6:53 *******
+******* AutoTest start : 2015/3/29 20:6:53 *******
+******* AutoTest start : 2015/3/29 20:7:19 *******
+******* AutoTest start : 2015/3/29 20:7:43 *******
+******* AutoTest start : 2015/3/29 20:9:25 *******
+******* AutoTest start : 2015/3/29 20:12:21 *******
+******* AutoTest start : 2015/3/29 20:12:51 *******
+******* AutoTest start : 2015/3/29 20:12:51 *******
+******* AutoTest start : 2015/3/29 20:13:51 *******
+******* AutoTest start : 2015/3/29 20:13:51 *******
+******* AutoTest start : 2015/3/29 20:20:47 *******
+******* AutoTest start : 2015/3/29 20:20:47 *******
+******* AutoTest start : 2015/3/29 20:21:42 *******
+******* AutoTest start : 2015/3/29 20:21:59 *******
+******* AutoTest start : 2015/3/29 20:23:11 *******
+******* AutoTest start : 2015/3/29 20:23:11 *******
+******* AutoTest start : 2015/3/29 20:25:36 *******
+******* AutoTest start : 2015/3/29 20:26:26 *******
+******* AutoTest start : 2015/3/29 20:26:26 *******
+******* AutoTest start : 2015/3/29 20:26:44 *******
+******* AutoTest start : 2015/3/29 20:27:9 *******
+Matrix3x3 operator* error.
+******* AutoTest start : 2015/3/29 20:27:9 *******
+******* AutoTest start : 2015/3/29 20:27:50 *******
+Matrix3x3 operator* error.
+Matrix3x3 operator* error.
+******* AutoTest start : 2015/3/29 20:27:50 *******
+******* AutoTest start : 2015/3/29 20:28:33 *******
+Matrix3x3 operator* error.
+Matrix3x3 operator* error.
+******* AutoTest start : 2015/3/29 20:28:33 *******
+******* AutoTest start : 2015/3/29 20:31:5 *******
+3
+Matrix3x3 operator*= error.
+******* AutoTest start : 2015/3/29 20:31:5 *******
+******* AutoTest start : 2015/3/29 20:33:2 *******
+******* AutoTest start : 2015/3/29 20:33:2 *******
+******* AutoTest start : 2015/3/29 20:34:9 *******
+******* AutoTest start : 2015/3/29 20:34:9 *******
+******* AutoTest start : 2015/3/29 20:34:54 *******
+******* AutoTest start : 2015/3/29 20:34:54 *******
+******* AutoTest start : 2015/3/29 20:35:11 *******
+******* AutoTest start : 2015/3/29 20:36:43 *******
+******* AutoTest start : 2015/3/29 20:36:43 *******
+******* AutoTest start : 2015/3/29 20:37:16 *******
+******* AutoTest start : 2015/3/29 20:38:27 *******
+******* AutoTest start : 2015/3/29 20:38:35 *******
+******* AutoTest start : 2015/3/29 20:38:52 *******
+******* AutoTest start : 2015/3/29 20:38:55 *******
+******* AutoTest start : 2015/3/29 20:40:45 *******
+Matrix4x4 operator* error.
+Matrix4x4 operator*= error.
+******* AutoTest start : 2015/3/29 20:40:45 *******
+******* AutoTest start : 2015/3/29 20:42:26 *******
+Matrix4x4 operator* error.
+Matrix4x4 operator*= error.
+******* AutoTest start : 2015/3/29 20:42:26 *******
+******* AutoTest start : 2015/3/29 20:44:10 *******
+******* AutoTest start : 2015/3/29 20:44:10 *******
+******* AutoTest start : 2015/3/29 20:44:53 *******
+******* AutoTest start : 2015/3/29 20:44:53 *******
+******* AutoTest start : 2015/3/29 20:45:37 *******
+******* AutoTest start : 2015/3/29 20:45:37 *******
+******* AutoTest start : 2015/3/29 20:45:55 *******
+******* AutoTest start : 2015/3/29 20:45:55 *******
+******* AutoTest start : 2015/3/29 20:55:25 *******
+******* AutoTest start : 2015/3/29 20:55:25 *******
+******* AutoTest start : 2015/3/29 20:59:14 *******
+Matrix1x3 zero() error.
+******* AutoTest start : 2015/3/29 20:59:14 *******
+******* AutoTest start : 2015/3/29 21:4:32 *******
+Matrix2x2 det() error.
+******* AutoTest start : 2015/3/29 21:4:32 *******
+******* AutoTest start : 2015/3/29 21:5:5 *******
+******* AutoTest start : 2015/3/29 21:5:5 *******
+******* AutoTest start : 2015/3/29 21:13:29 *******
+Matrix2x2 operator+ error.
+Matrix2x2 operator+= error.
+Matrix2x2 operator- error.
+Matrix2x2 operator-= error.
+Matrix2x2 operator* error.
+Matrix2x2 operator*= error.
+******* AutoTest start : 2015/3/29 21:13:29 *******
+******* AutoTest start : 2015/3/29 21:14:23 *******
+Matrix2x2 operator+= error.
+Matrix2x2 operator- error.
+Matrix2x2 operator-= error.
+Matrix2x2 operator* error.
+Matrix2x2 operator*= error.
+******* AutoTest start : 2015/3/29 21:14:23 *******
+******* AutoTest start : 2015/3/29 21:15:15 *******
+******* AutoTest start : 2015/3/29 21:15:15 *******
+******* AutoTest start : 2015/3/29 21:15:33 *******
+******* AutoTest start : 2015/3/29 21:15:33 *******

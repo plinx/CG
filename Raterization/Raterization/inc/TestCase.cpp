@@ -21,7 +21,7 @@ void AutoTest()
 
 	// Test Cases
 	VectorTest();
-	//MatrixTest(testlog);
+	MatrixTest();
 
 	// AutoTest end
 	GetLocalTime(&time);
@@ -87,157 +87,270 @@ void VectorTest()
 	v31.normalize();
 	UT_ASSERT(v31.x < 0.576 || 0.578 < v31.x, "Vector3D normalize() error.");
 	UT_ASSERT(v31.dot(&v32) < 1.731 || 1.733 < v31.dot(&v32), "Vector3D dot() error.");
-	UT_ASSERT(v31.cos(&v32) < 0.332 || 0.333 < v31.cos(&v32), "Vector3D cos() error.");
+	UT_ASSERT(v31.cos(&v32) < 0.99 || 1.01 < v31.cos(&v32), "Vector3D cos() error.");
 	v33 = v31.cross(&v32);
 	UT_ASSERT(v33.x < -0.01 || 0.01 < v33.x, "Vector3D cross() error.");
+	v31.init(1.0, 1.0, 1.0);
+	v31 = v31 + v32;
+	UT_ASSERT(v31.x < 1.99 || 2.01 < v31.x, "Vector3D operator+ error.");
+	v31 += v32;
+	UT_ASSERT(v31.x < 2.99 || 3.01 < v31.x, "Vector3D operator+= error.");
+	v31 = v31 - v32;
+	UT_ASSERT(v31.x < 1.99 || 2.01 < v31.x, "Vector3D operator- error.");
+	v31 -= v32;
+	UT_ASSERT(v31.x < 0.99 || 1.01 < v31.x, "Vector3D operator-= error.");
+	v31 = v31 * 3;
+	UT_ASSERT(v31.x < 2.99 || 3.01 < v31.x, "Vector3D operator* error.");
+	v31 *= 3;
+	UT_ASSERT(v31.x < 8.99 || 9.01 < v31.x, "Vector3D operator*= error.");
 
-
-
-}
-
-	/*
-	// Vector4D test : 4
+	// Vector4D test 
+	Vector4D v40;
 	Vector4D v41(1.0, 1.0, 1.0, 1.0);
 	Vector4D v42(v41);
 	Vector4D v43 = v41;
 
-	if (v41.x != 1 || v41.y != 1 || v41.z != 1 || v41.w != 1)
-	{
-		std::cout << "Vector4D constructor error." << std::endl;
-		log << "Vector4D constructor error." << std::endl;
-		err++;
-	}
+	v40.init(0, 0, 0);
+	UT_ASSERT(v40.x != 0 || v40.y != 0 || v40.z != 0, "Vector4D default constructor error.");
+	UT_ASSERT(v41.x != 1 || v41.y != 1 || v41.z != 1, "Vector4D assign constructor error.");
+	UT_ASSERT(v42 != v41, "Vector4D copy constructor error.");
+	UT_ASSERT(v43 != v41, "Vector4D operator= error.");
 
-	if (v42 != v41)
-	{
-		std::cout << "Vector4D copy constructor error." << std::endl;
-		log << "Vector4D copy constructor error." << std::endl;
-		err++;
-	}
-
-	if (v43 != v41)
-	{
-		std::cout << "Vector4D operator= error." << std::endl;
-		log << "Vector4D operator= error." << std::endl;
-		err++;
-	}
-
-	v41.Zero();
-	if (v41.x != 0 || v41.y != 0 || v41.z != 0 || v41.w != 1)
-	{
-		std::cout << "Vector4D Zero error." << std::endl;
-		log << "Vector4D Zero error." << std::endl;
-		err++;
-	}
-
-	auto p1 = new Point2D(0.0, 0.0);
-	auto p2 = new Point2D(1.0, 1.0);
-	auto v2 = Vector2D(2.0, 2.0);
-	Vector2D v1;
-	v1 = Vector2D(p1, p2);
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1.Normalize();
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1 = v2;
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1 = v1 + v2;
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1 += v2;
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1 -= v2;
-	std::cout << v1.x << " " << v1.x << std::endl;
-	v1 *= 2.0;
-	std::cout << v1.x << " " << v1.x << std::endl;
-	std::cout << v1.Dot(&v2) << std::endl;
-	std::cout << v1.Cos(&v2) << std::endl;
-	
-
-	log << "VectorTest => Total : " << total;
-	log << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)";
+	v41.zero();
+	UT_ASSERT(v41.x != 0 || v41.y != 0 || v41.z != 0, "Vector4D zero() error.");
+	v41.init(1.742, 1.742, 1.742);
+	UT_ASSERT(v41.length() < 2.99 || 4.01 < v41.length(), "Vector4D length() error.");
+	v41.normalize();
+	UT_ASSERT(v41.x < 0.576 || 0.578 < v41.x, "Vector4D normalize() error.");
+	UT_ASSERT(v41.dot(&v42) < 1.731 || 1.733 < v41.dot(&v42), "Vector4D dot() error.");
+	UT_ASSERT(v41.cos(&v42) < 0.99 || 1.01 < v41.cos(&v42), "Vector4D cos() error.");
+	v43 = v41.cross(&v42);
+	UT_ASSERT(v43.x < -0.01 || 0.01 < v43.x, "Vector4D cross() error.");
+	v41.init(1.0, 1.0, 1.0);
+	v41 = v41 + v42;
+	UT_ASSERT(v41.x < 1.99 || 2.01 < v41.x, "Vector4D operator+ error.");
+	v41 += v42;
+	UT_ASSERT(v41.x < 2.99 || 4.01 < v41.x, "Vector4D operator+= error.");
+	v41 = v41 - v42;
+	UT_ASSERT(v41.x < 1.99 || 2.01 < v41.x, "Vector4D operator- error.");
+	v41 -= v42;
+	UT_ASSERT(v41.x < 0.99 || 1.01 < v41.x, "Vector4D operator-= error.");
+	v41 = v41 * 3;
+	UT_ASSERT(v41.x < 2.99 || 3.01 < v41.x, "Vector4D operator* error.");
+	v41 *= 3;
+	UT_ASSERT(v41.x < 8.99 || 9.01 < v41.x, "Vector4D operator*= error.");
 }
 
-void MatrixTest(std::ofstream& log)
+void MatrixTest()
 {
-	int total = 7, err = 0;
+	// Matrix1x4 test 
+	Matrix1x4 m140;
+	Matrix1x4 m141(1.0, 1.0, 1.0, 1.0);
+	Matrix1x4 m142(m141);
+	Matrix1x4 m143 = m141;
 
-	// Matrix1x4 test : 2
-	Matrix1x4 M14;
-	M14.Zero();
-	Matrix1x4 M14c(M14);
-	Matrix1x4 M14e = M14;
+	m140.init(1.0, 1.0, 1.0, 1.0);
+	UT_ASSERT(m140.v[0] != 1.0, "Matrix1x4 default constructor error.");
+	UT_ASSERT(m141.v[0] != 1.0, "Matrix1x4 assign constructor error.");
+	UT_ASSERT(m142.v[0] != 1.0, "Matrix1x4 copy constructor error.");
+	UT_ASSERT(m143.v[0] != 1.0, "Matrix1x4 operator= error.");
+	m140.zero();
+	UT_ASSERT(m140.v[0] != 0 || m140.v[1] != 0, "Matrix1x4 zero() error.");
 
-	if (M14c.v[0] != 0 || M14c.v[1] != 0 || M14c.v[2] != 0 || M14c.v[3] != 0)
-	{
-		std::cout << "Matrix1x4 copy constructor error." << std::endl;
-		log << "Matrix1x4 copy constructor error." << std::endl;
-		err++;
-	}
+	// Matrix4x3 test
+	Matrix4x3 m430;
+	Matrix4x3 m431(1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0);
+	Matrix4x3 m432(m431);
+	Matrix4x3 m433 = m431;
 
-	if (M14e.v[0] != 0 || M14e.v[1] != 0 || M14e.v[2] != 0 || M14e.v[3] != 0)
-	{
-		std::cout << "Matrix1x4 operator= error." << std::endl;
-		log << "Matrix1x4 operator= error." << std::endl;
-		err++;
-	}
+	m430.zero();
+	UT_ASSERT(m430.v[0][0] != 0.0, "Matrix4x3 default constructor error.");
+	UT_ASSERT(m431.v[0][0] != 1.0, "Matrix4x3 assign constructor erorr.");
+	UT_ASSERT(m432.v[0][0] != 1.0, "Matrix4x3 copy constructor erorr.");
+	UT_ASSERT(m433.v[0][0] != 1.0, "Matrix4x3 operator= erorr.");
+	m430.init(2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0);
+	UT_ASSERT(m430.v[0][0] != 2.0, "Matrix4x3 init() error.");
+	m430.unit();
+	UT_ASSERT(m430.v[0][0] != 1.0 || m430.v[1][0] != 0, "Matrix4x3 unit() error.");
+	Vector3D tmp3D(1.0, 1.0, 1.0);
+	tmp3D = m431.mul(&tmp3D);
+	UT_ASSERT(tmp3D.x != 3.0 || tmp3D.y != 3.0, "Matrix4x3 mul() error.");
+	Vector4D tmp4D;
+	tmp4D.init(1.0, 1.0, 1.0);
+	tmp4D = m431.mul(&tmp4D);
+	UT_ASSERT(tmp4D.x != 4.0 || tmp4D.y != 4.0, "Matrix4x3 mul() error.");
+	m430.swap(&m141, 0);
+	UT_ASSERT(m430.v[1][0] != 1.0 || m430.v[2][0] != 1.0, "Matrix4x3 swap() error.");
 
-	// Matrix4x3 test : 4
-	Matrix4x3 M43;
-	M43.Init();
-	Matrix4x3 M43c(M43);
-	Matrix4x3 M43e = M43;
+	// Matrix4x4 test
+	Matrix4x4 m440;
+	Matrix4x4 m441(1.0, 1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0, 1.0);
+	Matrix4x4 m442(m441);
+	Matrix4x4 m443 = m441;
 
-	if (M43c.v[0][0] != 1 || M43c.v[1][1] != 1 || M43c.v[2][2] != 1 || M43c.v[3][2] != 0)
-	{
-		std::cout << "Matrix4x3 copy constructor error." << std::endl;
-		log << "Matrix4x3 copy constructor error." << std::endl;
-		err++;
-	}
+	m440.zero();
+	UT_ASSERT(m440.v[0][0] != 0.0, "Matrix4x4 default constructor error.");
+	UT_ASSERT(m441.v[0][0] != 1.0, "Matrix4x4 assign constructor erorr.");
+	UT_ASSERT(m442.v[0][0] != 1.0, "Matrix4x4 copy constructor erorr.");
+	UT_ASSERT(m443.v[0][0] != 1.0, "Matrix4x4 operator= erorr.");
+	m440.init(2.0, 2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0, 2.0,
+		2.0, 2.0, 2.0, 2.0);
+	UT_ASSERT(m440.v[0][0] != 2.0, "Matrix4x4 init() error.");
+	m440.unit();
+	UT_ASSERT(m440.v[0][0] != 1.0 || m440.v[1][0] != 0, "Matrix4x4 unit() error.");
+	m440.v[1][0] = 1.0;
+	m440.transpose();
+	UT_ASSERT(m440.v[0][1] != 1.0, "Matrix4x4 transpose() error.");
+	m440.swap(&m141, 0);
+	UT_ASSERT(m440.v[1][0] != 1.0 || m440.v[2][0] != 1.0, "Matrix4x3 swap() error.");
+	Matrix1x4 tmp14;
+	tmp14.init(1.0, 1.0, 1.0, 1.0);
+	tmp14 = m442.mul(&tmp14);
+	UT_ASSERT(tmp14.v[0] != 4.0 || tmp14.v[1] != 4.0, "Matrix4x4 mul() error.");
+	tmp3D.init(1.0, 1.0, 1.0);
+	tmp3D = m441.mul(&tmp3D);
+	UT_ASSERT(tmp3D.x != 3.0 || tmp3D.y != 3.0, "Matrix4x4 mul() error.");
+	tmp4D.init(1.0, 1.0, 1.0);
+	m441 = m443; m441.v[1][1] = 2; m441.v[2][2] = 3;
+	UT_ASSERT(m441.simple_det() != 2.0, "Matrix4x4 simple_det() error.");
+	m441 = m441.inverse();
+	UT_ASSERT(m441.v[0][0] < 2.499 || 2.501 < m441.v[1][1], "Matrix4x4 inverse() error.");
+	tmp4D = m442.mul(&tmp4D);
+	UT_ASSERT(tmp4D.x != 4.0 || tmp4D.y != 4.0, "Matrix4x4 mul() error.");
+	m442 = m442 + m443;
+	UT_ASSERT(m442.v[0][0] != 2.0 || m442.v[0][1] != 2.0, "Matrix4x4 operator+ error.");
+	m442 += m443;
+	UT_ASSERT(m442.v[0][0] != 3.0 || m442.v[0][1] != 3.0, "Matrix4x4 operator+= error.");
+	m442 = m442 * m443;
+	UT_ASSERT(m442.v[0][0] != 12.0 || m442.v[0][1] != 12.0, "Matrix4x4 operator* error.");
+	m442 *= m443;
+	UT_ASSERT(m442.v[0][0] != 48.0 || m442.v[0][1] != 48.0, "Matrix4x4 operator*= error.");
 
-	if (M43e.v[0][0] != 1 || M43e.v[1][1] != 1 || M43e.v[2][2] != 1 || M43e.v[3][2] != 0)
-	{
-		std::cout << "Matrix4x3 operator= error." << std::endl;
-		log << "Matrix4x3 operator= error." << std::endl;
-		err++;
-	}
+	// Matrix1x3 test
+	Matrix1x3 m130;
+	Matrix1x3 m131(1.0, 1.0, 1.0);
+	Matrix1x3 m132(m131);
+	Matrix1x3 m133 = m131;
 
-	M14.v[0] = 1; M14.v[1] = 1; M14.v[2] = 1; M14.v[3] = 1;
-	M43.Swap(&M14, 2);
-	if (M43.v[0][2] != 1 || M43.v[1][2] != 1 || M43.v[2][2] != 1 || M43.v[3][2] != 1)
-	{
-		std::cout << "Matrix4x3 Swap() error." << std::endl;
-		log << "Matrix4x3 Swap() error." << std::endl;
-		err++;
-	}
+	m130.init(1.0, 1.0, 1.0);
+	UT_ASSERT(m130.v[0] != 1.0, "Matrix1x3 default constructor error.");
+	UT_ASSERT(m131.v[0] != 1.0, "Matrix1x3 assign constructor error.");
+	UT_ASSERT(m132.v[0] != 1.0, "Matrix1x3 copy constructor error.");
+	UT_ASSERT(m133.v[0] != 1.0, "Matrix1x3 operator= error.");
+	m130.zero();
+	UT_ASSERT(m130.v[0] != 0 || m130.v[1] != 0, "Matrix1x3 zero() error.");
 
-	M43.Zero();
-	if (M43.v[0][2] != 0 || M43.v[1][2] != 0 || M43.v[2][2] != 0 || M43.v[3][2] != 0)
-	{
-		std::cout << "Matrix4x3 Zero() error." << std::endl;
-		log << "Matrix4x3 Zero() error." << std::endl;
-		err++;
-	}
+	// Matrix3x2 test
+	Matrix3x2 m320;
+	Matrix3x2 m321(1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0);
+	Matrix3x2 m322(m321);
+	Matrix3x2 m323 = m321;
 
-	// Matrix4x4 test : 1
-	Matrix4x4 M44;
-	M44.Init();
-	M44.Swap(&M14, 2);
-	M44.Transpose();
-	if (M44.v[2][0] != 1 || M44.v[2][1] != 1 || M44.v[2][2] != 1 || M44.v[2][3] != 1)
-	{
-		std::cout << "Matrix4x4 Transpose() error." << std::endl;
-		log << "Matrix4x4 Transpose() error." << std::endl;
-		err++;
-	}
+	m320.init(1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0);
+	UT_ASSERT(m320.v[0][0] != 1.0, "Matrix3x2 default constructor error.");
+	UT_ASSERT(m321.v[0][0] != 1.0, "Matrix3x2 assign constructor error.");
+	UT_ASSERT(m322.v[0][0] != 1.0, "Matrix3x2 copy constructor error.");
+	UT_ASSERT(m323.v[0][0] != 1.0, "Matrix3x2 operator= error.");
+	m320.zero();
+	UT_ASSERT(m320.v[0][0] != 0 || m320.v[1][0] != 0, "Matrix3x2 zero() error.");
 
-	// Other size Matrix test ...
-	// ...
+	// Matrix3x3 test
+	Matrix3x3 m330;
+	Matrix3x3 m331(1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0);
+	Matrix3x3 m332(m331);
+	Matrix3x3 m333 = m331;
 
-	std::cout << "MatrixTest => Total : " << total;
-	std::cout << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	std::cout << " | Error : " << err << "(" << (float)err * 100 / total << "%)" << std::endl;
+	m330.init(1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0,
+		1.0, 1.0, 1.0);
+	UT_ASSERT(m330.v[0][0] != 1.0, "Matrix3x3 default constructor error.");
+	UT_ASSERT(m331.v[0][0] != 1.0, "Matrix3x3 assign constructor error.");
+	UT_ASSERT(m332.v[0][0] != 1.0, "Matrix3x3 copy constructor error.");
+	UT_ASSERT(m333.v[0][0] != 1.0, "Matrix3x3 operator= error.");
+	m330.zero();
+	UT_ASSERT(m330.v[0][0] != 0.0, "Matrix3x3 zero() error.");
+	m330.unit();
+	UT_ASSERT(m330.v[0][0] != 1.0 || m330.v[1][1] != 1.0, "Matrix3x3 unit() error.");
+	m330.v[0][1] = 2.0;
+	m330.transpose();
+	UT_ASSERT(m330.v[1][0] != 2.0, "Matrix3x3 transpose() error.");
+	m330.swap(&m131, 0);
+	UT_ASSERT(m330.v[1][0] != 1.0 || m330.v[2][0] != 1.0, "Matrix3x3 swap() error.");
+	m331.v[1][1] = 2.0; m331.v[2][2] = 3.0;
+	UT_ASSERT(m331.det() != 2.0, "Matrix3x3 det() error.");
+	m331 = m331.inverse();
+	UT_ASSERT(m331.v[0][0] < 2.499 || 2.501 < m331.v[0][0], "Matrix3x3 inverse() error.");
+	m332 = m332 + m333;
+	UT_ASSERT(m332.v[0][0] != 2.0, "Matrix3x3 operator+ error.");
+	m332 += m333;
+	UT_ASSERT(m332.v[0][0] != 3.0, "Matrix3x3 operator+= error.");
+	m332 *= m333;
+	UT_ASSERT(m332.v[0][0] < 8.99 || 9.01 < m332.v[0][0], m332.v[0][0]);
+	m332 *= m333;
+	UT_ASSERT(m332.v[0][0] < 26.99 || 27.01 < m332.v[0][0], "Matrix3x3 operator*= error.");
 
-	log << "MatrixTest => Total : " << total;
-	log << " | Pass : " << std::setprecision(4) << total - err << "(" << (float)(total - err) * 100 / total << "%)";
-	log << " | Error : " << err << "(" << (float)err * 100 / total << "%)" << std::endl;
-}*/
+	// Matrix1x2 test
+	Matrix1x2 m120;
+	Matrix1x2 m121(1.0, 1.0);
+	Matrix1x2 m122(m121);
+	Matrix1x2 m123 = m121;
+
+	m120.init(1.0, 1.0);
+	UT_ASSERT(m120.v[0] != 1.0, "Matrix1x2 default constructor error.");
+	UT_ASSERT(m121.v[0] != 1.0, "Matrix1x2 assign constructor error.");
+	UT_ASSERT(m122.v[0] != 1.0, "Matrix1x2 copy constructor error.");
+	UT_ASSERT(m123.v[0] != 1.0, "Matrix1x2 operator= error.");
+	m120.zero();
+	UT_ASSERT(m120.v[0] != 0 || m120.v[1] != 0, "Matrix1x2 zero() error.");
+
+	// Matrix2x2 test
+	Matrix2x2 m220;
+	Matrix2x2 m221(1.0, 1.0, 1.0, 1.0);
+	Matrix2x2 m222(m221);
+	Matrix2x2 m223 = m221;
+
+	m220.init(1.0, 1.0, 1.0, 1.0);
+	UT_ASSERT(m220.v[0][0] != 1.0, "Matrix2x2 default constructor error.");
+	UT_ASSERT(m221.v[0][0] != 1.0, "Matrix2x2 assign constructor error.");
+	UT_ASSERT(m222.v[0][0] != 1.0, "Matrix2x2 copy constructor error.");
+	UT_ASSERT(m223.v[0][0] != 1.0, "Matrix2x2 operator= error.");
+	m220.zero();
+	UT_ASSERT(m220.v[0][0] != 0 || m220.v[1][1] != 0, "Matrix2x2 zero() error.");
+	m220.v[0][1] = 1.0; m220.v[1][0] = 2.0;
+	m220.transpose();
+	UT_ASSERT(m220.v[0][1] != 2.0 || m220.v[1][0] != 1.0, "Matrix2x2 transpose() error.");
+	m220.swap(&m121, 0);
+	UT_ASSERT(m220.v[0][0] != 1.0 || m220.v[1][0] != 1.0, "Matrix2x2 swap() error.");
+	UT_ASSERT(m220.det() != -2.0, "Matrix2x2 det() error.");
+	m220.zero(); m220.v[0][0] = 2.0; m220.v[1][1] = 2.0;
+	m220 = m220.inverse();
+	UT_ASSERT(m220.v[0][0] < 0.499 || 0.501 < m220.v[1][1], "Matrix2x2 inverse() error.");
+	m221 = m221 + m222;
+	UT_ASSERT(m221.v[0][0] != 2.0, "Matrix2x2 operator+ error.");
+	m221 += m222; 
+	UT_ASSERT(m221.v[0][0] != 3.0, "Matrix2x2 operator+= error.");
+	m221 = m221 - m222;
+	UT_ASSERT(m221.v[0][0] != 2.0, "Matrix2x2 operator- error.");
+	m221 -= m222;
+	UT_ASSERT(m221.v[0][0] != 1.0, "Matrix2x2 operator-= error.");
+	m221 = m221 * m222;
+	UT_ASSERT(m221.v[0][0] != 2.0, "Matrix2x2 operator* error.");
+	m221 *= m222;
+	UT_ASSERT(m221.v[0][0] != 4.0, "Matrix2x2 operator*= error.");
+
+}

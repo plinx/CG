@@ -163,7 +163,7 @@ void LWindow::Init(void)
 
 void LWindow::Render(HBITMAP& hBitmap)
 {
-	Point4D cam_pos(0, 0, -100, 1);
+	/*Point4D cam_pos(0, 0, -100, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
@@ -238,4 +238,5 @@ void LWindow::Render(HBITMAP& hBitmap)
 
 	FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	Sleep(10);
+	*/
 }

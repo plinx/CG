@@ -204,6 +204,15 @@ struct Vector4D
 		auto length_inv = 1.0 / length;
 		x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
 	}
+	double dot(const Vector4D* v) { return x * v->x + y * v->y + z * v->z; }
+	double cos(const Vector4D* v) { return  this->dot(v) / (this->length() * v->length()); }
+	Vector4D cross(const Vector4D* v)
+	{
+		Vector4D tmp;
+		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
+		tmp.y = (x * v->y) - (y * v->x); tmp.w = 1.0;
+		return tmp;
+	}
 
 	Vector4D& operator=(const Vector4D& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
 	Vector4D operator+(const Vector4D& v)
@@ -227,16 +236,6 @@ struct Vector4D
 		return tmp; 
 	}
 	Vector4D& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; return *this; }
-
-	double dot(const Vector4D* v) { return (x * v->x) + (y * v->y) + (z * v->z); }
-	double cos(const Vector4D* v) { return  this->dot(v) / (this->length() * v->length()); }
-	Vector4D cross(const Vector4D* v)
-	{
-		Vector4D tmp;
-		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
-		tmp.y = (x * v->y) - (y * v->x); tmp.w = 1.0;
-		return tmp;
-	}
 
 	bool operator==(const Vector4D& v)
 	{
