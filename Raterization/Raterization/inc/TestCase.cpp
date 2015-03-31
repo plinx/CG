@@ -3,10 +3,21 @@
 
 std::ofstream TestLog("log/LMathlog.txt", std::ofstream::app);
 
-#define UT_ASSERT(condition, output) if (condition) { \
+/*#define UT_ASSERT(condition, output) if (condition) { \
 	std::cout << output << std::endl; \
 	TestLog << output << std::endl; \
+}*/
+// According to <<Effective C++>>
+// Use inline to replace #define
+inline void UT_ASSERT(bool condition, std::string output)
+{
+	if (condition)
+	{
+		std::cout << output << std::endl;
+		TestLog << output << std::endl;
+	}
 }
+
 
 void AutoTest()
 {
@@ -23,7 +34,8 @@ void AutoTest()
 	VectorTest();
 	MatrixTest();
 	CoordinateTest();
-	LineTest();
+	LinePlaneTest();
+	QuatTest();
 
 	// AutoTest end
 	GetLocalTime(&time);
@@ -302,7 +314,7 @@ void MatrixTest()
 	m332 += m333;
 	UT_ASSERT(m332.v[0][0] != 3.0, "Matrix3x3 operator+= error.");
 	m332 *= m333;
-	UT_ASSERT(m332.v[0][0] < 8.99 || 9.01 < m332.v[0][0], m332.v[0][0]);
+	UT_ASSERT(m332.v[0][0] < 8.99 || 9.01 < m332.v[0][0], "Matrix3x3 operator* error.");
 	m332 *= m333;
 	UT_ASSERT(m332.v[0][0] < 26.99 || 27.01 < m332.v[0][0], "Matrix3x3 operator*= error.");
 
@@ -418,7 +430,7 @@ void CoordinateTest()
 	UT_ASSERT(sp0.pos != 2.0 || sp0.theta != PI_DIV_4, "Spherical3D operator= error.");
 }
 
-void LineTest()
+void LinePlaneTest()
 {
 	// Line2D test
 	Point2D pbegin1, pbegin2, pend1, pend2;
@@ -448,5 +460,49 @@ void LineTest()
 	UT_ASSERT(line4.p0.x != 0.0 || line4.p1.x != 2.0, "Line3D assign constructor error.");
 	Point3D tmp3D = line3.compute(0.5);
 	UT_ASSERT(tmp3D.x != 1.0 || tmp3D.y != 1.0, "Line3D compute() error.");
+
+	// Plane3D test
+	Point3D ptmp(1.0, 1.0, 1.0);
+	Vector3D nVec(0.0, 0.0, 1.0);
+	Plane3D plane0;
+	Plane3D plane1(ptmp, nVec, false);
+	Plane3D plane2(plane1);
+
+	plane0.init(ptmp, nVec, false);
+	UT_ASSERT(plane0.pos.x != 1.0 || plane0.normal.z != 1.0, "Plane3D default constructor error.");
+	UT_ASSERT(plane1.pos.x != 1.0 || plane1.normal.z != 1.0, "Plane3D assign constructor error.");
+	UT_ASSERT(plane2.pos.x != 1.0 || plane2.normal.z != 1.0, "Plane3D copy constructor error.");
+	ptmp.init(2, 2, 2);
+	UT_ASSERT(plane0.compute(&ptmp) < 1.0, "Plane3D compute() error.");
+	double t;
+	UT_ASSERT(plane0.intersect(&line3, &t, &ptmp) != LINE_INTERSECT_IN_SEGMENT, "Plane3D intersect() error.");
+	UT_ASSERT(t < 0.49 || 0.51 < t, "Plane3D intersect(double) error.");
+	UT_ASSERT(ptmp.x < 0.99 || 1.01 < ptmp.x, "Plane3D intersect(Point) error.");
+	plane0.zero();
+	plane0 = plane1;
+	UT_ASSERT(plane0.pos.x != 1.0 || plane0.normal.z != 1.0, "Plane3D operator= error.");
+
 }
+
+void QuatTest()
+{
+	// Quat test
+	Quat quat0;
+	Vector3D tmp3D(1.0, 1.0, 1.0);
+	Quat quat1(1.0, tmp3D);
+	Quat quat2(1.0, 1.0, 1.0, 1.0);
+	Quat quat3(quat2);
+
+	quat0.init(1.0, &tmp3D);
+	UT_ASSERT(quat0.real != 1.0 || quat0.i != 1.0, "Quat default constructor error.");
+	UT_ASSERT(quat1.real != 1.0 || quat1.i != 1.0, "Quat assign constructor error.");
+	UT_ASSERT(quat2.real != 1.0 || quat2.i != 1.0, "Quat assign constructor error.");
+	UT_ASSERT(quat3.real != 1.0 || quat3.i != 1.0, "Quat copy constructor error.");
+	quat0.zero();
+	UT_ASSERT(quat0.real != 0.0 || quat0.i != 0.0, "Quat zero() error.");
+
+	// skip test in quat
+
+}
+
 

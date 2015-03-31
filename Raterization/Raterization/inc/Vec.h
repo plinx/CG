@@ -18,8 +18,8 @@ struct Vector2D
 	Vector2D() = default;
 	~Vector2D() = default;
 	// Constructor
-	Vector2D(double dx, double dy) : x(dx), y(dy) {}
 	Vector2D(const Vector2D& v) { *this = v; }
+	Vector2D(double dx, double dy) : x(dx), y(dy) {}
 	// Construct from Point2D
 	Vector2D(const Vector2D* begin, const Vector2D* end)
 	{
@@ -87,8 +87,8 @@ struct Vector3D
 	Vector3D() = default;
 	~Vector3D() = default;
 	// Constructor
-	Vector3D(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
 	Vector3D(const Vector3D& v) { *this = v; }
+	Vector3D(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
 	// Build from Point3D
 	Vector3D(const Vector3D* begin, const Vector3D* end)
 	{
@@ -173,9 +173,9 @@ struct Vector4D
 	Vector4D(){}
 	~Vector4D() = default;
 	// Constructor
+	Vector4D(const Vector4D& v) { *this = v; }
 	Vector4D(double dx, double dy, double dz, double dw)
 		: x(dx), y(dy), z(dz), w(dw) {}
-	Vector4D(const Vector4D& v) { *this = v; }
 	// Build from Point4D
 	Vector4D(const Vector4D* begin, const Vector4D* end)
 	{

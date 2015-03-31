@@ -7,6 +7,7 @@ void AutoTest();
 void VectorTest();
 void MatrixTest();
 void CoordinateTest();
-void LineTest();
+void LinePlaneTest();
+void QuatTest();
 
 #endif

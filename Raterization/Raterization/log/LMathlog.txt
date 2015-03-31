@@ -316,3 +316,17 @@ Spherical3D init() error.
 ******* AutoTest start : 2015/3/30 3:22:42 *******
 ******* AutoTest start : 2015/3/30 3:23:44 *******
 ******* AutoTest start : 2015/3/30 3:23:44 *******
+******* AutoTest start : 2015/3/30 22:56:10 *******
+******* AutoTest start : 2015/3/30 22:56:10 *******
+******* AutoTest start : 2015/3/31 0:5:50 *******
+Plane3D intersect() error.
+******* AutoTest start : 2015/3/31 0:5:50 *******
+******* AutoTest start : 2015/3/31 0:9:18 *******
+Plane3D intersect(double) error.
+******* AutoTest start : 2015/3/31 0:9:18 *******
+******* AutoTest start : 2015/3/31 0:9:47 *******
+******* AutoTest start : 2015/3/31 0:9:47 *******
+******* AutoTest start : 2015/3/31 0:13:12 *******
+******* AutoTest start : 2015/3/31 0:13:12 *******
+******* AutoTest start : 2015/4/1 1:51:19 *******
+******* AutoTest start : 2015/4/1 1:51:19 *******

@@ -40,6 +40,8 @@ struct Line2D
 
 	Line2D() = default;
 	~Line2D() = default;
+
+	Line2D(const Line2D& l) { *this = l; }
 	Line2D(Point2D pb, Point2D pe, Vector2D v) : p0(pb), p1(pe), vec(v) {}
 	void init(Point2D pb, Point2D pe, Vector2D v)
 	{
@@ -94,6 +96,8 @@ struct Line3D
 
 	Line3D() = default;
 	~Line3D() = default;
+
+	Line3D(const Line3D& l) { *this = l; }
 	Line3D(Point3D pb, Point3D pe, Vector3D v) : p0(pb), p1(pe), vec(v) {}
 	void init(Point3D pb, Point3D pe, Vector3D v)
 	{
@@ -112,25 +116,28 @@ typedef Line3D* PLine3D;
 
 struct Plane3D
 {
-	Point3D p;
+	Point3D pos;
 	Vector3D normal;
 
 	Plane3D() = default;
 	~Plane3D() = default;
-	Plane3D(Point3D point, Vector3D n, int normalize) : p(point), normal(n)
+
+	Plane3D(const Plane3D& p) { *this = p; }
+	Plane3D(Point3D point, Vector3D n, int normalize) : pos(point), normal(n)
 	{
 		if (normalize) normal.normalize();
 	}
+	void zero() { pos.zero(); normal.zero(); }
 	void init(Point3D point, Vector3D n, int normalize)
 	{
-		p = point; normal = n; 
+		pos = point; normal = n; 
 		if (normalize) normal.normalize();
 	}
 	double compute(Point3D* point)
 	{
-		return (normal.x * (point->x - p.x) + 
-			normal.y * (point->y - p.y) + 
-			normal.z * (point->z - p.z));
+		return (normal.x * (point->x - pos.x) + 
+			normal.y * (point->y - pos.y) + 
+			normal.z * (point->z - pos.z));
 	}
 	int intersect(Line3D* line, double* t, Point3D* point)
 	{
@@ -144,7 +151,7 @@ struct Plane3D
 		}
 
 		*t = -(normal.x * line->p0.x + normal.y * line->p0.y + normal.z * line->p0.z
-			- normal.x * p.x - normal.y * p.y - normal.z * p.z) / dot;
+			- normal.x * pos.x - normal.y * pos.y - normal.z * pos.z) / dot;
 		point->x = line->p0.x + line->vec.x * (*t);
 		point->y = line->p0.y + line->vec.y * (*t);
 		point->z = line->p0.z + line->vec.z * (*t);
@@ -153,6 +160,12 @@ struct Plane3D
 			return LINE_INTERSECT_IN_SEGMENT;
 		else
 			return LINE_INTERSECT_OUT_SEGMENT;
+	}
+
+	Plane3D& operator=(const Plane3D& p)
+	{
+		pos = p.pos; normal = p.normal;
+		return *this;
 	}
 };
 
@@ -203,6 +216,7 @@ struct Cylindrical3D
 	Cylindrical3D() = default;
 	~Cylindrical3D() = default;
 
+	Cylindrical3D(const Cylindrical3D& c) { *this = c; }
 	Cylindrical3D(double dr, double dt, double dz) : r(dr), theta(dt), z(dz) {}
 
 	void init(double dr, double dt, double dz)
@@ -245,6 +259,7 @@ struct Spherical3D
 	Spherical3D() = default;
 	~Spherical3D() = default;
 
+	Spherical3D(const Spherical3D& s) { *this = s; }
 	Spherical3D(double dpos, double dt, double dphi) : pos(dpos), theta(dt), phi(dphi) {}
 
 	void init(double dpos, double dt, double dphi)

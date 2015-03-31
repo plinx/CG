@@ -32,6 +32,7 @@
 #define PLX_SHADE_MODE_PHONG_FLAG     0x6000  // this poly uses phong shading
 #define PLX_SHADE_MODE_FASTPHONG_FLAG 0x6000  // this poly uses phong shading (alias)
 
+/*
 #define POLY4D_ATTR_2SIDED              0x0001
 #define POLY4D_ATTR_TRANSPARENT         0x0002
 #define POLY4D_ATTR_8BITCOLOR           0x0004
@@ -44,12 +45,29 @@
 #define POLY4D_ATTR_SHADE_MODE_GOURAUD    0x0080
 #define POLY4D_ATTR_SHADE_MODE_PHONG      0x0100
 #define POLY4D_ATTR_SHADE_MODE_FASTPHONG  0x0100 // (alias)
-#define POLY4D_ATTR_SHADE_MODE_TEXTURE    0x0200 
+#define POLY4D_ATTR_SHADE_MODE_TEXTURE    0x0200
 
-// states of polygons and faces
 #define POLY4D_STATE_ACTIVE             0x0001
 #define POLY4D_STATE_CLIPPED            0x0002
 #define POLY4D_STATE_BACKFACE           0x0004
+*/
+const int POLY4D_ATTR_2SIDED = 0x0001;
+const int POLY4D_ATTR_TRANSPARENT = 0x0002;
+const int POLY4D_ATTR_8BITCOLOR = 0x0004;
+const int POLY4D_ATTR_RGB16 = 0x0008;
+const int POLY4D_ATTR_RGB24 = 0x0010;
+
+const int POLY4D_ATTR_SHADE_MODE_PURE = 0x0020;
+const int POLY4D_ATTR_SHADE_MODE_CONSTANT = 0x0020; // (alias)
+const int POLY4D_ATTR_SHADE_MODE_FLAT = 0x0040;
+const int POLY4D_ATTR_SHADE_MODE_GOURAUD = 0x0080;
+const int POLY4D_ATTR_SHADE_MODE_PHONG = 0x0100;
+const int POLY4D_ATTR_SHADE_MODE_FASTPHONG = 0x0100; // (alias)
+const int POLY4D_ATTR_SHADE_MODE_TEXTURE = 0x0200;
+
+const int POLY4D_STATE_ACTIVE = 0x0001;
+const int POLY4D_STATE_CLIPPED = 0x0002;
+const int POLY4D_STATE_BACKFACE = 0x0004;
 
 // defines for objects version 1
 #define OBJECT4D_MAX_VERTICES           1024  // 64
