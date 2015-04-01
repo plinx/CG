@@ -87,7 +87,7 @@ const int POLY4D_STATE_BACKFACE = 0x0004;
 // vertex list, but store the results in the
 // transformed vertex list
 
-// Models
+// Objects
 struct Poly4D
 {
 	int state;
@@ -113,7 +113,7 @@ struct PolyFace4D
 };
 typedef PolyFace4D* PPolyFace4D;
 
-struct Model4D
+struct Object4D
 {
 	int id;
 	std::string name;
@@ -134,10 +134,10 @@ struct Model4D
 	int num_poly;
 	Poly4D plist[OBJECT4D_MAX_POLYS];
 
-	Model4D() = default;
-	~Model4D() = default;
+	Object4D() = default;
+	~Object4D() = default;
 
-	void clear() { memset(this, 0, sizeof(Model4D)); }
+	void clear() { memset(this, 0, sizeof(Object4D)); }
 	void reset() 
 	{
 		state &= ~OBJECT4D_STATE_CULLED;
@@ -229,7 +229,7 @@ struct Model4D
 	}
 
 };
-typedef Model4D* PModel4D;
+typedef Object4D* PObject4D;
 
 struct RenderList4D
 {
@@ -365,7 +365,7 @@ typedef RenderList4D* PRenderList4D;
 
 // file loader
 
-inline int Load_Model4D_PLG(PModel4D& obj, std::string fpath,
+inline int Load_Object4D_PLG(PObject4D& obj, std::string fpath,
 	double scale, PVector4D pos, PVector4D rot)
 {
 	std::vector<std::string> data;
@@ -387,7 +387,7 @@ inline int Load_Model4D_PLG(PModel4D& obj, std::string fpath,
 		data.push_back(line);
 	}
 
-	obj = (PModel4D)malloc(sizeof(Model4D));
+	obj = (PObject4D)malloc(sizeof(Object4D));
 	obj->clear();
 	obj->state = OBJECT4D_STATE_ACTIVE | OBJECT4D_STATE_VISIBLE;
 	obj->world_pos = *pos;

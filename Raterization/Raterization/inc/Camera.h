@@ -2,7 +2,7 @@
 #define Camera_h
 enum 
 {
-	CAM_ROT_SEQ_XYZ,
+	CAM_ROT_SEQ_XYZ = 0,
 	CAM_ROT_SEQ_YXZ,
 	CAM_ROT_SEQ_XZY,
 	CAM_ROT_SEQ_YZX,
@@ -16,11 +16,17 @@ enum
 	UVN_MODE_SPHERICAL
 };
 
+/*
 // general culling flags
 #define CULL_OBJECT_X_PLANE           0x0001 // cull on the x clipping planes
 #define CULL_OBJECT_Y_PLANE           0x0002 // cull on the y clipping planes
 #define CULL_OBJECT_Z_PLANE           0x0004 // cull on the z clipping planes
 #define CULL_OBJECT_XYZ_PLANES        (CULL_OBJECT_X_PLANE | CULL_OBJECT_Y_PLANE | CULL_OBJECT_Z_PLANE)
+*/
+const int CULL_OBJECT_X_PLANE = 0x0001;
+const int CULL_OBJECT_Y_PLANE = 0x0002;
+const int CULL_OBJECT_Z_PLANE = 0x0004;
+const int CULL_OBJECT_XYZ_PLANE = CULL_OBJECT_X_PLANE | CULL_OBJECT_Y_PLANE | CULL_OBJECT_Z_PLANE;
 
 struct Camera
 {
@@ -32,7 +38,7 @@ struct Camera
 	Vector4D u, v, n;
 	Point4D target;
 
-	double horizon, vertical;
+	double view_h, view_v;
 	double view_dist;
 	double fov;
 
@@ -56,17 +62,20 @@ struct Camera
 		u.init(1, 0, 0);
 		v.init(0, 1, 0);
 		n.init(0, 0, 1);
+
 		viewport_cx = (viewport_width - 1) / 2;
 		viewport_cy = (viewport_height - 1) / 2;
 		aspect_ratio = viewport_width / viewplane_height;
+
 		mcam.unit(); 
 		mper.unit();
 		mscr.unit();
+
 		viewplane_width = 2.0;
 		viewplane_height = 2.0 / aspect_ratio;
-		double tan_fov_div2 = tan(DEG_TO_RAD(fov / 2));
+		double tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
 		view_dist = (0.5) * viewplane_height * tan_fov_div2;
-		if (89.9 < fov && fov < 90.1)
+		if (89.99 < fov && fov < 90.01)
 		{
 			Point3D pt_origin(0, 0, 0);
 			Vector3D vn(1, 0, -1);
@@ -197,7 +206,7 @@ struct Camera
 		mcam = mt_inv * mt_uvn;
 	}
 
-	void transformWorld(PModel4D obj)
+	void transformWorld(PObject4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -224,7 +233,7 @@ struct Camera
 		}
 	}
 
-	int cull(PModel4D obj, int cull_flag)
+	int cull(PObject4D obj, int cull_flag)
 	{
 		Point4D sphere_pos;
 		sphere_pos = mcam.mul(&obj->world_pos);
@@ -263,14 +272,14 @@ struct Camera
 		return 0;
 	}
 
-	void perspective(PModel4D obj)
+	void perspective(PObject4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
 			double z = obj->vlist_trans[vertex].z;
 
-			obj->vlist_trans[vertex].x = horizon * obj->vlist_trans[vertex].x / z;
-			obj->vlist_trans[vertex].y = vertical * obj->vlist_trans[vertex].y * aspect_ratio / z;
+			obj->vlist_trans[vertex].x = view_h * obj->vlist_trans[vertex].x / z;
+			obj->vlist_trans[vertex].y = view_v * obj->vlist_trans[vertex].y * aspect_ratio / z;
 		}
 	}
 
@@ -289,21 +298,21 @@ struct Camera
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
 				double z = curr_poly->tvlist[vertex].z;
-				curr_poly->tvlist[vertex].x = horizon * curr_poly->vlist[vertex].x / z;
-				curr_poly->tvlist[vertex].y = vertical * curr_poly->vlist[vertex].y * aspect_ratio / z;
+				curr_poly->tvlist[vertex].x = view_h * curr_poly->vlist[vertex].x / z;
+				curr_poly->tvlist[vertex].y = view_v * curr_poly->vlist[vertex].y * aspect_ratio / z;
 			}
 		}
 	}
 
 	void build_Perspective_Matrix4x4(PMatrix4x4 m)
 	{
-		m->init(horizon, 0, 0, 0,
-			0, vertical * aspect_ratio, 0, 0,
+		m->init(view_h, 0, 0, 0,
+			0, view_v * aspect_ratio, 0, 0,
 			0, 0, 1, 1,
 			0, 0, 0, 0);
 	}
 
-	void toScreen(PModel4D obj)
+	void toScreen(PObject4D obj)
 	{
 		double alpha = 0.5 * viewport_width - 0.5;
 		double beta = 0.5 * viewport_height - 0.5;
@@ -349,7 +358,7 @@ struct Camera
 		}
 	}
 
-	void to_Perspective_Screen(PModel4D obj)
+	void to_Perspective_Screen(PObject4D obj)
 	{
 		double alpha = 0.5 * viewport_width - 0.5;
 		double beta = 0.5 * viewport_height - 0.5;

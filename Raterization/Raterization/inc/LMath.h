@@ -4,14 +4,20 @@
 #include <math.h>
 #include "Vec.h"
 
-#define PI ((double)3.1415926535f)
-#define PI2 ((double)6.283185307f)
-#define PI_DIV_2 ((double)1.570796327f)
-#define PI_DIV_4 ((double)0.785398163f)
-#define PI_INV ((double)0.318309886f)
+const double PI = ((double)3.1415926535f);
+const double PI2 = ((double)6.283185307f);
+const double PI_DIV_2 = ((double)1.570796327f);
+const double PI_DIV_4 = ((double)0.785398163f);
+const double PI_INV = ((double)0.318309886f);
 
-#define DEG_TO_RAD(ang) ((ang) * PI / 180.0)
-#define RAD_TO_DEG(rads) ((rads) * 180.0 / PI)
+inline double Angle_to_Radian(angle)
+{
+	return (angle * PI / 180.0);
+}
+inline double Radian_to_Angle(radian)
+{
+	return (radian * 180.0 / PI);
+}
 
 enum 
 {
