@@ -321,7 +321,7 @@ struct RenderList4D
 		}
 	}
 
-	void transformWorld(PPoint4D pos, int select = TRANSFORM_LOCAL_TO_TRANS)
+	void transformWorld(PPoint4D pos, int select)
 	{
 		if (select == TRANSFORM_LOCAL_TO_TRANS)
 		{
@@ -331,8 +331,8 @@ struct RenderList4D
 
 				if ((curr_poly == NULL) ||
 					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					!(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					!(curr_poly->state & POLY4D_STATE_BACKFACE))
+					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+					(curr_poly->state & POLY4D_STATE_BACKFACE))
 					continue;
 
 				for (int vertex = 0; vertex < 3; vertex++)
@@ -349,8 +349,8 @@ struct RenderList4D
 
 				if ((curr_poly == NULL) ||
 					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					!(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					!(curr_poly->state & POLY4D_STATE_BACKFACE))
+					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+					(curr_poly->state & POLY4D_STATE_BACKFACE))
 					continue;
 
 				for (int vertex = 0; vertex < 3; vertex++)

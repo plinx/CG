@@ -10,11 +10,11 @@ const double PI_DIV_2 = ((double)1.570796327f);
 const double PI_DIV_4 = ((double)0.785398163f);
 const double PI_INV = ((double)0.318309886f);
 
-inline double Angle_to_Radian(angle)
+inline double Angle_to_Radian(double angle)
 {
 	return (angle * PI / 180.0);
 }
-inline double Radian_to_Angle(radian)
+inline double Radian_to_Angle(double radian)
 {
 	return (radian * 180.0 / PI);
 }

@@ -63,9 +63,11 @@ struct Camera
 		v.init(0, 1, 0);
 		n.init(0, 0, 1);
 
-		viewport_cx = (viewport_width - 1) / 2;
-		viewport_cy = (viewport_height - 1) / 2;
-		aspect_ratio = viewport_width / viewplane_height;
+		//viewport_cx = (viewport_width - 1) / 2;
+		//viewport_cy = (viewport_height - 1) / 2;
+		viewport_cx = viewport_width / 2;
+		viewport_cy = viewport_height / 2;
+		aspect_ratio = viewport_width / viewport_height;
 
 		mcam.unit(); 
 		mper.unit();
@@ -74,7 +76,7 @@ struct Camera
 		viewplane_width = 2.0;
 		viewplane_height = 2.0 / aspect_ratio;
 		double tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
-		view_dist = (0.5) * viewplane_height * tan_fov_div2;
+		view_dist = (0.5) * viewplane_width * tan_fov_div2;
 		if (89.99 < fov && fov < 90.01)
 		{
 			Point3D pt_origin(0, 0, 0);
@@ -240,8 +242,8 @@ struct Camera
 
 		if (cull_flag & CULL_OBJECT_Z_PLANE)
 		{
-			if (((sphere_pos.z - obj->max_radius) > far_clip) ||
-				((sphere_pos.z + obj->max_radius) < near_clip))
+			if (((sphere_pos.z + obj->max_radius) < near_clip) ||
+				((sphere_pos.z - obj->max_radius) > far_clip))
 			{
 				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
@@ -251,8 +253,8 @@ struct Camera
 		if (cull_flag & CULL_OBJECT_X_PLANE)
 		{
 			double z_test = (0.5) * viewplane_width * sphere_pos.z / view_dist;
-			if (((sphere_pos.x - obj->max_radius) > z_test) ||
-				((sphere_pos.x + obj->max_radius) < -z_test))
+			if (((sphere_pos.x + obj->max_radius) < -z_test) ||
+				((sphere_pos.x - obj->max_radius) > z_test))
 			{
 				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
@@ -262,8 +264,8 @@ struct Camera
 		if (cull_flag & CULL_OBJECT_Y_PLANE)
 		{
 			double z_test = (0.5) * viewplane_height * sphere_pos.z / view_dist;
-			if (((sphere_pos.x - obj->max_radius) > z_test) ||
-				((sphere_pos.x + obj->max_radius) < -z_test))
+			if (((sphere_pos.x + obj->max_radius) < -z_test) ||
+				((sphere_pos.x - obj->max_radius) > z_test))
 			{
 				obj->state |= OBJECT4D_STATE_CULLED;
 				return 1;
@@ -314,8 +316,10 @@ struct Camera
 
 	void toScreen(PObject4D obj)
 	{
-		double alpha = 0.5 * viewport_width - 0.5;
-		double beta = 0.5 * viewport_height - 0.5;
+		//double alpha = 0.5 * viewport_width - 0.5;
+		//double beta = 0.5 * viewport_height - 0.5;
+		double alpha = 0.5 * viewport_width;
+		double beta = 0.5 * viewport_height;
 
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -326,8 +330,10 @@ struct Camera
 
 	void build_Screen_Matrix4x4(PMatrix4x4 m)
 	{
-		double alpha = 0.5 * viewport_width - 0.5;
-		double beta = 0.5 * viewport_height - 0.5;
+		//double alpha = 0.5 * viewport_width - 0.5;
+		//double beta = 0.5 * viewport_height - 0.5;
+		double alpha = 0.5 * viewport_width;
+		double beta = 0.5 * viewport_height;
 		m->init(alpha, 0, 0, 0,
 			0, -beta, 0, 0,
 			alpha, beta, 1, 0,
@@ -346,22 +352,23 @@ struct Camera
 				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
-			double alpha = 0.5 * viewport_width - 0.5;
-			double beta = 0.5 * viewport_height - 0.5;
-
+			double alpha = 0.5 * viewport_width;
+			double beta = 0.5 * viewport_height;
+		
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
 				curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
-				curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
+				curr_poly->tvlist[vertex].y = beta + beta * curr_poly->tvlist[vertex].y;
 			}
-
 		}
 	}
 
 	void to_Perspective_Screen(PObject4D obj)
 	{
-		double alpha = 0.5 * viewport_width - 0.5;
-		double beta = 0.5 * viewport_height - 0.5;
+		//double alpha = 0.5 * viewport_width - 0.5;
+		//double beta = 0.5 * viewport_height - 0.5;
+		double alpha = 0.5 * viewport_width;
+		double beta = 0.5 * viewport_height;
 
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -386,13 +393,11 @@ struct Camera
 				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
-			double alpha = 0.5 * viewport_width - 0.5;
-			double beta = 0.5 * viewport_height - 0.5;
-
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
-				curr_poly->tvlist[vertex].x = curr_poly->tvlist[vertex].x + alpha;
-				curr_poly->tvlist[vertex].y = -curr_poly->tvlist[vertex].y + beta;
+				double z = curr_poly->tvlist[vertex].z;
+				curr_poly->tvlist[vertex].x = view_dist * curr_poly->tvlist[vertex].x / z;
+				curr_poly->tvlist[vertex].y = view_dist * curr_poly->tvlist[vertex].y * aspect_ratio /z;
 			}
 		}
 	}

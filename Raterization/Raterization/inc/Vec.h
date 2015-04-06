@@ -1,6 +1,7 @@
 #ifndef Vec_h
 #define Vec_h
 
+#include <iostream>
 #include <algorithm>
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -183,6 +184,7 @@ struct Vector4D
 		z = end->z - begin->z; w = 1.0;
 	}
 
+	void print() { std::cout << "(" << x << ", " << y << ", " << z << ")"; }
 	void zero() { x = y = z = 0.0; w = 1.0; }
 	void init(double dx, double dy, double dz) { x = dx; y = dy; z = dz; w = 1.0; }
 	double length() const { return sqrt(x*x + y*y + z*z); }

@@ -283,7 +283,7 @@ struct Matrix4x4
 
 	void build(double theta_x, double theta_y, double theta_z)
 	{
-		Matrix4x4 mx;// , my, mz, mtmp;
+		Matrix4x4 mx, my, mz, mtmp;
 		double sin_theta = 0, cos_theta = 0;
 		int rot_seq = 0;
 
@@ -302,28 +302,111 @@ struct Matrix4x4
 		case 0:
 			return;
 			break;
-		case 1:
+		case 1:		// x rotation
 			cos_theta = Fast_cos(theta_x);
 			sin_theta = Fast_sin(theta_x);
 			mx.init(1, 0, 0, 0,
 				0, cos_theta, sin_theta, 0,
 				0, -sin_theta, cos_theta, 0,
 				0, 0, 0, 1);
+
 			*this = mx;
 			return;
 			break;
-		case 2:
+		case 2:		// y rotation
 			cos_theta = Fast_cos(theta_y);
 			sin_theta = Fast_sin(theta_y);
-
-			this->init(cos_theta, 0, -sin_theta, 0,
+			my.init(cos_theta, 0, -sin_theta, 0,
 				0, 1, 0, 0,
 				sin_theta, 0, cos_theta, 0,
 				0, 0, 0, 1);
 
-			//*this = my;
+			*this = my;
 			return;
 			break;
+		case 3:		// xy rotation
+			cos_theta = Fast_cos(theta_x);
+			sin_theta = Fast_sin(theta_x);
+			mx.init(1, 0, 0, 0,
+				0, cos_theta, sin_theta, 0,
+				0, -sin_theta, cos_theta, 0,
+				0, 0, 0, 1);
+
+			cos_theta = Fast_cos(theta_y);
+			sin_theta = Fast_sin(theta_y);
+			my.init(cos_theta, 0, -sin_theta, 0,
+				0, 1, 0, 0,
+				sin_theta, 0, cos_theta, 0,
+				0, 0, 0, 1);
+
+			*this = mx * my;
+			return;
+			break;
+		case 4: // z rotation
+			cos_theta = Fast_cos(theta_z);
+			sin_theta = Fast_sin(theta_z);
+			mz.init(cos_theta, sin_theta, 0, 0,
+				-sin_theta, cos_theta, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1);
+
+			*this = mz;
+		case 5: // xz rotation
+			cos_theta = Fast_cos(theta_x);
+			sin_theta = Fast_sin(theta_x);
+			mx.init(1, 0, 0, 0,
+				0, cos_theta, sin_theta, 0,
+				0, -sin_theta, cos_theta, 0,
+				0, 0, 0, 1);
+			
+			cos_theta = Fast_cos(theta_z);
+			sin_theta = Fast_sin(theta_z);
+			mz.init(cos_theta, sin_theta, 0, 0,
+				-sin_theta, cos_theta, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1);
+
+			*this = mx * mz;
+		case  6: // yz rotation
+			cos_theta = Fast_cos(theta_y);
+			sin_theta = Fast_sin(theta_y);
+			my.init(cos_theta, 0, -sin_theta, 0,
+				0, 1, 0, 0,
+				sin_theta, 0, cos_theta, 0,
+				0, 0, 0, 1);
+
+			cos_theta = Fast_cos(theta_z);
+			sin_theta = Fast_sin(theta_z);
+			mz.init(cos_theta, sin_theta, 0, 0,
+				-sin_theta, cos_theta, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1);
+
+			*this = my * mz;
+		case 7:
+			cos_theta = Fast_cos(theta_x);
+			sin_theta = Fast_sin(theta_x);
+			mx.init(1, 0, 0, 0,
+				0, cos_theta, sin_theta, 0,
+				0, -sin_theta, cos_theta, 0,
+				0, 0, 0, 1);
+
+			cos_theta = Fast_cos(theta_y);
+			sin_theta = Fast_sin(theta_y);
+			my.init(cos_theta, 0, -sin_theta, 0,
+				0, 1, 0, 0,
+				sin_theta, 0, cos_theta, 0,
+				0, 0, 0, 1);
+
+			cos_theta = Fast_cos(theta_z);
+			sin_theta = Fast_sin(theta_z);
+			mz.init(cos_theta, sin_theta, 0, 0,
+				-sin_theta, cos_theta, 0, 0,
+				0, 0, 1, 0,
+				0, 0, 0, 1);
+
+			mtmp = mx * my;
+			*this = mtmp * mz;
 		default:
 			break;
 		}
