@@ -106,64 +106,18 @@ HBITMAP LWindow::CreateDIB()
 	return hBitmap;
 }
 
-WPARAM LWindow::MsgLoop(void)
+WPARAM LWindow::Render(void)
 {
+	// window init
 	MSG msg;
 	HBITMAP hBitmap;
+	HPEN hPen;
+	HBRUSH hBrush;
+	POINT apt[3];
+	RECT rect;
 
-	ShowWindow(m_hwnd, SW_SHOWNORMAL);
-	UpdateWindow(m_hwnd);
-	
-	m_hDC = GetDC(m_hwnd);
-	m_hDCmem = CreateCompatibleDC(m_hDC);
-	//SetRect(&rect, 0, 0, m_width, m_height);
-	hBitmap = CreateDIB();
-	SelectObject(m_hDCmem, hBitmap);
-	//FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-
-#if 0
-	Render();
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-#else
-	Init();
-	while (TRUE)
-	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
-			//if (msg.message == WM_QUIT)
-				break;
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else
-		{
-			// Render
-			Render(hBitmap);
-		}
-	}
-#endif
-
-	ReleaseDC(m_hwnd, m_hDC);
-	DeleteDC(m_hDCmem);
-	DeleteObject(hBitmap);
-
-	return msg.wParam;
-}
-
-void LWindow::Init(void)
-{
-	
-}
-
-void LWindow::Render(HBITMAP& hBitmap)
-{
-	/*Point4D cam_pos(0, 0, -100, 1);
+	// render init
+	Point4D cam_pos(0, 0, -100, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
@@ -171,6 +125,21 @@ void LWindow::Render(HBITMAP& hBitmap)
 	RenderList4D rlist;
 	PolyFace4D poly1;
 	Point4D poly_pos(0, 0, 100, 1);
+	Object4D obj;
+
+	ShowWindow(m_hwnd, SW_SHOWNORMAL);
+	UpdateWindow(m_hwnd);
+	
+	m_hDC = GetDC(m_hwnd);
+	m_hDCmem = CreateCompatibleDC(m_hDC);
+	SetRect(&rect, 0, 0, m_width, m_height);
+	hBitmap = CreateDIB();
+	SelectObject(m_hDCmem, hBitmap);
+	//FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+	hPen = (HPEN)GetStockObject(WHITE_PEN);
+	SelectObject(m_hDCmem, hPen);
+	//hBrush = CreateHatchBrush(HS_DIAGCROSS, RGB(255, 0, 255));
+	//SelectObject(m_hDCmem, hBrush);
 
 	Build_SinCos_Tables();
 
@@ -196,47 +165,71 @@ void LWindow::Render(HBITMAP& hBitmap)
 	poly1.next = NULL;
 	poly1.prev = NULL;
 
-	camera = Camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 480, 480);
+	camera = Camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
+	Load_Object4D_PLG(&obj, "resource/cube1.plg", vscale.x, &vpos, &vrot);
+	obj.world_pos.x = 0;
+	obj.world_pos.y = 0;
+	obj.world_pos.z = 100;
 
-	static Matrix4x4 mrot;
-	static double ang_y = 0;
-
+	Matrix4x4 mrot;
+	//static double ang_y = 0;
 	// need the reset func in renderlist
-	rlist.num_polys = 1;
+	//rlist.num_polys = 1;
+	// need the insert func in renderlist
+	//rlist.poly_ptrs[0] = &rlist.poly_data[0];
+	//rlist.poly_data[0] = poly1;
 
-	// need the insert func in rederlist
-	rlist.poly_ptrs[0] = &rlist.poly_data[0];
-	rlist.poly_data[0] = poly1;
+#if 0
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
 
-	mrot.build(0, ang_y, 0);
-	if (++ang_y >= 360.0) ang_y = 0;
-	rlist.transform(&mrot, TRANSFORM_LOCAL_ONLY);
-	rlist.transformWorld(&poly_pos);
-	camera.build_Euler(CAM_ROT_SEQ_ZYX);
-	camera.transformWorld(&rlist);
-	camera.to_Perspective_Screen(&rlist);
-	camera.perspective_to_Renderlist(&rlist);
+#else
+	while (TRUE)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+			//if (msg.message == WM_QUIT)
+				break;
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else
+		{
+			// Render
+			/*mrot.build(0, ang_y, 0);
+			if (++ang_y >= 360.0) ang_y = 0;
+			rlist.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+			rlist.transformWorld(&poly_pos, TRANSFORM_TRANS_ONLY);
+			camera.build_Euler(CAM_ROT_SEQ_ZYX);
+			camera.transformWorld(&rlist);
+			camera.to_Perspective_Screen(&rlist);
+			camera.perspective_to_Renderlist(&rlist);
 
-	static RECT rect;
-	SetRect(&rect, 0, 0, m_width, m_height);
-	//static HBRUSH brush = (HBRUSH)CreateSolidBrush(RGB(255, 255, 255));
-	//SelectObject(m_hDCmem, brush);
-	static HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	SelectObject(m_hDCmem, hPen);
-	static POINT apt[3];
-	apt[0].x = rlist.poly_data[0].vlist[0].x + 200;
-	apt[0].y = rlist.poly_data[0].vlist[0].y + 200;
-	apt[1].x = rlist.poly_data[0].vlist[1].x + 200;
-	apt[1].y = rlist.poly_data[0].vlist[1].y + 200;
-	apt[2].x = rlist.poly_data[0].vlist[2].x + 200;
-	apt[2].y = rlist.poly_data[0].vlist[2].y + 200;
-	PolylineTo(m_hDCmem, apt, 3);
+			apt[0].x = (LONG)rlist.poly_ptrs[0]->tvlist[0].x;
+			apt[0].y = (LONG)rlist.poly_ptrs[0]->tvlist[0].y;
+			apt[1].x = (LONG)rlist.poly_ptrs[0]->tvlist[1].x;
+			apt[1].y = (LONG)rlist.poly_ptrs[0]->tvlist[1].y;
+			apt[2].x = (LONG)rlist.poly_ptrs[0]->tvlist[2].x;
+			apt[2].y = (LONG)rlist.poly_ptrs[0]->tvlist[2].y;*/
 
-	BitBlt(m_hDC,
-		0, 0, m_width, m_height,
-		m_hDCmem, 0, 0, SRCCOPY);
+			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			Polygon(m_hDCmem, apt, 3);
+			BitBlt(m_hDC,
+				0, 0, m_width, m_height,
+				m_hDCmem, 0, 0, SRCCOPY);
+			Sleep(10);
+		}
+	}
+#endif
 
-	FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	Sleep(10);
-	*/
+	ReleaseDC(m_hwnd, m_hDC);
+	DeleteDC(m_hDCmem);
+	DeleteObject(hBitmap);
+
+	return msg.wParam;
 }
+

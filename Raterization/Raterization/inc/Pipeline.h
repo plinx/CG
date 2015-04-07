@@ -365,7 +365,7 @@ typedef RenderList4D* PRenderList4D;
 
 // file loader
 
-inline int Load_Object4D_PLG(PObject4D& obj, std::string fpath,
+inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 	double scale, PVector4D pos, PVector4D rot)
 {
 	std::vector<std::string> data;

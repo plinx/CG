@@ -358,7 +358,7 @@ struct Camera
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
 				curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
-				curr_poly->tvlist[vertex].y = beta + beta * curr_poly->tvlist[vertex].y;
+				curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
 			}
 		}
 	}

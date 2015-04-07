@@ -26,10 +26,7 @@ public:
 	BOOL Create(HINSTANCE hInstance);
 
 	HBITMAP CreateDIB();
-	WPARAM MsgLoop(void);
-
-	void Init();
-	void Render(HBITMAP& hBitmap);
+	WPARAM Render(void);
 };
 
 #endif

@@ -7,7 +7,7 @@ void Build_SinCos_Tables()
 {
 	for (int ang = 0; ang <= 360; ang++)
 	{
-		double theta = (double)ang * PI / (double)180;
+		double theta = (double)ang * PI / (double)180.0;
 		cos_table[ang] = cos(theta);
 		sin_table[ang] = sin(theta);
 
