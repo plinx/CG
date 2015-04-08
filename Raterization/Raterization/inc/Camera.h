@@ -103,6 +103,54 @@ struct Camera
 		}
 	}
 
+	void init(int a, Point4D p, Vector4D d, Point4D t,
+		double nc, double fc, double f, double w, double h)
+	{
+		attr = a; pos = p; dir = d; target = t;
+		near_clip = nc; far_clip = fc; fov = f; viewport_width = w; viewport_height = h;
+
+		u.init(1, 0, 0);
+		v.init(0, 1, 0);
+		n.init(0, 0, 1);
+
+		viewport_cx = viewport_width / 2;
+		viewport_cy = viewport_height / 2;
+		aspect_ratio = viewport_width / viewport_height;
+
+		mcam.unit();
+		mper.unit();
+		mscr.unit();
+
+		viewplane_width = 2.0;
+		viewplane_height = 2.0 / aspect_ratio;
+		double tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
+		view_dist = (0.5) * viewplane_width * tan_fov_div2;
+		if (89.99 < fov && fov < 90.01)
+		{
+			Point3D pt_origin(0, 0, 0);
+			Vector3D vn(1, 0, -1);
+			right_plane.init(pt_origin, vn, 1);
+			vn.init(-1, 0, 1);
+			left_plane.init(pt_origin, vn, 1);
+			vn.init(0, 1, -1);
+			top_plane.init(pt_origin, vn, 1);
+			vn.init(0, -1, -1);
+			bottom_plane.init(pt_origin, vn, 1);
+		}
+		else
+		{
+			Point3D pt_origin(0, 0, 0);
+			Vector3D vn(view_dist, 0, -viewplane_width / 2.0);
+			right_plane.init(pt_origin, vn, 1);
+			vn.init(-(int)view_dist, 0, -viewplane_width / 2.0);
+			left_plane.init(pt_origin, vn, 1);
+			vn.init(0, view_dist, -viewplane_height / 2.0);
+			top_plane.init(pt_origin, vn, 1);
+			vn.init(0, -view_dist, -viewplane_width / 2.0);
+			bottom_plane.init(pt_origin, vn, 1);
+		}
+	}
+
 	void build_Euler(int cam_rot_seq)
 	{
 		Matrix4x4 mt_inv, mx_inv, my_inv, mz_inv, mrot, mtmp;
@@ -313,21 +361,7 @@ struct Camera
 			0, 0, 1, 1,
 			0, 0, 0, 0);
 	}
-
-	void toScreen(PObject4D obj)
-	{
-		//double alpha = 0.5 * viewport_width - 0.5;
-		//double beta = 0.5 * viewport_height - 0.5;
-		double alpha = 0.5 * viewport_width;
-		double beta = 0.5 * viewport_height;
-
-		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
-		{
-			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x;
-			obj->vlist_trans[vertex].x = beta + beta * obj->vlist_trans[vertex].y;
-		}
-	}
-
+	
 	void build_Screen_Matrix4x4(PMatrix4x4 m)
 	{
 		//double alpha = 0.5 * viewport_width - 0.5;
@@ -340,48 +374,17 @@ struct Camera
 			0, 0, 0, 1);
 	}
 
-	void perspective_to_Renderlist(PRenderList4D rlist)
+	void to_Perspective(PObject4D obj)
 	{
-		for (int poly = 0; poly < rlist->num_polys; poly++)
-		{
-			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
-
-			if ((curr_poly == NULL) ||
-				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-				(curr_poly->state & POLY4D_STATE_BACKFACE))
-				continue;
-
-			double alpha = 0.5 * viewport_width;
-			double beta = 0.5 * viewport_height;
-		
-			for (int vertex = 0; vertex < 3; vertex++)
-			{
-				curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
-				curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
-			}
-		}
-	}
-
-	void to_Perspective_Screen(PObject4D obj)
-	{
-		//double alpha = 0.5 * viewport_width - 0.5;
-		//double beta = 0.5 * viewport_height - 0.5;
-		double alpha = 0.5 * viewport_width;
-		double beta = 0.5 * viewport_height;
-
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
 			double z = obj->vlist_trans[vertex].z;
-			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x /z;
-			obj->vlist_trans[vertex].x = beta + beta * obj->vlist_trans[vertex].y * aspect_ratio / z;
-		
-			obj->vlist_trans[vertex].x = obj->vlist_trans[vertex].x + alpha;
-			obj->vlist_trans[vertex].y = -obj->vlist_trans[vertex].y + beta;
+			obj->vlist_trans[vertex].x = view_dist * obj->vlist_trans[vertex].x /z;
+			obj->vlist_trans[vertex].y = view_dist * obj->vlist_trans[vertex].y * aspect_ratio / z;
 		}
 	}
 
-	void to_Perspective_Screen(PRenderList4D rlist)
+	void to_Perspective(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
@@ -401,6 +404,44 @@ struct Camera
 			}
 		}
 	}
+
+	void to_Screen(PRenderList4D rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			double alpha = 0.5 * viewport_width;
+			double beta = 0.5 * viewport_height;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
+				curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
+			}
+		}
+	}
+
+	void to_Screen(PObject4D obj)
+	{
+		//double alpha = 0.5 * viewport_width - 0.5;
+		//double beta = 0.5 * viewport_height - 0.5;
+		double alpha = 0.5 * viewport_width;
+		double beta = 0.5 * viewport_height;
+
+		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
+		{
+			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x;
+			obj->vlist_trans[vertex].y = beta + beta * obj->vlist_trans[vertex].y;
+		}
+	}
+
 };
 typedef Camera* PCamera;
 

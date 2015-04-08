@@ -65,6 +65,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Demos.h" />
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\LMath.h" />
     <ClInclude Include="inc\LWin.h" />
@@ -76,6 +77,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demos.cpp" />
     <ClCompile Include="inc\LMath.cpp" />
     <ClCompile Include="inc\LWin.cpp" />
     <ClCompile Include="inc\TestCase.cpp" />

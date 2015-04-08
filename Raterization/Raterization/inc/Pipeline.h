@@ -1,9 +1,9 @@
 #ifndef Pipeline_h
 #define Pipeline_h
 
-#define OBJECT4D_MAX_VERTICES 1024
-#define OBJECT4D_MAX_POLYS 1024
-#define RENDERLIST4D_MAX_POLYS 1024
+const int OBJECT4D_MAX_VERTICES = 1024;
+const int OBJECT4D_MAX_POLYS = 1024;
+const int RENDERLIST4D_MAX_POLYS = 1024;
 
 #define OBJECT4D_STATE_ACTIVE           0x0001
 #define OBJECT4D_STATE_VISIBLE          0x0002 
@@ -387,16 +387,15 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 		data.push_back(line);
 	}
 
-	obj = (PObject4D)malloc(sizeof(Object4D));
 	obj->clear();
 	obj->state = OBJECT4D_STATE_ACTIVE | OBJECT4D_STATE_VISIBLE;
 	obj->world_pos = *pos;
 	iss.str(data[offset]);
 	offset++;
 	iss >> obj->name >> obj->num_vertices >> obj->num_poly;
-	std::cout << "name : " << obj->name << std::endl;
-	std::cout << "vertices : " << obj->num_vertices << std::endl;
-	std::cout << "poly : " << obj->num_poly << std::endl;
+	//std::cout << "name : " << obj->name << std::endl;
+	//std::cout << "vertices : " << obj->num_vertices << std::endl;
+	//std::cout << "poly : " << obj->num_poly << std::endl;
 
 	for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 	{
@@ -405,8 +404,8 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 		iss >> obj->vlist_local[vertex].x >> obj->vlist_local[vertex].y >> obj->vlist_local[vertex].z;
 		obj->vlist_local[vertex] *= scale;
 
-		std::cout << obj->vlist_local[vertex].x << " " << obj->vlist_local[vertex].y << " " << obj->vlist_local[vertex].z;
-		std::cout << std::endl;
+		//std::cout << obj->vlist_local[vertex].x << " " << obj->vlist_local[vertex].y << " " << obj->vlist_local[vertex].z;
+		//std::cout << std::endl;
 	}
 	offset += obj->num_vertices;
 
@@ -420,8 +419,8 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 		iss.clear();
 		iss.str(data[poly + offset]);
 		iss >> std::hex >> poly_surface_desc >> std::dec >> poly_num_verts
-			>> obj->plist[poly].vert[0] >> obj->plist[poly].vert[1] >> obj->plist[poly].vert[3];
-		std::cout << std::hex << poly_surface_desc << " " << std::dec << poly_num_verts << " " << obj->plist[poly].vert[0] << " " << obj->plist[poly].vert[1] << " " << obj->plist[poly].vert[2] << std::endl;
+			>> obj->plist[poly].vert[0] >> obj->plist[poly].vert[1] >> obj->plist[poly].vert[2];
+		//std::cout << std::hex << poly_surface_desc << " " << std::dec << poly_num_verts << " " << obj->plist[poly].vert[0] << " " << obj->plist[poly].vert[1] << " " << obj->plist[poly].vert[2] << std::endl;
 		if (poly_surface_desc & PLX_2SIDED_FLAG)
 		{
 			obj->plist[poly].attr |= POLY4D_ATTR_2SIDED;
@@ -434,7 +433,7 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 			int red = (poly_surface_desc & 0x0f00) >> 4;
 			int green = (poly_surface_desc & 0x00f0);
 			int blue = (poly_surface_desc & 0x000f) << 4;
-			std::cout << "red : " << red << " green : " << green << " blue : " << blue << std::endl;
+			//std::cout << "red : " << red << " green : " << green << " blue : " << blue << std::endl;
 			obj->plist[poly].color = RGB(red, green, blue);
 		}
 

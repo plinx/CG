@@ -112,7 +112,7 @@ WPARAM LWindow::Render(void)
 	MSG msg;
 	HBITMAP hBitmap;
 	HPEN hPen;
-	HBRUSH hBrush;
+	//HBRUSH hBrush;
 	POINT apt[3];
 	RECT rect;
 
@@ -126,6 +126,7 @@ WPARAM LWindow::Render(void)
 	PolyFace4D poly1;
 	Point4D poly_pos(0, 0, 100, 1);
 	Object4D obj;
+	Matrix4x4 mrot;
 
 	ShowWindow(m_hwnd, SW_SHOWNORMAL);
 	UpdateWindow(m_hwnd);
@@ -136,48 +137,15 @@ WPARAM LWindow::Render(void)
 	hBitmap = CreateDIB();
 	SelectObject(m_hDCmem, hBitmap);
 	//FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	hPen = (HPEN)GetStockObject(WHITE_PEN);
+	hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
 	SelectObject(m_hDCmem, hPen);
 	//hBrush = CreateHatchBrush(HS_DIAGCROSS, RGB(255, 0, 255));
 	//SelectObject(m_hDCmem, hBrush);
 
 	Build_SinCos_Tables();
 
-	poly1.state = POLY4D_STATE_ACTIVE;
-	poly1.attr = 0;
-	poly1.color = RGB(0, 0, 0);
-
-	poly1.vlist[0].x = 0;
-	poly1.vlist[0].y = 50;
-	poly1.vlist[0].z = 0;
-	poly1.vlist[0].w = 1;
-
-	poly1.vlist[1].x = 50;
-	poly1.vlist[1].y = -50;
-	poly1.vlist[1].z = 0;
-	poly1.vlist[1].w = 1;
-
-	poly1.vlist[2].x = -50;
-	poly1.vlist[2].y = -50;
-	poly1.vlist[2].z = 0;
-	poly1.vlist[2].w = 1;
-
-	poly1.next = NULL;
-	poly1.prev = NULL;
-
-	camera = Camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
-	Load_Object4D_PLG(&obj, "resource/cube1.plg", vscale.x, &vpos, &vrot);
-	obj.world_pos.x = 0;
-	obj.world_pos.y = 0;
-	obj.world_pos.z = 100;
-
-	Matrix4x4 mrot;
-	//static double ang_y = 0;
-	// need the reset func in renderlist
-	//rlist.num_polys = 1;
-	// need the insert func in renderlist
-	//rlist.poly_ptrs[0] = &rlist.poly_data[0];
-	//rlist.poly_data[0] = poly1;
+	camera.init(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
+	Load_Object4D_PLG(&obj, "resource/tank2.plg", vscale.x, &vpos, &vrot);
 
 #if 0
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -199,28 +167,52 @@ WPARAM LWindow::Render(void)
 		}
 		else
 		{
+			static int ang_x = 0;
+			static int ang_y = 5;
+			static int ang_z = 0;
 			// Render
-			/*mrot.build(0, ang_y, 0);
-			if (++ang_y >= 360.0) ang_y = 0;
-			rlist.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS);
-			rlist.transformWorld(&poly_pos, TRANSFORM_TRANS_ONLY);
+			if (GetKeyState(VK_LEFT) < 0) ang_y++;
+			if (GetKeyState(VK_RIGHT) < 0) ang_y--;
+			if (GetKeyState(VK_UP) < 0) ang_x++;
+			if (GetKeyState(VK_DOWN) < 0) ang_x--;
+			if (GetKeyState(VK_SPACE) < 0) camera.pos.y++;
+			if (GetKeyState(0x56) < 0) camera.pos.y--;
+			mrot.build(ang_x, ang_y, ang_z);
+			obj.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+			obj.transformWorld(TRANSFORM_TRANS_ONLY);
 			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-			camera.transformWorld(&rlist);
-			camera.to_Perspective_Screen(&rlist);
-			camera.perspective_to_Renderlist(&rlist);
-
-			apt[0].x = (LONG)rlist.poly_ptrs[0]->tvlist[0].x;
-			apt[0].y = (LONG)rlist.poly_ptrs[0]->tvlist[0].y;
-			apt[1].x = (LONG)rlist.poly_ptrs[0]->tvlist[1].x;
-			apt[1].y = (LONG)rlist.poly_ptrs[0]->tvlist[1].y;
-			apt[2].x = (LONG)rlist.poly_ptrs[0]->tvlist[2].x;
-			apt[2].y = (LONG)rlist.poly_ptrs[0]->tvlist[2].y;*/
+			camera.transformWorld(&obj);
+			camera.to_Perspective(&obj);
+			camera.to_Screen(&obj);
 
 			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-			Polygon(m_hDCmem, apt, 3);
+			for (auto poly = 0; poly < obj.num_poly; poly++)
+			{
+				if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
+					(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
+					(obj.plist[poly].state & POLY4D_STATE_BACKFACE))
+					continue;
+
+				apt[0].x = (LONG)obj.vlist_trans[obj.plist[poly].vert[0]].x;
+				apt[0].y = (LONG)obj.vlist_trans[obj.plist[poly].vert[0]].y;
+				apt[1].x = (LONG)obj.vlist_trans[obj.plist[poly].vert[1]].x;
+				apt[1].y = (LONG)obj.vlist_trans[obj.plist[poly].vert[1]].y;
+				apt[2].x = (LONG)obj.vlist_trans[obj.plist[poly].vert[2]].x;
+				apt[2].y = (LONG)obj.vlist_trans[obj.plist[poly].vert[2]].y;
+
+				//Polyline(m_hDCmem, apt, 3);
+				MoveToEx(m_hDCmem, apt[0].x, apt[0].y, NULL);
+				LineTo(m_hDCmem, apt[1].x, apt[1].y);
+				MoveToEx(m_hDCmem, apt[1].x, apt[1].y, NULL);
+				LineTo(m_hDCmem, apt[2].x, apt[2].y);
+				MoveToEx(m_hDCmem, apt[2].x, apt[2].y, NULL);
+				LineTo(m_hDCmem, apt[0].x, apt[0].y);
+			}
+
 			BitBlt(m_hDC,
 				0, 0, m_width, m_height,
 				m_hDCmem, 0, 0, SRCCOPY);
+
 			Sleep(10);
 		}
 	}
