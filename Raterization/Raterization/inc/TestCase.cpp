@@ -56,7 +56,7 @@ void VectorTest()
 	Vector2D v22(v21);
 	Vector2D v23 = v22;
 
-	v20.init(0, 0);
+	v20.init(0.0, 0.0);
 	UT_ASSERT(v20.x != 0 || v20.y != 0, "Vector2D default constructor error.");
 	UT_ASSERT(v21.x != 1 || v21.y != 1, "Vector2D assign constructor error.");
 	UT_ASSERT(v22 != v21, "Vector2D constructor error.");

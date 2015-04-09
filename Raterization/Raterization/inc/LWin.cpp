@@ -145,7 +145,7 @@ WPARAM LWindow::Render(void)
 	Build_SinCos_Tables();
 
 	camera.init(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
-	Load_Object4D_PLG(&obj, "resource/tank2.plg", vscale.x, &vpos, &vrot);
+	Load_Object4D_PLG(&obj, "resource/tank1.plg", vscale.x, &vpos, &vrot);
 
 #if 0
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -178,10 +178,12 @@ WPARAM LWindow::Render(void)
 			if (GetKeyState(VK_SPACE) < 0) camera.pos.y++;
 			if (GetKeyState(0x56) < 0) camera.pos.y--;
 			mrot.build(ang_x, ang_y, ang_z);
+			obj.reset();
 			obj.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
-			obj.transformWorld(TRANSFORM_TRANS_ONLY);
+			obj.transform_World(TRANSFORM_TRANS_ONLY);
 			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-			camera.transformWorld(&obj);
+			camera.remove_Backfaces(&obj);
+			camera.transform_World(&obj);
 			camera.to_Perspective(&obj);
 			camera.to_Screen(&obj);
 

@@ -256,7 +256,7 @@ struct Camera
 		mcam = mt_inv * mt_uvn;
 	}
 
-	void transformWorld(PObject4D obj)
+	void transform_World(PObject4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -264,7 +264,7 @@ struct Camera
 		}
 	}
 
-	void transformWorld(PRenderList4D rlist)
+	void transform_World(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{
@@ -322,7 +322,68 @@ struct Camera
 		return 0;
 	}
 
-	void perspective(PObject4D obj)
+	void remove_Backfaces(PObject4D obj)
+	{
+		if (obj->state & OBJECT4D_STATE_CULLED)
+			return;
+
+		for (int poly = 0; poly < obj->num_poly; poly++)
+		{
+			PPoly4D curr_poly = &obj->plist[poly];
+
+			if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->attr & POLY4D_ATTR_2SIDED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			int vert0 = curr_poly->vert[0];
+			int vert1 = curr_poly->vert[1];
+			int vert2 = curr_poly->vert[2];
+
+			Vector4D u(&obj->vlist_trans[vert0], &obj->vlist_trans[vert1]);
+			Vector4D v(&obj->vlist_trans[vert0], &obj->vlist_trans[vert2]);
+			Vector4D n(u.cross(&v));
+			Vector4D view(&obj->vlist_trans[vert0], &pos);
+
+			//n.print(); view.print();
+			double dp = n.dot(&view);
+			if (dp <= 0.0)
+			{
+				curr_poly->state |= POLY4D_STATE_BACKFACE;
+				//std::cout << "remove plist";
+			}
+		}
+	}
+
+	void remove_Backfaces(PRenderList4D rlist)
+	{
+		for (int poly = 0; poly < rlist->num_polys; poly++)
+		{
+			PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+
+			if ((curr_poly == NULL) || 
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->attr & POLY4D_ATTR_2SIDED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			Vector4D u, v, n;
+
+			u.init(&curr_poly->tvlist[0], &curr_poly->tvlist[1]);
+			v.init(&curr_poly->tvlist[0], &curr_poly->tvlist[2]);
+			n = u.cross(&v);
+
+			Vector4D view(&curr_poly->tvlist[0], &pos);
+
+			double dp = n.dot(&view);
+			if (dp <= 0.0)
+				curr_poly->state |= POLY4D_STATE_BACKFACE;
+		}
+	}
+
+	/*void perspective(PObject4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -360,7 +421,7 @@ struct Camera
 			0, view_v * aspect_ratio, 0, 0,
 			0, 0, 1, 1,
 			0, 0, 0, 0);
-	}
+	}*/
 	
 	void build_Screen_Matrix4x4(PMatrix4x4 m)
 	{
@@ -438,7 +499,7 @@ struct Camera
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
 			obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x;
-			obj->vlist_trans[vertex].y = beta + beta * obj->vlist_trans[vertex].y;
+			obj->vlist_trans[vertex].y = beta - beta * obj->vlist_trans[vertex].y;
 		}
 	}
 

@@ -5,5 +5,6 @@
 
 void TriangleDemo();
 void CubeDemo1();
+void CubeDemo2();
 
 #endif

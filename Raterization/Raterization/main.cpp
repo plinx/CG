@@ -25,7 +25,8 @@ int main()
 {
 	//AutoTest();
 	//TriangleDemo();
-	CubeDemo1();
+	//CubeDemo1();
+	CubeDemo2();
 
 	system("pause");
 

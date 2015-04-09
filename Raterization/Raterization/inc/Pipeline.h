@@ -32,7 +32,6 @@ const int RENDERLIST4D_MAX_POLYS = 1024;
 #define PLX_SHADE_MODE_PHONG_FLAG     0x6000  // this poly uses phong shading
 #define PLX_SHADE_MODE_FASTPHONG_FLAG 0x6000  // this poly uses phong shading (alias)
 
-/*
 #define POLY4D_ATTR_2SIDED              0x0001
 #define POLY4D_ATTR_TRANSPARENT         0x0002
 #define POLY4D_ATTR_8BITCOLOR           0x0004
@@ -50,7 +49,7 @@ const int RENDERLIST4D_MAX_POLYS = 1024;
 #define POLY4D_STATE_ACTIVE             0x0001
 #define POLY4D_STATE_CLIPPED            0x0002
 #define POLY4D_STATE_BACKFACE           0x0004
-*/
+/*
 const int POLY4D_ATTR_2SIDED = 0x0001;
 const int POLY4D_ATTR_TRANSPARENT = 0x0002;
 const int POLY4D_ATTR_8BITCOLOR = 0x0004;
@@ -68,6 +67,7 @@ const int POLY4D_ATTR_SHADE_MODE_TEXTURE = 0x0200;
 const int POLY4D_STATE_ACTIVE = 0x0001;
 const int POLY4D_STATE_CLIPPED = 0x0002;
 const int POLY4D_STATE_BACKFACE = 0x0004;
+*/
 
 // defines for objects version 1
 #define OBJECT4D_MAX_VERTICES           1024  // 64
@@ -149,8 +149,8 @@ struct Object4D
 			if (!(curr_poly->state & POLY4D_STATE_ACTIVE))
 				continue;
 
-			state &= ~POLY4D_STATE_CLIPPED;
-			state &= ~POLY4D_STATE_BACKFACE;
+			curr_poly->state &= ~POLY4D_STATE_CLIPPED;
+			curr_poly->state &= ~POLY4D_STATE_BACKFACE;
 		}
 	}
 	void convert() 
@@ -210,7 +210,7 @@ struct Object4D
 			uz = m->mul(&uz);
 		}
 	}
-	void transformWorld(int select = TRANSFORM_LOCAL_TO_TRANS)
+	void transform_World(int select = TRANSFORM_LOCAL_TO_TRANS)
 	{
 		if (select == TRANSFORM_LOCAL_TO_TRANS)
 		{
@@ -321,7 +321,7 @@ struct RenderList4D
 		}
 	}
 
-	void transformWorld(PPoint4D pos, int select)
+	void transform_World(PPoint4D pos, int select)
 	{
 		if (select == TRANSFORM_LOCAL_TO_TRANS)
 		{
@@ -420,7 +420,11 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 		iss.str(data[poly + offset]);
 		iss >> std::hex >> poly_surface_desc >> std::dec >> poly_num_verts
 			>> obj->plist[poly].vert[0] >> obj->plist[poly].vert[1] >> obj->plist[poly].vert[2];
-		//std::cout << std::hex << poly_surface_desc << " " << std::dec << poly_num_verts << " " << obj->plist[poly].vert[0] << " " << obj->plist[poly].vert[1] << " " << obj->plist[poly].vert[2] << std::endl;
+		/*std::cout << std::hex << poly_surface_desc 
+			<< " " << std::dec << poly_num_verts 
+			<< " " << obj->plist[poly].vert[0] 
+			<< " " << obj->plist[poly].vert[1] 
+			<< " " << obj->plist[poly].vert[2] << std::endl;*/
 		if (poly_surface_desc & PLX_2SIDED_FLAG)
 		{
 			obj->plist[poly].attr |= POLY4D_ATTR_2SIDED;

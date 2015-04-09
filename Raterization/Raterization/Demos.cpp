@@ -65,9 +65,9 @@ void TriangleDemo()
 
 		if (++ang_y >= 360.0) ang_y = 0;
 		rlist.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS);
-		rlist.transformWorld(&poly_pos, TRANSFORM_TRANS_ONLY);
+		rlist.transform_World(&poly_pos, TRANSFORM_TRANS_ONLY);
 		camera.build_Euler(CAM_ROT_SEQ_ZYX);
-		camera.transformWorld(&rlist);
+		camera.transform_World(&rlist);
 		camera.to_Perspective(&rlist);
 		camera.to_Screen(&rlist);
 		rlist.poly_data[0].vlist[0].print();
@@ -95,11 +95,75 @@ void CubeDemo1()
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube1.plg", 0.5, &vpos, &vrot);
 
-	mrot.build(0, 5, 0);
+	mrot.build(0, 15, 0);
 	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
-	obj.transformWorld();
+	obj.transform_World();
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
-	camera.transformWorld(&obj);
+	camera.transform_World(&obj);
+	camera.to_Perspective(&obj);
+	camera.to_Screen(&obj);
+	for (auto poly = 0; poly < obj.num_poly; poly++)
+	{
+		if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
+			(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
+			(obj.plist[poly].state & POLY4D_STATE_BACKFACE))
+			continue;
+
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[0]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[0]].y << ")";
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[1]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[1]].y << ")";
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[2]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[2]].y << ")";
+		std::cout << std::endl;
+	}
+
+}
+
+void CubeDemo2()
+{
+	Point4D cam_pos(0, 0, -10, 1);
+	Point4D cam_target(0, 0, 0, 0);
+	Vector4D cam_dir(0, 0, 0, 1);
+	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
+	Point4D poly_pos(0, 0, 10, 1);
+	Camera camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 400, 400);
+	Object4D obj;
+	Matrix4x4 mrot;
+
+	Build_SinCos_Tables();
+	Load_Object4D_PLG(&obj, "resource/cube2.plg", 0.5, &vpos, &vrot);
+
+	mrot.build(0, 0, 0);
+	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	obj.transform_World();
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
+	camera.remove_Backfaces(&obj);
+	camera.transform_World(&obj);
+	camera.to_Perspective(&obj);
+	camera.to_Screen(&obj);
+	for (auto poly = 0; poly < obj.num_poly; poly++)
+	{
+		if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
+			(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
+			(obj.plist[poly].state & POLY4D_STATE_BACKFACE))
+			continue;
+
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[0]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[0]].y << ")";
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[1]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[1]].y << ")";
+		std::cout << "(" << obj.vlist_trans[obj.plist[poly].vert[2]].x << ","
+			<< obj.vlist_trans[obj.plist[poly].vert[2]].y << ")";
+		std::cout << std::endl;
+	}
+	obj.reset();
+	mrot.build(0, 45, 0);
+	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	obj.transform_World();
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
+	camera.remove_Backfaces(&obj);
+	camera.transform_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
 	for (auto poly = 0; poly < obj.num_poly; poly++)

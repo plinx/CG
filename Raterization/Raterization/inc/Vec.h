@@ -29,6 +29,10 @@ struct Vector2D
 
 	void zero() { x = y = 0.0; }
 	void init(double ix, double iy) { x = ix; y = iy; }
+	void init(const Vector2D* begin, const Vector2D* end)
+	{
+		x = end->x - begin->x; y = end->y - begin->y;
+	}
 	double length() const { return sqrt(x*x + y*y); }
 	void normalize()
 	{
@@ -98,6 +102,10 @@ struct Vector3D
 
 	void zero() { x = y = z = 0.0; }
 	void init(double ix, double iy, double iz) { x = ix; y = iy; z = iz; }
+	void init(const Vector3D* begin, const Vector3D* end)
+	{
+		x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
+	}
 	double length() const { return sqrt(x*x + y*y + z*z); }
 	double Fast_length()
 	{
@@ -187,6 +195,11 @@ struct Vector4D
 	void print() { std::cout << "(" << x << ", " << y << ", " << z << ")"; }
 	void zero() { x = y = z = 0.0; w = 1.0; }
 	void init(double dx, double dy, double dz) { x = dx; y = dy; z = dz; w = 1.0; }
+	void init(const Vector4D* begin, const Vector4D* end)
+	{
+		x = end->x - begin->x; y = end->y - begin->y;
+		z = end->z - begin->z; w = 1.0;
+	}
 	double length() const { return sqrt(x*x + y*y + z*z); }
 	double Fast_length()
 	{
@@ -212,7 +225,7 @@ struct Vector4D
 	{
 		Vector4D tmp;
 		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
-		tmp.y = (x * v->y) - (y * v->x); tmp.w = 1.0;
+		tmp.z = (x * v->y) - (y * v->x); tmp.w = 1.0;
 		return tmp;
 	}
 
