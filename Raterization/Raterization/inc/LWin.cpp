@@ -145,7 +145,7 @@ WPARAM LWindow::Render(void)
 	Build_SinCos_Tables();
 
 	camera.init(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
-	Load_Object4D_PLG(&obj, "resource/tank1.plg", vscale.x, &vpos, &vrot);
+	Load_Object4D_PLG(&obj, "resource/tank1.plg", &vscale, &vpos, &vrot);
 
 #if 0
 	while (GetMessage(&msg, NULL, 0, 0))
@@ -178,17 +178,53 @@ WPARAM LWindow::Render(void)
 			if (GetKeyState(VK_SPACE) < 0) camera.pos.y++;
 			if (GetKeyState(0x56) < 0) camera.pos.y--;
 			mrot.build(ang_x, ang_y, ang_z);
-			obj.reset();
-			obj.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
-			obj.transform_World(TRANSFORM_TRANS_ONLY);
+			/*obj.reset();
+			obj.world_pos = poly_pos;
+			obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+			obj.to_World(TRANSFORM_TRANS_ONLY);
+			camera.cull(&obj, CULL_OBJECT_XYZ_PLANE);
 			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-			camera.remove_Backfaces(&obj);
-			camera.transform_World(&obj);
+			camera.form_World(&obj);
 			camera.to_Perspective(&obj);
 			camera.to_Screen(&obj);
+			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));*/
+			obj.reset();
+			camera.cull(&obj, CULL_OBJECT_XYZ_PLANE);
+			rlist.insert(&obj);
+			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+			rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
+			camera.remove_Backfaces(&rlist);
+			camera.from_World(&rlist);
+			camera.to_Perspective(&rlist);
+			camera.to_Screen(&rlist);
 
 			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-			for (auto poly = 0; poly < obj.num_poly; poly++)
+			
+			for (auto poly = 0; poly < rlist.num_polys; poly++)
+			{
+				PPolyFace4D curr_poly = rlist.poly_ptrs[poly];
+				if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+					(curr_poly->state & POLY4D_STATE_BACKFACE))
+					continue;
+
+				apt[0].x = (LONG)curr_poly->tvlist[0].x;
+				apt[0].y = (LONG)curr_poly->tvlist[0].y;
+				apt[1].x = (LONG)curr_poly->tvlist[1].x;
+				apt[1].y = (LONG)curr_poly->tvlist[1].y;
+				apt[2].x = (LONG)curr_poly->tvlist[2].x;
+				apt[2].y = (LONG)curr_poly->tvlist[2].y;
+
+				//Polyline(m_hDCmem, apt, 3);
+				MoveToEx(m_hDCmem, apt[0].x, apt[0].y, NULL);
+				LineTo(m_hDCmem, apt[1].x, apt[1].y);
+				MoveToEx(m_hDCmem, apt[1].x, apt[1].y, NULL);
+				LineTo(m_hDCmem, apt[2].x, apt[2].y);
+				MoveToEx(m_hDCmem, apt[2].x, apt[2].y, NULL);
+				LineTo(m_hDCmem, apt[0].x, apt[0].y);
+			}
+
+			/*for (auto poly = 0; poly < obj.num_poly; poly++)
 			{
 				if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
 					(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
@@ -209,13 +245,15 @@ WPARAM LWindow::Render(void)
 				LineTo(m_hDCmem, apt[2].x, apt[2].y);
 				MoveToEx(m_hDCmem, apt[2].x, apt[2].y, NULL);
 				LineTo(m_hDCmem, apt[0].x, apt[0].y);
-			}
+			}*/
+
 
 			BitBlt(m_hDC,
 				0, 0, m_width, m_height,
 				m_hDCmem, 0, 0, SRCCOPY);
 
 			Sleep(10);
+
 		}
 	}
 #endif

@@ -256,7 +256,7 @@ struct Camera
 		mcam = mt_inv * mt_uvn;
 	}
 
-	void transform_World(PObject4D obj)
+	void from_World(PObject4D obj)
 	{
 		for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 		{
@@ -264,7 +264,7 @@ struct Camera
 		}
 	}
 
-	void transform_World(PRenderList4D rlist)
+	void from_World(PRenderList4D rlist)
 	{
 		for (int poly = 0; poly < rlist->num_polys; poly++)
 		{

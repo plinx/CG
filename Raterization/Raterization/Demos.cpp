@@ -64,10 +64,10 @@ void TriangleDemo()
 		<< mrot.v[3][0] << "\t\t" << mrot.v[3][1] << "\t" << mrot.v[3][2] << "\t\t" << mrot.v[3][3] << std::endl;*/
 
 		if (++ang_y >= 360.0) ang_y = 0;
-		rlist.transform(&mrot, TRANSFORM_LOCAL_TO_TRANS);
-		rlist.transform_World(&poly_pos, TRANSFORM_TRANS_ONLY);
+		rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+		rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
 		camera.build_Euler(CAM_ROT_SEQ_ZYX);
-		camera.transform_World(&rlist);
+		camera.from_World(&rlist);
 		camera.to_Perspective(&rlist);
 		camera.to_Screen(&rlist);
 		rlist.poly_data[0].vlist[0].print();
@@ -93,13 +93,13 @@ void CubeDemo1()
 	Matrix4x4 mrot;
 
 	Build_SinCos_Tables();
-	Load_Object4D_PLG(&obj, "resource/cube1.plg", 0.5, &vpos, &vrot);
+	Load_Object4D_PLG(&obj, "resource/cube1.plg", &vscale, &vpos, &vrot);
 
 	mrot.build(0, 15, 0);
-	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
-	obj.transform_World();
+	obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	obj.to_World();
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
-	camera.transform_World(&obj);
+	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
 	for (auto poly = 0; poly < obj.num_poly; poly++)
@@ -132,14 +132,14 @@ void CubeDemo2()
 	Matrix4x4 mrot;
 
 	Build_SinCos_Tables();
-	Load_Object4D_PLG(&obj, "resource/cube2.plg", 0.5, &vpos, &vrot);
+	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
 	mrot.build(0, 0, 0);
-	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
-	obj.transform_World();
+	obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	obj.to_World();
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
 	camera.remove_Backfaces(&obj);
-	camera.transform_World(&obj);
+	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
 	for (auto poly = 0; poly < obj.num_poly; poly++)
@@ -159,11 +159,11 @@ void CubeDemo2()
 	}
 	obj.reset();
 	mrot.build(0, 45, 0);
-	obj.transform(&mrot, TRANSFORM_LOCAL_ONLY, 1);
-	obj.transform_World();
+	obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	obj.to_World();
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
 	camera.remove_Backfaces(&obj);
-	camera.transform_World(&obj);
+	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
 	for (auto poly = 0; poly < obj.num_poly; poly++)
