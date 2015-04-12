@@ -184,3 +184,75 @@ void CubeDemo2()
 
 }
 
+void TankDemo1()
+{
+	Point4D cam_pos(0, 0, -10, 1);
+	Point4D cam_target(0, 0, 0, 0);
+	Vector4D cam_dir(0, 0, 0, 1);
+	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
+	Point4D poly_pos(0, 0, 10, 1);
+	Camera camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 400, 400);
+	RenderList4D rlist;
+	Object4D obj;
+	Matrix4x4 mrot;
+
+	Build_SinCos_Tables();
+	Load_Object4D_PLG(&obj, "resource/tank1.plg", &vscale, &vpos, &vrot);
+
+	mrot.build(0, 0, 0);
+
+	//obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+	rlist.insert(&obj);
+	rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+	obj.to_World(TRANSFORM_LOCAL_ONLY);
+	obj.world_pos = poly_pos;
+	obj.world_pos.z += 100;
+	obj.to_World(TRANSFORM_LOCAL_ONLY);
+	rlist.insert(&obj);
+	rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+	rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
+	camera.remove_Backfaces(&rlist);
+	camera.from_World(&rlist);
+	camera.to_Perspective(&rlist);
+	camera.to_Screen(&rlist);
+
+	std::cout << "(" << rlist.poly_data[0].tvlist[0].x << ","
+		<< rlist.poly_data[0].tvlist[0].y << ")";
+	std::cout << "(" << rlist.poly_data[0].tvlist[1].x << ","
+		<< rlist.poly_data[0].tvlist[1].y << ")";
+	std::cout << "(" << rlist.poly_data[0].tvlist[2].x << ","
+		<< rlist.poly_data[0].tvlist[2].y << ")";
+	std::cout << std::endl;
+	std::cout << "(" << rlist.poly_ptrs[0]->tvlist[0].x << ","
+		<< rlist.poly_ptrs[0]->tvlist[0].y << ")";
+	std::cout << "(" << rlist.poly_ptrs[0]->tvlist[1].x << ","
+		<< rlist.poly_ptrs[0]->tvlist[1].y << ")";
+	std::cout << "(" << rlist.poly_ptrs[0]->tvlist[2].x << ","
+		<< rlist.poly_ptrs[0]->tvlist[2].y << ")";;
+	std::cout << std::endl;
+	std::cout << "(" << rlist.poly_data[19].tvlist[0].x << ","
+		<< rlist.poly_data[19].tvlist[0].y << ")";
+	std::cout << "(" << rlist.poly_data[19].tvlist[1].x << ","
+		<< rlist.poly_data[19].tvlist[1].y << ")";
+	std::cout << "(" << rlist.poly_data[19].tvlist[2].x << ","
+		<< rlist.poly_data[19].tvlist[2].y << ")";
+	std::cout << std::endl;
+	std::cout << "(" << rlist.poly_ptrs[19]->tvlist[0].x << ","
+		<< rlist.poly_ptrs[19]->tvlist[0].y << ")";
+	std::cout << "(" << rlist.poly_ptrs[19]->tvlist[1].x << ","
+		<< rlist.poly_ptrs[19]->tvlist[1].y << ")";
+	std::cout << "(" << rlist.poly_ptrs[19]->tvlist[2].x << ","
+		<< rlist.poly_ptrs[19]->tvlist[2].y << ")";;
+	std::cout << std::endl;
+
+	int poly = 0;
+	PPolyFace4D curr_poly = rlist.poly_ptrs[poly];
+	std::cout << "curr_poly0 : (" << curr_poly->tvlist[1].x
+		<< "," << curr_poly->tvlist[1].y << ")" << std::endl;
+	poly = 19;
+	curr_poly = rlist.poly_ptrs[poly];
+	std::cout << "curr_poly1 : (" << curr_poly->tvlist[1].x
+		<< "," << curr_poly->tvlist[1].y << ")" << std::endl;
+}
+

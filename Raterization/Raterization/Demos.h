@@ -6,5 +6,6 @@
 void TriangleDemo();
 void CubeDemo1();
 void CubeDemo2();
+void TankDemo1();
 
 #endif

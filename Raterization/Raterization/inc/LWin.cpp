@@ -1,6 +1,10 @@
 #include <assert.h>
 #include "LWin.h"
 
+#define VK_E 0x45
+#define VK_Q 0x51
+#define VK_V 0x56
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
@@ -117,7 +121,8 @@ WPARAM LWindow::Render(void)
 	RECT rect;
 
 	// render init
-	Point4D cam_pos(0, 0, -100, 1);
+	int cam_dist = 300;
+	Point4D cam_pos(cam_dist, 0, 0, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
@@ -144,7 +149,7 @@ WPARAM LWindow::Render(void)
 
 	Build_SinCos_Tables();
 
-	camera.init(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, m_width, m_height);
+	camera.init(0, cam_pos, cam_dir, cam_target, 10.0, 1200.0, 90.0, m_width, m_height);
 	Load_Object4D_PLG(&obj, "resource/tank1.plg", &vscale, &vpos, &vrot);
 
 #if 0
@@ -168,31 +173,54 @@ WPARAM LWindow::Render(void)
 		else
 		{
 			static int ang_x = 0;
-			static int ang_y = 5;
+			static int ang_y = 0;
 			static int ang_z = 0;
 			// Render
-			if (GetKeyState(VK_LEFT) < 0) ang_y++;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y--;
-			if (GetKeyState(VK_UP) < 0) ang_x++;
-			if (GetKeyState(VK_DOWN) < 0) ang_x--;
+			if (GetKeyState(VK_LEFT) < 0)
+			{
+				if (ang_y++ > 360) ang_y = 0;
+				camera.pos.x = cam_dist * Fast_cos(ang_y);
+				camera.pos.z = cam_dist * Fast_sin(ang_y);
+			}
+			if (GetKeyState(VK_RIGHT) < 0)
+			{
+				if (ang_y-- < 0) ang_y = 360;
+				camera.pos.x = cam_dist * Fast_cos(ang_y);
+				camera.pos.z = cam_dist * Fast_sin(ang_y);
+			}
+			if (GetKeyState(VK_UP) < 0) {
+				cam_dist += 5;
+				camera.pos.x += 5;
+			}
+			if (GetKeyState(VK_DOWN) < 0)
+			{
+				cam_dist -= 5;
+				camera.pos.x -= 5;
+			}
 			if (GetKeyState(VK_SPACE) < 0) camera.pos.y++;
-			if (GetKeyState(0x56) < 0) camera.pos.y--;
+			if (GetKeyState(VK_V) < 0) camera.pos.y--;
+			//if (GetKeyState(VK_Q) < 0) ang_y++;
+			//if (GetKeyState(VK_E) < 0) ang_y--;
 			mrot.build(ang_x, ang_y, ang_z);
-			/*obj.reset();
-			obj.world_pos = poly_pos;
-			obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
-			obj.to_World(TRANSFORM_TRANS_ONLY);
-			camera.cull(&obj, CULL_OBJECT_XYZ_PLANE);
-			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-			camera.form_World(&obj);
-			camera.to_Perspective(&obj);
-			camera.to_Screen(&obj);
-			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));*/
-			obj.reset();
-			camera.cull(&obj, CULL_OBJECT_XYZ_PLANE);
-			rlist.insert(&obj);
+
+			rlist.reset();
+			for (int x = -16; x < 16; x++)
+			{
+				for (int z = -16; z < 16; z++)
+				{
+					obj.reset();
+					obj.world_pos = poly_pos;
+					obj.world_pos.x = x * 100;
+					obj.world_pos.z = z * 100;
+					obj.to_World();
+					camera.cull(&obj, CULL_OBJECT_XYZ_PLANE);
+					rlist.insert(&obj);
+				}
+			}
 			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 			rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
+			//camera.build_Euler(CAM_ROT_SEQ_ZYX);
+			camera.build_UVN(UVN_MODE_SIMPLE);
 			camera.remove_Backfaces(&rlist);
 			camera.from_World(&rlist);
 			camera.to_Perspective(&rlist);
@@ -216,12 +244,24 @@ WPARAM LWindow::Render(void)
 				apt[2].y = (LONG)curr_poly->tvlist[2].y;
 
 				//Polyline(m_hDCmem, apt, 3);
-				MoveToEx(m_hDCmem, apt[0].x, apt[0].y, NULL);
-				LineTo(m_hDCmem, apt[1].x, apt[1].y);
-				MoveToEx(m_hDCmem, apt[1].x, apt[1].y, NULL);
-				LineTo(m_hDCmem, apt[2].x, apt[2].y);
-				MoveToEx(m_hDCmem, apt[2].x, apt[2].y, NULL);
-				LineTo(m_hDCmem, apt[0].x, apt[0].y);
+				if (0 < apt[0].x && apt[0].x < m_width 
+					&& 0 < apt[0].y && apt[0].y < m_width)
+				{
+					MoveToEx(m_hDCmem, apt[0].x, apt[0].y, NULL);
+					LineTo(m_hDCmem, apt[1].x, apt[1].y);
+				}
+				if (0 < apt[0].x && apt[0].x < m_width 
+					&& 0 < apt[0].y && apt[0].y < m_width)
+				{
+					MoveToEx(m_hDCmem, apt[1].x, apt[1].y, NULL);
+					LineTo(m_hDCmem, apt[2].x, apt[2].y);
+				}
+				if (0 < apt[0].x && apt[0].x < m_width 
+					&& 0 < apt[0].y && apt[0].y < m_width)
+				{
+					MoveToEx(m_hDCmem, apt[2].x, apt[2].y, NULL);
+					LineTo(m_hDCmem, apt[0].x, apt[0].y);
+				}
 			}
 
 			/*for (auto poly = 0; poly < obj.num_poly; poly++)
@@ -264,4 +304,6 @@ WPARAM LWindow::Render(void)
 
 	return msg.wParam;
 }
+
+
 

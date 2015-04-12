@@ -1,9 +1,13 @@
 #ifndef Pipeline_h
 #define Pipeline_h
 
-const int OBJECT4D_MAX_VERTICES = 1024;
-const int OBJECT4D_MAX_POLYS = 1024;
-const int RENDERLIST4D_MAX_POLYS = 1024;
+enum {
+	OBJECT4D_LOCAL_INSERT = 0,
+	OBJECT4D_TRANS_INSERT,
+	OBJECT4D_MAX_VERTICES = 1024,
+	OBJECT4D_MAX_POLYS = 1024,
+	RENDERLIST4D_MAX_POLYS = 1024,
+};
 
 #define OBJECT4D_STATE_ACTIVE           0x0001
 #define OBJECT4D_STATE_VISIBLE          0x0002 
@@ -224,7 +228,7 @@ struct Object4D
 		{
 			for (int vertex = 0; vertex < num_vertices; vertex++)
 			{
-				vlist_trans[vertex] += world_pos;
+				vlist_local[vertex] += world_pos;
 			}
 		}
 	}
@@ -244,21 +248,7 @@ struct RenderList4D
 	RenderList4D() { num_polys = 0; }
 	~RenderList4D() = default;
 
-	void reset()
-	{
-		state &= ~OBJECT4D_STATE_CULLED;
-
-		for (int poly = 0; poly < num_polys; poly++)
-		{
-			PPolyFace4D curr_poly = &poly_data[poly];
-
-			if (!(curr_poly->state & POLY4D_STATE_ACTIVE))
-				continue;
-
-			curr_poly->state &= ~POLY4D_STATE_CLIPPED;
-			curr_poly->state &= ~POLY4D_STATE_BACKFACE;
-		}
-	}
+	void reset() { num_polys = 0; }
 	int insert(PPoly4D poly)
 	{
 		if (num_polys >= RENDERLIST4D_MAX_POLYS)
@@ -284,7 +274,7 @@ struct RenderList4D
 		num_polys++;
 		return 1;
 	}
-	int insert(PObject4D obj)
+	int insert(PObject4D obj, int select = OBJECT4D_TRANS_INSERT)
 	{
 		if (!(obj->state & OBJECT4D_STATE_ACTIVE) ||
 			(obj->state & OBJECT4D_STATE_CULLED) ||
@@ -301,7 +291,11 @@ struct RenderList4D
 				continue;
 
 			PPoint4D vlist_old = curr_poly->vlist;
-			curr_poly->vlist = obj->vlist_local;
+			if (select == OBJECT4D_TRANS_INSERT)
+				curr_poly->vlist = obj->vlist_trans;
+			else // OBJECT4D_LOCAL_INSERT
+				curr_poly->vlist = obj->vlist_local;
+
 
 			if (!this->insert(curr_poly))
 			{

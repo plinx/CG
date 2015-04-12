@@ -24,9 +24,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 int main()
 {
 	//AutoTest();
-	TriangleDemo();
+	//TriangleDemo();
 	//CubeDemo1();
 	//CubeDemo2();
+	TankDemo1();
 
 	system("pause");
 
