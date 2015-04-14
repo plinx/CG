@@ -5,17 +5,19 @@
 
 class LWindow
 {
+	friend class Painter;
 protected:
-	HWND m_hwnd;
-	HDC m_hDC, m_hDCmem;
-	int m_width, m_height;
-	PBYTE* ScanLine;
+	HWND _hwnd;
+	HDC _hdc, _hdcMem;
+	int _width, _height;
+	Painter painter;
 
 public:
 	LWindow() { 
-		m_hwnd = NULL; 
-		m_hDC = m_hDCmem = NULL;
-		m_width = m_height = 0; 
+		_hwnd = NULL; 
+		_hdc = _hdcMem = NULL;
+		_width = _height = 0; 
+		painter.init(_width, _height);
 		//ScanLine = NULL;
 	}
 	virtual ~LWindow() = default;

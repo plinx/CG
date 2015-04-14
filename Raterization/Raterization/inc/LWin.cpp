@@ -1,6 +1,8 @@
 #include <assert.h>
 #include "LWin.h"
 
+#pragma comment(lib, "Msimg32.lib")
+
 #define VK_E 0x45
 #define VK_Q 0x51
 #define VK_V 0x56
@@ -48,19 +50,20 @@ BOOL LWindow::Create(LPCTSTR lpszClass, LPCTSTR lpszName, DWORD dwstyle,
 		return FALSE;
 	}
 
-	m_hwnd = CreateWindow(lpszClass, lpszName, 
+	_hwnd = CreateWindow(lpszClass, lpszName, 
 		WS_OVERLAPPEDWINDOW,
 		x, y, nWidth, nHeight, 
 		hParent, hMenu, hInst, NULL);
-	m_width = nWidth;
-	m_height = nHeight;
+	_width = nWidth;
+	_height = nHeight;
+	painter.init(nWidth, nHeight);
 
-	MoveWindow(m_hwnd, 
+	MoveWindow(_hwnd, 
 		GetSystemMetrics(SM_CXSCREEN) / 2 - nWidth / 2, 
 		GetSystemMetrics(SM_CYSCREEN) / 2 - nHeight / 2, 
 		nWidth, nHeight, FALSE);
 
-	return m_hwnd != NULL;
+	return _hwnd != NULL;
 }
 
 BOOL LWindow::Create(int nWidth, int nHeight, HINSTANCE hInst)
@@ -80,14 +83,13 @@ HBITMAP LWindow::CreateDIB()
 {
 	BITMAPINFO* Info = (BITMAPINFO*)malloc(sizeof(BITMAPINFOHEADER) + 2 * sizeof(RGBQUAD));
 	BITMAPINFOHEADER* bmih = &Info->bmiHeader;
-	BYTE *pBits;
 	HBITMAP hBitmap;
 
 	bmih->biSize = sizeof(BITMAPINFOHEADER);
-	bmih->biWidth = m_width;
-	bmih->biHeight = m_height;
+	bmih->biWidth = _width;
+	bmih->biHeight = _height;
 	bmih->biPlanes = 1;
-	bmih->biBitCount = 24;
+	bmih->biBitCount = 32;
 	bmih->biCompression = BI_RGB;
 	bmih->biSizeImage = 0;
 	bmih->biXPelsPerMeter = 0;
@@ -95,18 +97,8 @@ HBITMAP LWindow::CreateDIB()
 	bmih->biClrUsed = 0;
 	bmih->biClrImportant = 0;
 
-	hBitmap = CreateDIBSection(NULL, Info, DIB_RGB_COLORS, (void **)&pBits, NULL, 0);
+	hBitmap = CreateDIBSection(NULL, Info, DIB_RGB_COLORS, (void**)&painter._scanLine, NULL, 0);
 	
-	int BytesPerLine = m_width * 3;
-	if (BytesPerLine % 4 != 0)
-		BytesPerLine += 4 - BytesPerLine % 4;
-
-	ScanLine = new PBYTE[m_height];
-	for (int i = 0; i < m_height; i++)
-	{
-		ScanLine[m_height - i - 1] = pBits + BytesPerLine * i;
-	}
-
 	return hBitmap;
 }
 
@@ -115,26 +107,42 @@ WPARAM LWindow::Render(void)
 	// window init
 	MSG msg;
 	HBITMAP hBitmap;
+	BLENDFUNCTION blend;
+
 	HPEN hPen;
-	//HBRUSH hBrush;
 	RECT rect;
 
-	ShowWindow(m_hwnd, SW_SHOWNORMAL);
-	UpdateWindow(m_hwnd);
+	ShowWindow(_hwnd, SW_SHOWNORMAL);
+	UpdateWindow(_hwnd);
 	
-	m_hDC = GetDC(m_hwnd);
-	m_hDCmem = CreateCompatibleDC(m_hDC);
-	SetRect(&rect, 0, 0, m_width, m_height);
+	_hdc = GetDC(_hwnd);
+	_hdcMem = CreateCompatibleDC(_hdc);
+	SetRect(&rect, 0, 0, _width, _height);
 	hBitmap = CreateDIB();
-	SelectObject(m_hDCmem, hBitmap);
-	FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+	SelectObject(_hdcMem, hBitmap);
+	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
 	hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	SelectObject(m_hDCmem, hPen);
-	//hBrush = CreateHatchBrush(HS_DIAGCROSS, RGB(255, 0, 255));
-	//SelectObject(m_hDCmem, hBrush);
+	SelectObject(_hdcMem, hPen);
+	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	blend.BlendOp = AC_SRC_OVER;
+	blend.BlendFlags = 0;
+	blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
+	blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
 
+	for (int y = 0; y < _height; y++)
+	{
+		static Color color(255, 0, 0);
+		for (int x = 0; x < _width; x++)
+		{
+			color.init((float)x / _width * 255, (float)y / _height * 255, 0);
+			painter.DrawPixel(x, y, color);
+		}
+	}
+		
+	AlphaBlend(_hdc, 0, 0, _width, _height,
+		_hdcMem, 0, 0, _width, _height, blend);
 
-#if 0
+#if 1
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -154,11 +162,11 @@ WPARAM LWindow::Render(void)
 		}
 		else
 		{
-			FillRect(m_hDCmem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+			FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 			
-			BitBlt(m_hDC,
-				0, 0, m_width, m_height,
-				m_hDCmem, 0, 0, SRCCOPY);
+			BitBlt(_hdc,
+				0, 0, _width, _height,
+				_hdcMem, 0, 0, SRCCOPY);
 
 			Sleep(10);
 
@@ -166,8 +174,8 @@ WPARAM LWindow::Render(void)
 	}
 #endif
 
-	ReleaseDC(m_hwnd, m_hDC);
-	DeleteDC(m_hDCmem);
+	ReleaseDC(_hwnd, _hdc);
+	DeleteDC(_hdcMem);
 	DeleteObject(hBitmap);
 
 	return msg.wParam;

@@ -1,4 +1,4 @@
-﻿  main.cpp
+﻿cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   LWin.cpp
-  Generating Code...
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(137): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
   Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe
