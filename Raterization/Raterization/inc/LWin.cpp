@@ -31,6 +31,7 @@ BOOL LWindow::Create(LPCTSTR lpszClass, LPCTSTR lpszName, DWORD dwstyle,
 	int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, HINSTANCE hInst)
 {
 	WNDCLASS wc;
+	RECT rect;
 
 	wc.style = dwstyle;
 	wc.lpfnWndProc = WndProc;
@@ -50,9 +51,11 @@ BOOL LWindow::Create(LPCTSTR lpszClass, LPCTSTR lpszName, DWORD dwstyle,
 		return FALSE;
 	}
 
-	_hwnd = CreateWindow(lpszClass, lpszName, 
+	SetRect(&rect, 0, 0, nWidth, nHeight);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, FALSE);
+	_hwnd = CreateWindow(lpszClass, lpszName,
 		WS_OVERLAPPEDWINDOW,
-		x, y, nWidth, nHeight, 
+		x, y, rect.right - rect.left, rect.bottom - rect.top, 
 		hParent, hMenu, hInst, NULL);
 	_width = nWidth;
 	_height = nHeight;
@@ -61,7 +64,7 @@ BOOL LWindow::Create(LPCTSTR lpszClass, LPCTSTR lpszName, DWORD dwstyle,
 	MoveWindow(_hwnd, 
 		GetSystemMetrics(SM_CXSCREEN) / 2 - nWidth / 2, 
 		GetSystemMetrics(SM_CYSCREEN) / 2 - nHeight / 2, 
-		nWidth, nHeight, FALSE);
+		rect.right - rect.left, rect.bottom - rect.top, FALSE);
 
 	return _hwnd != NULL;
 }
@@ -129,15 +132,23 @@ WPARAM LWindow::Render(void)
 	blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
 	blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
 
-	for (int y = 0; y < _height; y++)
+	/*for (int y = 0; y < _height; y++)
 	{
-		static Color color(255, 0, 0);
 		for (int x = 0; x < _width; x++)
 		{
-			color.init((float)x / _width * 255, (float)y / _height * 255, 0);
-			painter.DrawPixel(x, y, color);
+			painter.drawPixel(x, y);
 		}
-	}
+	}*/
+	//painter.drawLine(0, 0, _width, _height);
+	/*for (int y = 0; y < _height; y++)
+	{
+		painter.drawHorizonLine(0, _width, y, Color(Red));
+	}*/
+	painter.drawTriangle(100, 200, 100, 300, 100, 400, Color(Red));
+	painter.drawTriangle(100, 200, 200, 200, 300, 200, Color(Blue));
+	painter.drawTriangle(100, 200, 200, 300, 300, 400, Color(Cyan));
+	painter.drawTriangle(100, 200, 200, 250, 300, 300, Color(Yellow));
+
 		
 	AlphaBlend(_hdc, 0, 0, _width, _height,
 		_hdcMem, 0, 0, _width, _height, blend);

@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "inc/LWin.h"
+#include "inc/Color.h"
 #include "inc/Painter.h"
 /*#include "inc/Vec.h"
 #include "inc/Matrix.h"

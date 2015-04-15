@@ -26,7 +26,10 @@ int main()
 	//TriangleDemo();
 	//CubeDemo1();
 	//CubeDemo2();
-	TankDemo1();
+	//TankDemo1();
+	double a, b, c;
+	a = b = c = 2.21321;
+	std::cout << std::setprecision(20) << a << " " << ceil(a) << std::endl;
 
 	system("pause");
 
