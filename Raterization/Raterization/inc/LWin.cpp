@@ -144,8 +144,10 @@ WPARAM LWindow::Render(void)
 	{
 		painter.drawHorizonLine(0, _width, y, Color(Red));
 	}*/
-	//painter.drawTriangle(100, -100, 200, 600, 300, -100, Color(Black));
-	painter.drawTriangle(200, 200, 100, 500, 300, 500, Color(Red));
+	//painter.drawTriangle(10, -100, 200, 600, 300, -100, Color(Black));
+	painter.drawTriangle(-100, 200, 500, 400, 550, 200, Color(Black));
+	//painter.drawTriangle(100, 100, 200, 200, 300, 50, Color(Black));
+	//painter.drawTriangle(200, -200, 100, 500, 300, 500, Color(Red));
 	/*painter.drawTriangle(100, 200, 100, 300, 100, 400, Color(Red));
 	painter.drawTriangle(100, 200, 200, 200, 300, 200, Color(Blue));
 	painter.drawTriangle(100, 200, 200, 300, 300, 400, Color(Cyan));

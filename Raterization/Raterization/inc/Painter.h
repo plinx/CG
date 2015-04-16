@@ -151,9 +151,9 @@ inline void Painter::drawTriangle(double x1, double y1,
 		(x1 > _width && x2 > _width && x3 > _width))
 		return;
 	
-	if (ceil(y1) == ceil(y2))
+	if (ceil(y1) == ceil(y2)) // flat bottom triangle
 	{
-		if (y3 > _height) // vertical top clip
+		/*if (y3 > _height) // horizon top clip
 		{
 			clip_y1 = clip_y2 = _height;
 			clip_x1 = x1 + (x3 - x1) * (clip_y1 - y1) / (y3 - y1);
@@ -161,21 +161,40 @@ inline void Painter::drawTriangle(double x1, double y1,
 			drawTriangle(x1, y1, clip_x1, clip_y1, x2, y2, color);
 			drawTriangle(clip_x1, clip_y1, clip_x2, clip_y2, x2, y2, color);
 		}
-		else if (y1 < 0)
+		else if (y1 < 0) // horizon bottom clip
 		{
 			clip_y1 = clip_y2 = 0;
 			clip_x1 = x1 + (x3 - x1) * (-y1) / (y3 - y1);
 			clip_x2 = x2 + (x3 - x2) * (-y2) / (y3 - y2);
 			drawTriangle(clip_x1, clip_y1, clip_x2, clip_y2, x3, y3, color);
 		}
+		else if (x1 < 0 && x3 > 0) // vertical left clip
+		{
+			clip_x1 = clip_x2 = 0;
+			clip_y1 = y1;
+			clip_y2 = y1 + (y3 - y1) * (-x1) / (x3 - x1);
+			drawTriangle(clip_x1, clip_y1, clip_x2, clip_y2, x2, y2, color);
+			drawTriangle(clip_x2, clip_y2, x2, y2, x3, y3, color);
+		}*/
+		if (x1 < 0 || x2 < 0)
+		{
+			// use scanling culling instead of triangle culliing.
+		}
 		else
 		{
 			_drawFlatBottomTriangle(x1, y2, x2, y2, x3, y3, color);
 		}
 	}
-	else if (ceil(y2) == ceil(y3))
+	else if (ceil(y2) == ceil(y3)) // flat top triangle
 	{
-		if (y1 < 0)
+		if (y2 > _height) // horizon top clip
+		{
+			clip_y1 = clip_y2 = _height;
+			clip_x1 = x1 + (x2 - x1) * (clip_y1 - y1) / (y2 - y1);
+			clip_x2 = x1 + (x3 - x1) * (clip_y2 - y1) / (y3 - y1);
+			drawTriangle(x1, y1, clip_x1, clip_y1, clip_x2, clip_y2, color);
+		}
+		else if (y1 < 0) // horizon bottom clip
 		{
 			clip_y1 = clip_y2 = 0;
 			clip_x1 = x1 + (x2 - x1) * (-y1) / (y2 - y1);
@@ -183,21 +202,54 @@ inline void Painter::drawTriangle(double x1, double y1,
 			drawTriangle(clip_x1, clip_y1, x2, y2, x3, y3, color);
 			drawTriangle(clip_x1, clip_y1, x3, y3, clip_x2, clip_y2, color);
 		}
-		else if (y2 > _height)
-		{
-			clip_y1 = clip_y2 = _height;
-			clip_x1 = x1 + (x2 - x1) * (clip_y1 - y1) / (y2 - y1);
-			clip_x2 = x1 + (x3 - x1) * (clip_y2 - y1) / (y3 - y1);
-			drawTriangle(x1, y1, clip_x1, clip_y1, clip_x2, clip_y2, color);
-		}
 		else
 		{
 			_drawFlatTopTriangle(x1, y1, x2, y2, x3, y3, color);
 		}
 	}
-	else
+	else // normal triangle
 	{
-
+		if (x1 < 0 && x3 > 0)
+		{
+			clip_x1 = clip_x2 = 0;
+			clip_y1 = y1 + (y2 - y1) * (-x1) / (x2 - x1);
+			clip_y2 = y1 + (y3 - y1) * (-x1) / (x3 - x1);
+			drawTriangle(clip_x1, clip_y1, clip_x2, clip_y2, x2, y2, color);
+			drawTriangle(clip_x2, clip_y2, x2, y2, x3, y3, color);
+		}
+		else if (x1 < 0 && x3 < 0)
+		{
+			clip_x1 = clip_x2 = 0;
+			clip_y1 = y1 + (y2 - y1) * (-x1) / (x2 - x1);
+			clip_y2 = y3 + (y2 - y3) * (-x3) / (x2 - x3);
+			drawTriangle(clip_x1, clip_y1, clip_x2, clip_y2, x2, y2, color);
+		}
+		else if (x2 > _width && x3 < _width)
+		{
+			clip_x1 = clip_x2 = _width;
+			clip_y1 = y1 + (y2 - y1) * (_width - x1) / (x2 - x1);
+			clip_y2 = y3 + (y2 - y3) * (_width - x3) / (x2 - x3);
+			drawTriangle(x1, y1, x3, y3, clip_x1, clip_y1, color);
+			drawTriangle(clip_x1, clip_y1, x3, y3, clip_x2, clip_y2, color);
+		}
+		else if (x2 > _width && x3 > _width)
+		{
+			clip_x1 = clip_x2 = _width;
+			clip_y1 = y1 + (y2 - y1) * (_width - x1) / (x2 - x1);
+			clip_y2 = y1 + (y3 - y1) * (_width - x1) / (x3 - x1);
+			drawTriangle(x1, y1, clip_x1, clip_y1, clip_x2, clip_y2, color);
+		}
+		else
+		{
+			clip_y1 = y2;
+			clip_x1 = x1 + (x3 - x1) * (clip_y1 - y1) / (y3 - y1);
+			drawTriangle(x1, y1, clip_x1, clip_y1, x2, y2, color);
+			drawTriangle(clip_x1, clip_y1, x2, y2, x3, y3, color);
+		}
+		/*clip_y1 = y2;
+		clip_x1 = x1 + (x3 - x1) * (clip_y1 - y1) / (y3 - y1);
+		drawTriangle(x1, y1, clip_x1, clip_y1, x2, y2, color);
+		drawTriangle(clip_x1, clip_y1, x2, y2, x3, y3, color);*/
 	}
 }
 	
