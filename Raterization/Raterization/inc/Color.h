@@ -20,6 +20,7 @@ struct Color
 	void init(int r, int g, int b) { R = r; G = g; B = b; A = 255; }
 	void init(int r, int g, int b, int a) { R = r; G = g; B = b; A = a; }
 	void reset() { R = 0; G = 0; B = 0; A = 255; }
+	void alpha(int alpha) { A = alpha; }
 	void delta(Color& left, Color& right);
 };
 
