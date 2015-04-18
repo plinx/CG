@@ -30,12 +30,24 @@
     <ClInclude Include="inc\Vec.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\LMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Quat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="inc\LWin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inc\LMath.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

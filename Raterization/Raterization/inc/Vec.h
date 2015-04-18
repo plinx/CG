@@ -25,6 +25,7 @@ struct Vector2D
 	double dot(const Vector2D* v);
 	double cos(const Vector2D* v);
 
+	// override operator
 	Vector2D& operator=(const Vector2D& v);
 	Vector2D operator+(const Vector2D& v);
 	Vector2D& operator+=(const Vector2D& v);
@@ -49,81 +50,29 @@ struct Vector3D
 	// Constructor
 	Vector3D(const Vector3D& v) { *this = v; }
 	Vector3D(double dx, double dy, double dz) : x(dx), y(dy), z(dz) {}
-	// Build from Point3D
-	Vector3D(const Vector3D* begin, const Vector3D* end)
-	{
-		x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
-	}
+	Vector3D(const Vector3D* begin, const Vector3D* end);
 
-	void zero() { x = y = z = 0.0; }
-	void init(double ix, double iy, double iz) { x = ix; y = iy; z = iz; }
-	void init(const Vector3D* begin, const Vector3D* end)
-	{
-		x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
-	}
-	double length() const { return sqrt(x*x + y*y + z*z); }
-	double Fast_length()
-	{
-		int ix, iy, iz;
-		ix = (int)abs(x) * 1024; iy = (int)abs(y) * 1024; iz = (int)abs(z) * 1024;
-		if (y < x) std::swap(ix, iy);
-		if (z < y) std::swap(iy, iz);
-		if (y < x) std::swap(ix, iy);
-		auto dist = (iz + 11 * (iy >> 5) + (ix >> 2));
-		return ((double)(dist >> 10));
-	}
-	void normalize()
-	{
-		auto length = this->length();
-		if (length < EPSILON_E5)
-			return;
-		auto length_inv = 1.0 / length;
-		x *= length_inv; y *= length_inv; z *= length_inv;
-	}
-	double dot(const Vector3D* v) { return x * v->x + y * v->y + z * v->z; }
-	double cos(const Vector3D* v) { return this->dot(v) / (this->length() * v->length()); }
-	Vector3D cross(Vector3D* v)
-	{
-		Vector3D tmp;
-		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
-		return tmp;
-	}
+	// basic methods
+	void zero();
+	void init(double ix, double iy, double iz);
+	void init(const Vector3D* begin, const Vector3D* end);
+	double length() const;
+	double Fast_length();
+	void normalize();
+	double dot(const Vector3D* v);
+	double cos(const Vector3D* v);
+	Vector3D cross(Vector3D* v);
 
-	Vector3D& operator=(const Vector3D& v) { x = v.x; y = v.y; z = v.z; return *this; }
-	Vector3D operator+(const Vector3D& v)
-	{
-		Vector3D tmp;
-		tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z;
-		return tmp;
-	}
-	Vector3D& operator+=(const Vector3D& v) { x += v.x; y += v.y; z += v.z; return *this; }
-	Vector3D operator-(const Vector3D& v)
-	{
-		Vector3D tmp;
-		tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z;
-		return tmp;
-	}
-	Vector3D& operator-=(const Vector3D& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
-	Vector3D operator*(double k)
-	{
-		Vector3D tmp;
-		tmp.x = x * k; tmp.y = y * k; tmp.z = z * k;
-		return tmp;
-	}
-	Vector3D& operator*=(double k) { x *= k; y *= k; z *= k; return *this; }
-
-	bool operator==(const Vector3D& v)
-	{
-		if (x == v.x && y == v.y && z == v.z)
-			return true;
-		return false;
-	}
-	bool operator!=(const Vector3D& v)
-	{
-		if (*this == v)
-			return false;
-		return true;
-	}
+	// overrride operator
+	Vector3D& operator=(const Vector3D& v);
+	Vector3D operator+(const Vector3D& v);
+	Vector3D& operator+=(const Vector3D& v);
+	Vector3D operator-(const Vector3D& v);
+	Vector3D& operator-=(const Vector3D& v);
+	Vector3D operator*(double k);
+	Vector3D& operator*=(double k);
+	bool operator==(const Vector3D& v);
+	bool operator!=(const Vector3D& v);
 };
 typedef Vector3D* PVector3D;
 typedef Vector3D Point3D;
@@ -140,91 +89,36 @@ struct Vector4D
 	Vector4D(const Vector4D& v) { *this = v; }
 	Vector4D(double dx, double dy, double dz, double dw)
 		: x(dx), y(dy), z(dz), w(dw) {}
-	// Build from Point4D
-	Vector4D(const Vector4D* begin, const Vector4D* end)
-	{
-		x = end->x - begin->x; y = end->y - begin->y;
-		z = end->z - begin->z; w = 1.0;
-	}
+	Vector4D(const Vector4D* begin, const Vector4D* end);
 
-	void print() { std::cout << "(" << x << ", " << y << ", " << z << ")"; }
-	void zero() { x = y = z = 0.0; w = 1.0; }
-	void init(double dx, double dy, double dz) { x = dx; y = dy; z = dz; w = 1.0; }
-	void init(const Vector4D* begin, const Vector4D* end)
-	{
-		x = end->x - begin->x; y = end->y - begin->y;
-		z = end->z - begin->z; w = 1.0;
-	}
-	double length() const { return sqrt(x*x + y*y + z*z); }
-	double Fast_length()
-	{
-		int ix, iy, iz;
-		ix = (int)abs(x) * 1024; iy = (int)abs(y) * 1024; iz = (int)abs(z) * 1024;
-		if (y < x) std::swap(ix, iy);
-		if (z < y) std::swap(iy, iz);
-		if (y < x) std::swap(ix, iy);
-		auto dist = (iz + 11 * (iy >> 5) + (ix >> 2));
-		return ((double)(dist >> 10));
-	}
-	void normalize()
-	{
-		auto length = this->length();
-		if (length < EPSILON_E5)
-			return;
-		auto length_inv = 1.0 / length;
-		x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
-	}
-	double dot(const Vector4D* v) { return x * v->x + y * v->y + z * v->z; }
-	double cos(const Vector4D* v) { return  this->dot(v) / (this->length() * v->length()); }
-	Vector4D cross(const Vector4D* v)
-	{
-		Vector4D tmp;
-		tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
-		tmp.z = (x * v->y) - (y * v->x); tmp.w = 1.0;
-		return tmp;
-	}
+	// basic methods
+	void print();
+	void zero();
+	void init(double dx, double dy, double dz);
+	void init(const Vector4D* begin, const Vector4D* end);
+	double length() const;
+	double Fast_length();
+	void normalize();
+	double dot(const Vector4D* v);
+	double cos(const Vector4D* v);
+	Vector4D cross(const Vector4D* v);
 
-	Vector4D& operator=(const Vector4D& v) { x = v.x; y = v.y; z = v.z; w = v.w; return *this; }
-	Vector4D operator+(const Vector4D& v)
-	{
-		Vector4D tmp;
-		tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z; tmp.w = 1.0;
-		return tmp;
-	}
-	Vector4D& operator+=(const Vector4D& v) { x += v.x; y += v.y; z += v.z; w = 1.0; return *this; }
-	Vector4D operator-(const Vector4D& v)
-	{
-		Vector4D tmp;
-		tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z; tmp.w = 1.0;
-		return tmp;
-	}
-	Vector4D& operator-=(const Vector4D& v) { x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; }
-	Vector4D operator*(const double k)
-	{
-		Vector4D tmp;
-		tmp.x = x * k; tmp.y = y * k; tmp.z = z * k; tmp.w = 1.0;
-		return tmp;
-	}
-	Vector4D& operator*=(const double k) { x *= k; y *= k; z *= k; w = 1.0; return *this; }
-
-	bool operator==(const Vector4D& v)
-	{
-		if (x == v.x && y == v.y && z == v.z && w == v.w)
-			return true;
-		return false;
-	}
-	bool operator!=(const Vector4D& v)
-	{
-		if (*this == v)
-			return false;
-		return true;
-	}
+	// override operator
+	Vector4D& operator=(const Vector4D& v);
+	Vector4D operator+(const Vector4D& v);
+	Vector4D& operator+=(const Vector4D& v);
+	Vector4D operator-(const Vector4D& v);
+	Vector4D& operator-=(const Vector4D& v);
+	Vector4D operator*(const double k);
+	Vector4D& operator*=(const double k);
+	bool operator==(const Vector4D& v);
+	bool operator!=(const Vector4D& v);
 };
 typedef Vector4D* PVector4D;
 typedef Vector4D Point4D;
 typedef Point4D* PPoint4D;
 
-// Vector2D implement functions
+// Vector2D methods implement
 inline void Vector2D::zero() 
 { 
 	x = y = 0.0; 
@@ -316,6 +210,249 @@ inline bool Vector2D::operator==(const Vector2D& v)
 }
 
 inline bool Vector2D::operator!=(const Vector2D& v)
+{
+	if (*this == v)
+		return false;
+	return true;
+}
+
+// Vector3D methods implement
+inline Vector3D::Vector3D(const Vector3D* begin, const Vector3D* end)
+{
+	x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
+}
+
+inline void Vector3D::zero() 
+{ 
+	x = y = z = 0.0; 
+}
+
+inline void Vector3D::init(double ix, double iy, double iz) 
+{ 
+	x = ix; y = iy; z = iz; 
+}
+
+inline void Vector3D::init(const Vector3D* begin, const Vector3D* end)
+{
+	x = end->x - begin->x; y = end->y - begin->y; z = end->z - begin->z;
+}
+
+inline double Vector3D::length() const 
+{ 
+	return sqrt(x*x + y*y + z*z); 
+}
+
+inline double Vector3D::Fast_length()
+{
+	int ix, iy, iz;
+	ix = (int)abs(x) * 1024; iy = (int)abs(y) * 1024; iz = (int)abs(z) * 1024;
+	if (y < x) std::swap(ix, iy);
+	if (z < y) std::swap(iy, iz);
+	if (y < x) std::swap(ix, iy);
+	auto dist = (iz + 11 * (iy >> 5) + (ix >> 2));
+	return ((double)(dist >> 10));
+}
+
+inline void Vector3D::normalize()
+{
+	auto length = this->length();
+	if (length < EPSILON_E5)
+		return;
+	auto length_inv = 1.0 / length;
+	x *= length_inv; y *= length_inv; z *= length_inv;
+}
+
+inline double Vector3D::dot(const Vector3D* v) 
+{ 
+	return x * v->x + y * v->y + z * v->z; 
+}
+
+inline double Vector3D::cos(const Vector3D* v) 
+{ 
+	return this->dot(v) / (this->length() * v->length()); 
+}
+
+inline Vector3D Vector3D::cross(Vector3D* v)
+{
+	Vector3D tmp;
+	tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
+	return tmp;
+}
+
+inline Vector3D& Vector3D::operator=(const Vector3D& v)
+{ 
+	x = v.x; y = v.y; z = v.z; return *this; 
+}
+
+inline Vector3D Vector3D::operator+(const Vector3D& v)
+{
+	Vector3D tmp;
+	tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z;
+	return tmp;
+}
+
+inline Vector3D& Vector3D::operator+=(const Vector3D& v) 
+{ 
+	x += v.x; y += v.y; z += v.z; return *this; 
+}
+
+inline Vector3D Vector3D::operator-(const Vector3D& v)
+{
+	Vector3D tmp;
+	tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z;
+	return tmp;
+}
+
+inline Vector3D& Vector3D::operator-=(const Vector3D& v) 
+{
+	x -= v.x; y -= v.y; z -= v.z; return *this; 
+}
+
+inline Vector3D Vector3D::operator*(double k)
+{
+	Vector3D tmp;
+	tmp.x = x * k; tmp.y = y * k; tmp.z = z * k;
+	return tmp;
+}
+
+inline Vector3D& Vector3D::operator*=(double k) 
+{ 
+	x *= k; y *= k; z *= k; return *this; 
+}
+
+inline bool Vector3D::operator==(const Vector3D& v)
+{
+	if (x == v.x && y == v.y && z == v.z)
+		return true;
+	return false;
+}
+
+inline bool Vector3D::operator!=(const Vector3D& v)
+{
+	if (*this == v)
+		return false;
+	return true;
+}
+
+// Vector4D methods implement
+inline Vector4D::Vector4D(const Vector4D* begin, const Vector4D* end)
+{
+	x = end->x - begin->x; y = end->y - begin->y;
+	z = end->z - begin->z; w = 1.0;
+}
+
+inline void Vector4D::print() 
+{ 
+	std::cout << "(" << x << ", " << y << ", " << z << ")"; 
+}
+
+inline void Vector4D::zero() 
+{ 
+	x = y = z = 0.0; w = 1.0; 
+}
+
+inline void Vector4D::init(double dx, double dy, double dz) 
+{ 
+	x = dx; y = dy; z = dz; w = 1.0; 
+}
+
+inline void Vector4D::init(const Vector4D* begin, const Vector4D* end)
+{
+	x = end->x - begin->x; y = end->y - begin->y;
+	z = end->z - begin->z; w = 1.0;
+}
+
+inline double Vector4D::length() const 
+{ 
+	return sqrt(x*x + y*y + z*z); 
+}
+
+inline double Vector4D::Fast_length()
+{
+	int ix, iy, iz;
+	ix = (int)abs(x) * 1024; iy = (int)abs(y) * 1024; iz = (int)abs(z) * 1024;
+	if (y < x) std::swap(ix, iy);
+	if (z < y) std::swap(iy, iz);
+	if (y < x) std::swap(ix, iy);
+	auto dist = (iz + 11 * (iy >> 5) + (ix >> 2));
+	return ((double)(dist >> 10));
+}
+
+inline void Vector4D::normalize()
+{
+	auto length = this->length();
+	if (length < EPSILON_E5)
+		return;
+	auto length_inv = 1.0 / length;
+	x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
+}
+
+inline double Vector4D::dot(const Vector4D* v) 
+{
+	return x * v->x + y * v->y + z * v->z; 
+}
+
+inline double Vector4D::cos(const Vector4D* v) 
+{
+	return  this->dot(v) / (this->length() * v->length()); 
+}
+
+inline Vector4D Vector4D::cross(const Vector4D* v)
+{
+	Vector4D tmp;
+	tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
+	tmp.z = (x * v->y) - (y * v->x); tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::operator=(const Vector4D& v) 
+{ 
+	x = v.x; y = v.y; z = v.z; w = v.w; return *this; 
+}
+
+inline Vector4D Vector4D::operator+(const Vector4D& v)
+{
+	Vector4D tmp;
+	tmp.x = x + v.x; tmp.y = y + v.y; tmp.z = z + v.z; tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::operator+=(const Vector4D& v) 
+{
+	x += v.x; y += v.y; z += v.z; w = 1.0; return *this; 
+}
+
+inline Vector4D Vector4D::operator-(const Vector4D& v)
+{
+	Vector4D tmp;
+	tmp.x = x - v.x; tmp.y = y - v.y; tmp.z = z - v.z; tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::operator-=(const Vector4D& v) 
+{ 
+	x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; 
+}
+inline Vector4D Vector4D::operator*(const double k)
+{
+	Vector4D tmp;
+	tmp.x = x * k; tmp.y = y * k; tmp.z = z * k; tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::operator*=(const double k) 
+{ 
+	x *= k; y *= k; z *= k; w = 1.0; return *this; 
+}
+
+inline bool Vector4D::operator==(const Vector4D& v)
+{
+	if (x == v.x && y == v.y && z == v.z && w == v.w)
+		return true;
+	return false;
+}
+
+inline bool Vector4D::operator!=(const Vector4D& v)
 {
 	if (*this == v)
 		return false;

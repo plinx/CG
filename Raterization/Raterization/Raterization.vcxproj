@@ -66,12 +66,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="inc\Color.h" />
+    <ClInclude Include="inc\LMath.h" />
     <ClInclude Include="inc\LWin.h" />
+    <ClInclude Include="inc\Matrix.h" />
     <ClInclude Include="inc\Painter.h" />
+    <ClInclude Include="inc\Quat.h" />
     <ClInclude Include="inc\Vec.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="inc\LMath.cpp" />
     <ClCompile Include="inc\LWin.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
