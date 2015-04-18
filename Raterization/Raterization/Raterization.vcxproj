@@ -68,6 +68,7 @@
     <ClInclude Include="inc\Color.h" />
     <ClInclude Include="inc\LWin.h" />
     <ClInclude Include="inc\Painter.h" />
+    <ClInclude Include="inc\Vec.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

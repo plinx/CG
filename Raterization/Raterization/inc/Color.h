@@ -10,25 +10,28 @@ struct Color
 {
 	int R, G, B, A;
 
+	// Constructor 
 	Color() = default;
 	~Color() = default;
 	Color(int r, int g, int b) : R(r), G(g), B(b), A(255) {}
 	Color(int r, int g, int b, int a) : R(r), G(g), B(b), A(a) {}
-	Color(ColorStyle style);
-	Color(Color& left, Color& right);
+	Color(const ColorStyle style);
+	Color(const Color& left, const Color& right); // Color = rightColor - leftColor
 
+	// basic methods
 	void init(int r, int g, int b) { R = r; G = g; B = b; A = 255; }
 	void init(int r, int g, int b, int a) { R = r; G = g; B = b; A = a; }
 	void reset() { R = 0; G = 0; B = 0; A = 255; }
 	void alpha(int alpha) { A = alpha; }
 	Color mul(double scale);
 
-	Color& operator=(Color& rhs);
-	Color operator+(Color& rhs);
-	Color operator-(Color& rhs);
+	// override operator
+	Color& operator=(const Color& rhs);
+	Color operator+(const Color& rhs);
+	Color operator-(const Color& rhs);
 };
 
-inline Color::Color(ColorStyle style)
+inline Color::Color(const ColorStyle style)
 {
 	switch (style)
 	{
@@ -53,7 +56,7 @@ inline Color::Color(ColorStyle style)
 	}
 }
 
-inline Color::Color(Color& left, Color& right)
+inline Color::Color(const Color& left, const Color& right)
 {
 	R = right.R - left.R;
 	G = right.G - left.G;
@@ -64,20 +67,20 @@ inline Color::Color(Color& left, Color& right)
 inline Color Color::mul(double scale)
 {
 	Color tmpColor;
-	tmpColor.R = (int)(R * scale);
-	tmpColor.G = (int)(G * scale);
-	tmpColor.B = (int)(B * scale);
+	tmpColor.R = (int)min(R * scale, 255);
+	tmpColor.G = (int)min(G * scale, 255);
+	tmpColor.B = (int)min(B * scale, 255);
 	tmpColor.A = 255;
 	return tmpColor;
 }
 
-inline Color& Color::operator=(Color& rhs)
+inline Color& Color::operator=(const Color& rhs)
 {
 	R = rhs.R; G = rhs.G; B = rhs.B; A = rhs.A;
 	return *this;
 }
 
-inline Color Color::operator+(Color& rhs)
+inline Color Color::operator+(const Color& rhs)
 {
 	Color tmpColor;
 	tmpColor.R = R + rhs.R;
@@ -87,7 +90,7 @@ inline Color Color::operator+(Color& rhs)
 	return tmpColor;
 }
 
-inline Color Color::operator-(Color& rhs)
+inline Color Color::operator-(const Color& rhs)
 {
 	Color tmpColor;
 	tmpColor.R = R - rhs.R;

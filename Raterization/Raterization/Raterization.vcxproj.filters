@@ -27,6 +27,9 @@
     <ClInclude Include="inc\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\Vec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

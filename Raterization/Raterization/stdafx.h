@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include <vector>
 #include <ctime>
 #include <fstream>
@@ -12,8 +13,8 @@
 #include "inc/LWin.h"
 #include "inc/Color.h"
 #include "inc/Painter.h"
-/*#include "inc/Vec.h"
-#include "inc/Matrix.h"
+#include "inc/Vec.h"
+/*#include "inc/Matrix.h"
 #include "inc/Quat.h"
 #include "inc/LMath.h"
 #include "inc/Pipeline.h"

@@ -6,11 +6,12 @@ class Painter
 public:
 	PBYTE _scanLine;
 
+	// Constructor
 	Painter() = default;
 
 	void init(int width, int height);
 
-	// draw functions
+	// basic methods
 	void drawPixel(int x, int y, Color& color = Color(0, 0, 0));
 	void drawLine(int x1, int y1, int x2, int y2, Color& color = Color(0, 0, 0));
 	void drawVerticalLine(int x, int y1, int y2, Color& color = Color(0, 0, 0));
