@@ -60,28 +60,24 @@ inline void Painter::_setColor(PBYTE& pixel, Color& color)
 
 inline void Painter::drawPixel(int x, int y, Color& color)
 {
+	if (y < 0 || y > _width)
+		return;
 	_pixel = _scanLine + _bytePerLine * (y);
 	_pixel += x * 4;
 	_setColor(_pixel, color);
-	// 32 bit color format : Blue, Green, Red, Alpha
-	/*_pixel[0] = color.B;
-	_pixel[1] = color.G;
-	_pixel[2] = color.R;
-	_pixel[3] = color.A;*/
 }
-	
+
 inline void Painter::drawLine(int x1, int y1, int x2, int y2, Color& color)
 {
-	float delta;
-	if (x1 != x2)
-		delta = (float)(y2 - y1) / (x2 - x1);
+	double delta;
+	if (y1 != y2)
+		delta = (float)(x2 - x1) / (y2 - y1);
 	else
-		drawVerticalLine(x1, y1, y2, color);
+		drawHorizonLine(x1, x2, y1, color);
 
-	for (int x = 0, y = y1; x < abs(x2 - x1); x++)
+	for (int y = 0; y < abs(y2 - y1); y++)
 	{
-		drawPixel(x + x1, y, color);
-		y = (int)(x * delta + y1);
+		drawPixel((int)(x1 + delta * y), y, color);
 	}
 }
 

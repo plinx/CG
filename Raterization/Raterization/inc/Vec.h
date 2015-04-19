@@ -1,6 +1,9 @@
 #ifndef Vec_h
 #define Vec_h
 
+#include <iostream>
+#include <memory>
+
 #define EPSILON_E5 (double)(1E-5)
 
 // Vector2D, PVector2D, Point2D, PPoint2D
@@ -342,7 +345,7 @@ inline Vector4D::Vector4D(const Vector4D* begin, const Vector4D* end)
 }
 
 inline void Vector4D::print() 
-{ 
+{
 	std::cout << "(" << x << ", " << y << ", " << z << ")"; 
 }
 

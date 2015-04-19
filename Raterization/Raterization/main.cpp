@@ -1,10 +1,8 @@
 #include "stdafx.h"
+#include "Demos.h"
 
 //#define UNITTEST_MODE 
 #undef UNITTEST_MODE 
-
-extern double sin_table[361];
-extern double cos_table[361];
 
 #ifndef UNITTEST_MODE
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
@@ -26,10 +24,7 @@ int main()
 	//TriangleDemo();
 	//CubeDemo1();
 	//CubeDemo2();
-	//TankDemo1();
-	double a, b, c;
-	a = b = c = 2.21321;
-	std::cout << std::setprecision(20) << a << " " << ceil(a) << std::endl;
+	TankDemo1();
 
 	system("pause");
 

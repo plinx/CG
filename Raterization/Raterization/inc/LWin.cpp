@@ -3,6 +3,9 @@
 
 #pragma comment(lib, "Msimg32.lib")
 
+extern double sin_table[361];
+extern double cos_table[361];
+
 #define VK_E 0x45
 #define VK_Q 0x51
 #define VK_V 0x56
@@ -132,30 +135,6 @@ WPARAM LWindow::Render(void)
 	blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
 	blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
 
-	/*for (int y = 0; y < _height; y++)
-	{
-		for (int x = 0; x < _width; x++)
-		{
-			painter.drawPixel(x, y);
-		}
-	}*/
-	//painter.drawLine(0, 0, _width, _height);
-	/*for (int y = 0; y < _height; y++)
-	{
-		painter.drawHorizonLine(0, _width, y, Color(Red));
-	}*/
-	//painter.drawTriangle(10, -100, 200, 600, 300, -100, Color(Black));
-	painter.drawTriangle(200, 200, 300, 400, 400, 100, Color(Black));
-	painter.drawTriangle(100, 100, Color(Red), 200, 300, Color(Green), 300, 0, Color(Blue));
-
-	//painter.drawTriangle(100, 100, 200, 200, 300, 50, Color(Black));
-	//painter.drawTriangle(200, -200, 100, 500, 300, 500, Color(Red));
-	/*painter.drawTriangle(100, 200, 100, 300, 100, 400, Color(Red));
-	painter.drawTriangle(100, 200, 200, 200, 300, 200, Color(Blue));
-	painter.drawTriangle(100, 200, 200, 300, 300, 400, Color(Cyan));
-	painter.drawTriangle(100, 200, 200, 250, 300, 300, Color(Yellow));
-	painter.drawTriangle(100, 200, 200, 150, 300, 100, Color(Green));*/
-		
 	AlphaBlend(_hdc, 0, 0, _width, _height,
 		_hdcMem, 0, 0, _width, _height, blend);
 

@@ -1,66 +1,8 @@
-﻿  main.cpp
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(702): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(703): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(713): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(714): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(724): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(725): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(731): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(732): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(742): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(743): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(751): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(752): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(758): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(759): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(767): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(768): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(774): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(775): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(783): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(784): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(790): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(791): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(797): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(798): error C3861: 'Fast_sin': identifier not found
-  LWin.cpp
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(702): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(703): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(713): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(714): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(724): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(725): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(731): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(732): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(742): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(743): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(751): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(752): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(758): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(759): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(767): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(768): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(774): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(775): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(783): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(784): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(790): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(791): error C3861: 'Fast_sin': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(797): error C3861: 'Fast_cos': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\matrix.h(798): error C3861: 'Fast_sin': identifier not found
-  LMath.cpp
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(249): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(249): error C3861: 'swap': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(250): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(250): error C3861: 'swap': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(251): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(251): error C3861: 'swap': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(346): error C2039: 'cout' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(346): error C2065: 'cout' : undeclared identifier
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(374): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(374): error C3861: 'swap': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(375): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(375): error C3861: 'swap': identifier not found
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(376): error C2039: 'swap' : is not a member of 'std'
-h:\dreamcode\cg\raterization\raterization\inc\vec.h(376): error C3861: 'swap': identifier not found
+﻿  LWin.cpp
   Generating Code...
+  Compiling...
+  main.cpp
+  TestCase.cpp
+  Demos.cpp
+  Generating Code...
+  Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

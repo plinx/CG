@@ -98,18 +98,20 @@ struct Matrix4x4
 	void transpose();
 	void swap(Matrix1x4* m, int c);
 	double simple_det();
+	void build(double theta_x, double theta_y, double theta_z);
+
 	Matrix4x4 inverse();
 	Matrix1x4 mul(Matrix1x4* m);
 	Vector3D mul(Vector3D* vec);
 	Vector4D mul(Vector4D* vec);
 
+	// override operator
 	Matrix4x4& operator=(const Matrix4x4& m);
 	Matrix4x4 operator+(const Matrix4x4& m);
 	Matrix4x4& operator+=(const Matrix4x4& m);
 	Matrix4x4 operator*(const Matrix4x4& m);
 	Matrix4x4& operator*=(const Matrix4x4& m);
 
-	void build(double theta_x, double theta_y, double theta_z);
 };
 typedef Matrix4x4* PMatrix4x4;
 
@@ -117,25 +119,18 @@ struct Matrix1x3
 {
 	double v[3];
 
+	// Constructor
 	Matrix1x3() = default;
 	~Matrix1x3() = default;
 	Matrix1x3(const Matrix1x3& m) { *this = m; }
-	Matrix1x3(double m0, double m1, double m2)
-	{
-		v[0] = m0; v[1] = m1; v[2] = m2;
-	}
+	Matrix1x3(double m0, double m1, double m2);
 
-	void zero() { memset(v, 0, sizeof(v)); }
-	void init(double m0, double m1, double m2)
-	{
-		v[0] = m0; v[1] = m1; v[2] = m2;
-	}
+	// basic methods
+	void zero();
+	void init(double m0, double m1, double m2);
 
-	Matrix1x3& operator=(const Matrix1x3& m)
-	{
-		v[0] = m.v[0]; v[1] = m.v[1]; v[2] = m.v[2];
-		return *this;
-	}
+	// override operator
+	Matrix1x3& operator=(const Matrix1x3& m);
 };
 typedef Matrix1x3* PMatrix1x3;
 
@@ -143,31 +138,18 @@ struct Matrix3x2
 {
 	double v[3][2];
 
+	// Constructor
 	Matrix3x2() = default;
 	~Matrix3x2() = default;
 	Matrix3x2(const Matrix3x2& m) { *this = m; }
-	Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21)
-	{
-		v[0][0] = m00; v[0][1] = m01; 
-		v[1][0] = m10; v[1][1] = m11;
-		v[2][0] = m20; v[2][1] = m21;
-	}
+	Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21);
 
-	void zero() { memset(v, 0, sizeof(v)); }
-	void init(double m00, double m01, double m10, double m11, double m20, double m21)
-	{
-		v[0][0] = m00; v[0][1] = m01; 
-		v[1][0] = m10; v[1][1] = m11;
-		v[2][0] = m20; v[2][1] = m21;
-	}
+	// basic methods
+	void zero();
+	void init(double m00, double m01, double m10, double m11, double m20, double m21);
 
-	Matrix3x2& operator=(const Matrix3x2& m)
-	{
-		v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1]; 
-		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1]; 
-		v[2][0] = m.v[2][0]; v[2][1] = m.v[2][1]; 
-		return *this;
-	}
+	// override operator
+	Matrix3x2& operator=(const Matrix3x2& m);
 };
 typedef Matrix3x2* PMatrix3x2;
 
@@ -175,115 +157,31 @@ struct Matrix3x3
 {
 	double v[3][3];
 
+	// Constructor
 	Matrix3x3() = default;
 	~Matrix3x3() = default;
 	Matrix3x3(const Matrix3x3& m) { *this = m; }
 	Matrix3x3(double m00, double m01, double m02,
 		double m10, double m11, double m12,
-		double m20, double m21, double m22)
-	{
-		v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
-		v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
-		v[2][0] = m20; v[2][1] = m21; v[2][2] = m22;
-	}
+		double m20, double m21, double m22);
 
-	void zero() { memset(v, 0, sizeof(v)); }
+	// basic methods
+	void zero();
 	void init(double m00, double m01, double m02,
 		double m10, double m11, double m12,
-		double m20, double m21, double m22)
-	{
-		v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
-		v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
-		v[2][0] = m20; v[2][1] = m21; v[2][2] = m22;
-	}
-	void unit()	{ memcpy((void*)v, (void*)&Unit_M3x3, sizeof(v)); }
-	void transpose()
-	{
-		std::swap(v[0][1], v[1][0]);
-		std::swap(v[0][2], v[2][0]);
-		std::swap(v[1][2], v[2][1]);
-	}
-	void swap(Matrix1x3* m, int c)
-	{
-		v[0][c] = m->v[0]; v[1][c] = m->v[1]; v[2][c] = m->v[2];
-	}
-	double det()
-	{
-		return (v[0][0] * (v[1][1] * v[2][2] - v[1][2] * v[2][1]) -
-			v[0][1] * (v[1][0] * v[2][2] - v[1][2] * v[2][0]) +
-			v[0][2] * (v[1][0] * v[2][1] - v[1][1] * v[2][0]));
-	}
-	Matrix3x3 inverse()
-	{
-		Matrix3x3 m;
-		m.zero();
+		double m20, double m21, double m22);
+	void unit();
+	void transpose();
+	void swap(Matrix1x3* m, int c);
+	double det();
+	Matrix3x3 inverse();
 
-		auto det = this->det();
-		if (abs(det) < EPSILON_E5)
-			return m;
-		auto det_inv = 1.0 / det;
-		m.v[0][0] = det_inv * (v[1][1] * v[2][2] - v[1][2] * v[2][1]);
-		m.v[1][0] = -det_inv * (v[1][0] * v[2][2] - v[1][2] * v[2][0]);
-		m.v[2][0] = det_inv * (v[1][0] * v[2][1] - v[1][1] * v[2][0]);
-
-		m.v[0][1] = -det_inv * (v[0][1] * v[2][2] - v[0][2] * v[2][1]);
-		m.v[1][1] = det_inv * (v[0][0] * v[2][2] - v[0][2] * v[2][0]);
-		m.v[2][1] = -det_inv * (v[0][1] * v[2][1] - v[0][1] * v[2][0]);
-
-		m.v[0][2] = det_inv * (v[0][1] * v[1][2] - v[1][1] * v[0][2]);
-		m.v[1][2] = -det_inv * (v[0][0] * v[1][2] - v[0][2] * v[1][0]);
-		m.v[2][2] = det_inv * (v[0][0] * v[1][1] - v[1][0] * v[0][1]);
-
-		return m;
-	}
-
-	Matrix3x3& operator=(const Matrix3x3& m)
-	{
-		v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1]; v[0][2] = m.v[0][2];
-		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1]; v[1][2] = m.v[1][2];
-		v[2][0] = m.v[2][0]; v[2][1] = m.v[2][1]; v[2][2] = m.v[2][2];
-		return *this;
-	}
-	Matrix3x3 operator+(const Matrix3x3& m)
-	{
-		Matrix3x3 tmp(*this);
-		tmp += m;
-		return tmp;
-	}
-	Matrix3x3& operator+=(const Matrix3x3& m)
-	{
-		v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1]; v[0][2] += m.v[0][2];
-		v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1]; v[1][2] += m.v[1][2];
-		v[2][0] += m.v[2][0]; v[2][1] += m.v[2][1]; v[2][2] += m.v[2][2];
-		return *this;
-	}
-	Matrix3x3 operator*(const Matrix3x3& m)
-	{ 
-		Matrix3x3 tmp(*this);
-		for (int row = 0; row < 4; row++)
-		{
-			tmp.v[row][0] = v[row][0] * m.v[0][0] + v[row][1] * m.v[1][0] + v[row][2] * m.v[2][0];
-			tmp.v[row][1] = v[row][0] * m.v[0][1] + v[row][1] * m.v[1][1] + v[row][2] * m.v[2][1];
-			tmp.v[row][2] = v[row][0] * m.v[0][2] + v[row][1] * m.v[1][2] + v[row][2] * m.v[2][2];
-		}
-		return tmp;
-	}
-	Matrix3x3& operator*=(const Matrix3x3& m)
-	{
-		Matrix3x3 tmp;
-		for (int row = 0; row < 3; row++)
-		{
-			tmp.v[row][0] = v[row][0] * m.v[0][0] + v[row][1] * m.v[1][0] + v[row][2] * m.v[2][0];
-			tmp.v[row][1] = v[row][0] * m.v[0][1] + v[row][1] * m.v[1][1] + v[row][2] * m.v[2][1];
-			tmp.v[row][2] = v[row][0] * m.v[0][2] + v[row][1] * m.v[1][2] + v[row][2] * m.v[2][2];
-		}
-		*this = tmp;
-		return *this;
-		/*v[0][0] *= m.v[0][0]; v[0][1] *= m.v[0][1]; v[0][2] *= m.v[0][2];
-		v[1][0] *= m.v[1][0]; v[1][1] *= m.v[1][1]; v[1][2] *= m.v[1][2];
-		v[2][0] *= m.v[2][0]; v[2][1] *= m.v[2][1]; v[2][2] *= m.v[2][2];*/
-	}
-
+	// override operator
+	Matrix3x3& operator=(const Matrix3x3& m);
+	Matrix3x3 operator+(const Matrix3x3& m);
+	Matrix3x3& operator+=(const Matrix3x3& m);
+	Matrix3x3 operator*(const Matrix3x3& m);
+	Matrix3x3& operator*=(const Matrix3x3& m);
 };
 typedef Matrix3x3* PMatrix3x3;
 
@@ -291,31 +189,19 @@ struct Matrix1x2
 {
 	double v[2];
 
+	// Constructor
 	Matrix1x2() = default;
 	~Matrix1x2() = default;
 	Matrix1x2(const Matrix1x2& m) { *this = m; }
-	Matrix1x2(double m0, double m1)
-	{
-		v[0] = m0; v[1] = m1;
-	}
+	Matrix1x2(double m0, double m1);
 
-	void zero() { memset(v, 0, sizeof(v)); }
-	void init(double m0, double m1)
-	{
-		v[0] = m0; v[1] = m1;
-	}
-	void mul_3x2(const Matrix3x2* m)
-	{
-		auto v1 = v[0] * m->v[0][0] + v[1] * m->v[1][0] + m->v[2][0];
-		auto v2 = v[0] * m->v[0][1] + v[1] * m->v[1][1] + m->v[2][1];
-		v[0] = v1; v[1] = v2;
-	}
+	// basic methods
+	void zero();
+	void init(double m0, double m1);
+	void mul_3x2(const Matrix3x2* m);
 
-	Matrix1x2& operator=(const Matrix1x2& m)
-	{
-		v[0] = m.v[0]; v[1] = m.v[1];
-		return *this;
-	}
+	// override operator
+	Matrix1x2& operator=(const Matrix1x2& m);
 };
 typedef Matrix1x2* PMatrix1x2;
 
@@ -323,98 +209,29 @@ struct Matrix2x2
 {
 	double v[2][2];
 
+	// Constructor
 	Matrix2x2() = default;
 	~Matrix2x2() = default;
 	Matrix2x2(const Matrix2x2& m) { *this = m; }
-	Matrix2x2(double m00, double m01, double m10, double m11)
-	{
-		v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
-	}
+	Matrix2x2(double m00, double m01, double m10, double m11);
 
-	void zero() { memset(v, 0, sizeof(v)); }
-	void init(double m00, double m01, double m10, double m11)
-	{
-		v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
-	}
-	void unit() { memcpy((void*)v, (void*)&Unit_M2x2, sizeof(v)); }
-	void transpose()
-	{
-		std::swap(v[0][1], v[1][0]);
-	}
-	void swap(Matrix1x2* m, int c)
-	{
-		v[0][c] = m->v[0]; v[1][c] = m->v[1];
-	}
-	double det() { return v[0][0] * v[1][1] - v[1][0] * v[0][1]; }
-	Matrix2x2 inverse()
-	{
-		Matrix2x2 m;
-		m.zero();
-		auto det = this->det();
-		if (abs(det) < EPSILON_E5)
-			return m;
+	// basic methods
+	void zero();
+	void init(double m00, double m01, double m10, double m11);
+	void unit();
+	void transpose();
+	void swap(Matrix1x2* m, int c);
+	double det(); 
+	Matrix2x2 inverse();
 
-		auto det_inv = 1.0 / det;
-		m.v[0][0] = v[0][0] * det_inv;
-		m.v[0][1] = v[0][1] * det_inv;
-		m.v[1][0] = v[1][0] * det_inv;
-		m.v[1][1] = v[1][1] * det_inv;
-
-		return m;
-	}
-
-	Matrix2x2& operator=(const Matrix2x2& m)
-	{
-		v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1];
-		v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1];
-		return *this;
-	}
-	Matrix2x2 operator+(const Matrix2x2& m)
-	{
-		Matrix2x2 tmp(*this);
-		tmp += m;
-		return tmp;
-	}
-	Matrix2x2& operator+=(const Matrix2x2& m)
-	{
-		v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1];
-		v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1];
-		return *this;
-	}
-	Matrix2x2 operator-(const Matrix2x2& m)
-	{
-		Matrix2x2 tmp(*this);
-		tmp -= m;
-		return tmp;
-	}
-	Matrix2x2& operator-=(const Matrix2x2& m)
-	{
-		v[0][0] -= m.v[0][0]; v[0][1] -= m.v[0][1];
-		v[1][0] -= m.v[1][0]; v[1][1] -= m.v[1][1];
-		return *this;
-	}
-	Matrix2x2 operator*(const Matrix2x2& m)
-	{
-		Matrix2x2 tmp(*this);
-		tmp *= m;
-		/*tmp.v[0][0] = v[0][0] * m.v[0][0] + v[0][1] * m.v[1][0];
-		tmp.v[0][1] = v[0][0] * m.v[0][1] + v[0][1] * m.v[1][1];
-		tmp.v[1][0] = v[1][0] * m.v[0][0] + v[1][1] * m.v[1][0];
-		tmp.v[1][1] = v[1][0] * m.v[0][1] + v[1][1] * m.v[1][1];*/
-		return tmp;
-	}
-	Matrix2x2& operator*=(const Matrix2x2& m)
-	{
-		Matrix2x2 tmp;
-		tmp.v[0][0] = v[0][0] * m.v[0][0] + v[0][1] * m.v[1][0];
-		tmp.v[0][1] = v[0][0] * m.v[0][1] + v[0][1] * m.v[1][1];
-		tmp.v[1][0] = v[1][0] * m.v[0][0] + v[1][1] * m.v[1][0];
-		tmp.v[1][1] = v[1][0] * m.v[0][1] + v[1][1] * m.v[1][1];
-		*this = tmp;
-		/*v[0][0] *= m.v[0][0]; v[0][1] *= m.v[0][1];
-		v[1][0] *= m.v[1][0]; v[1][1] *= m.v[1][1];*/
-		return *this;
-	}
+	// override operator
+	Matrix2x2& operator=(const Matrix2x2& m);
+	Matrix2x2 operator+(const Matrix2x2& m);
+	Matrix2x2& operator+=(const Matrix2x2& m);
+	Matrix2x2 operator-(const Matrix2x2& m);
+	Matrix2x2& operator-=(const Matrix2x2& m);
+	Matrix2x2 operator*(const Matrix2x2& m);
+	Matrix2x2& operator*=(const Matrix2x2& m);
 
 };
 typedef Matrix2x2* PMatrix2x2;
@@ -808,5 +625,309 @@ inline void Matrix4x4::build(double theta_x, double theta_y, double theta_z)
 	}
 }
 
+// Matrix1x3 methods implement
+inline Matrix1x3::Matrix1x3(double m0, double m1, double m2)
+{
+	v[0] = m0; v[1] = m1; v[2] = m2;
+}
+
+inline void Matrix1x3::zero() 
+{ 
+	memset(v, 0, sizeof(v)); 
+}
+
+inline void Matrix1x3::init(double m0, double m1, double m2)
+{
+	v[0] = m0; v[1] = m1; v[2] = m2;
+}
+
+inline Matrix1x3& Matrix1x3::operator=(const Matrix1x3& m)
+{
+	v[0] = m.v[0]; v[1] = m.v[1]; v[2] = m.v[2];
+	return *this;
+}
+
+// Matrix3x2 methods implement
+inline Matrix3x2::Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21)
+{
+	v[0][0] = m00; v[0][1] = m01;
+	v[1][0] = m10; v[1][1] = m11;
+	v[2][0] = m20; v[2][1] = m21;
+}
+
+inline void Matrix3x2::zero() 
+{ 
+	memset(v, 0, sizeof(v)); 
+}
+
+inline void Matrix3x2::init(double m00, double m01, double m10, double m11, double m20, double m21)
+{
+	v[0][0] = m00; v[0][1] = m01;
+	v[1][0] = m10; v[1][1] = m11;
+	v[2][0] = m20; v[2][1] = m21;
+}
+
+inline Matrix3x2& Matrix3x2::operator=(const Matrix3x2& m)
+{
+	v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1];
+	v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1];
+	v[2][0] = m.v[2][0]; v[2][1] = m.v[2][1];
+	return *this;
+}
+
+// Matrix3x3 methods implement
+inline Matrix3x3::Matrix3x3(double m00, double m01, double m02,
+	double m10, double m11, double m12,
+	double m20, double m21, double m22)
+{
+	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
+	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
+	v[2][0] = m20; v[2][1] = m21; v[2][2] = m22;
+}
+
+inline void Matrix3x3::zero() 
+{
+	memset(v, 0, sizeof(v)); 
+}
+
+inline void Matrix3x3::init(double m00, double m01, double m02,
+	double m10, double m11, double m12,
+	double m20, double m21, double m22)
+{
+	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
+	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
+	v[2][0] = m20; v[2][1] = m21; v[2][2] = m22;
+}
+
+inline void Matrix3x3::unit()	
+{ 
+	memcpy((void*)v, (void*)&Unit_M3x3, sizeof(v)); 
+}
+
+inline void Matrix3x3::transpose()
+{
+	std::swap(v[0][1], v[1][0]);
+	std::swap(v[0][2], v[2][0]);
+	std::swap(v[1][2], v[2][1]);
+}
+
+inline void Matrix3x3::swap(Matrix1x3* m, int c)
+{
+	v[0][c] = m->v[0]; v[1][c] = m->v[1]; v[2][c] = m->v[2];
+}
+
+inline double Matrix3x3::det()
+{
+	return (v[0][0] * (v[1][1] * v[2][2] - v[1][2] * v[2][1]) -
+		v[0][1] * (v[1][0] * v[2][2] - v[1][2] * v[2][0]) +
+		v[0][2] * (v[1][0] * v[2][1] - v[1][1] * v[2][0]));
+}
+
+inline Matrix3x3 Matrix3x3::inverse()
+{
+	Matrix3x3 m;
+	m.zero();
+
+	auto det = this->det();
+	if (abs(det) < EPSILON_E5)
+		return m;
+	auto det_inv = 1.0 / det;
+	m.v[0][0] = det_inv * (v[1][1] * v[2][2] - v[1][2] * v[2][1]);
+	m.v[1][0] = -det_inv * (v[1][0] * v[2][2] - v[1][2] * v[2][0]);
+	m.v[2][0] = det_inv * (v[1][0] * v[2][1] - v[1][1] * v[2][0]);
+
+	m.v[0][1] = -det_inv * (v[0][1] * v[2][2] - v[0][2] * v[2][1]);
+	m.v[1][1] = det_inv * (v[0][0] * v[2][2] - v[0][2] * v[2][0]);
+	m.v[2][1] = -det_inv * (v[0][1] * v[2][1] - v[0][1] * v[2][0]);
+
+	m.v[0][2] = det_inv * (v[0][1] * v[1][2] - v[1][1] * v[0][2]);
+	m.v[1][2] = -det_inv * (v[0][0] * v[1][2] - v[0][2] * v[1][0]);
+	m.v[2][2] = det_inv * (v[0][0] * v[1][1] - v[1][0] * v[0][1]);
+
+	return m;
+}
+
+inline Matrix3x3& Matrix3x3::operator=(const Matrix3x3& m)
+{
+	v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1]; v[0][2] = m.v[0][2];
+	v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1]; v[1][2] = m.v[1][2];
+	v[2][0] = m.v[2][0]; v[2][1] = m.v[2][1]; v[2][2] = m.v[2][2];
+	return *this;
+}
+
+inline Matrix3x3 Matrix3x3::operator+(const Matrix3x3& m)
+{
+	Matrix3x3 tmp(*this);
+	tmp += m;
+	return tmp;
+}
+
+inline Matrix3x3& Matrix3x3::operator+=(const Matrix3x3& m)
+{
+	v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1]; v[0][2] += m.v[0][2];
+	v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1]; v[1][2] += m.v[1][2];
+	v[2][0] += m.v[2][0]; v[2][1] += m.v[2][1]; v[2][2] += m.v[2][2];
+	return *this;
+}
+
+inline Matrix3x3 Matrix3x3::operator*(const Matrix3x3& m)
+{
+	Matrix3x3 tmp(*this);
+	for (int row = 0; row < 4; row++)
+	{
+		tmp.v[row][0] = v[row][0] * m.v[0][0] + v[row][1] * m.v[1][0] + v[row][2] * m.v[2][0];
+		tmp.v[row][1] = v[row][0] * m.v[0][1] + v[row][1] * m.v[1][1] + v[row][2] * m.v[2][1];
+		tmp.v[row][2] = v[row][0] * m.v[0][2] + v[row][1] * m.v[1][2] + v[row][2] * m.v[2][2];
+	}
+	return tmp;
+}
+
+inline Matrix3x3& Matrix3x3::operator*=(const Matrix3x3& m)
+{
+	Matrix3x3 tmp;
+	for (int row = 0; row < 3; row++)
+	{
+		tmp.v[row][0] = v[row][0] * m.v[0][0] + v[row][1] * m.v[1][0] + v[row][2] * m.v[2][0];
+		tmp.v[row][1] = v[row][0] * m.v[0][1] + v[row][1] * m.v[1][1] + v[row][2] * m.v[2][1];
+		tmp.v[row][2] = v[row][0] * m.v[0][2] + v[row][1] * m.v[1][2] + v[row][2] * m.v[2][2];
+	}
+	*this = tmp;
+	return *this;
+}
+
+// Matrix1x2 methods implement
+inline Matrix1x2::Matrix1x2(double m0, double m1)
+{
+	v[0] = m0; v[1] = m1;
+}
+
+inline void Matrix1x2::zero() 
+{ 
+	memset(v, 0, sizeof(v)); 
+}
+
+inline void Matrix1x2::init(double m0, double m1)
+{
+	v[0] = m0; v[1] = m1;
+}
+
+inline void Matrix1x2::mul_3x2(const Matrix3x2* m)
+{
+	auto v1 = v[0] * m->v[0][0] + v[1] * m->v[1][0] + m->v[2][0];
+	auto v2 = v[0] * m->v[0][1] + v[1] * m->v[1][1] + m->v[2][1];
+	v[0] = v1; v[1] = v2;
+}
+
+inline Matrix1x2& Matrix1x2::operator=(const Matrix1x2& m)
+{
+	v[0] = m.v[0]; v[1] = m.v[1];
+	return *this;
+}
+
+// Matrix2x2 methods implement
+inline Matrix2x2::Matrix2x2(double m00, double m01, double m10, double m11)
+{
+	v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
+}
+
+inline void Matrix2x2::zero() 
+{
+	memset(v, 0, sizeof(v)); 
+}
+
+inline void Matrix2x2::init(double m00, double m01, double m10, double m11)
+{
+	v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
+}
+
+inline void Matrix2x2::unit() 
+{ 
+	memcpy((void*)v, (void*)&Unit_M2x2, sizeof(v)); 
+}
+
+inline void Matrix2x2::transpose()
+{
+	std::swap(v[0][1], v[1][0]);
+}
+
+inline void Matrix2x2::swap(Matrix1x2* m, int c)
+{
+	v[0][c] = m->v[0]; v[1][c] = m->v[1];
+}
+
+inline double Matrix2x2::det() 
+{
+	return v[0][0] * v[1][1] - v[1][0] * v[0][1]; 
+}
+
+inline Matrix2x2 Matrix2x2::inverse()
+{
+	Matrix2x2 m;
+	m.zero();
+	auto det = this->det();
+	if (abs(det) < EPSILON_E5)
+		return m;
+
+	auto det_inv = 1.0 / det;
+	m.v[0][0] = v[0][0] * det_inv;
+	m.v[0][1] = v[0][1] * det_inv;
+	m.v[1][0] = v[1][0] * det_inv;
+	m.v[1][1] = v[1][1] * det_inv;
+
+	return m;
+}
+
+inline Matrix2x2& Matrix2x2::operator=(const Matrix2x2& m)
+{
+	v[0][0] = m.v[0][0]; v[0][1] = m.v[0][1];
+	v[1][0] = m.v[1][0]; v[1][1] = m.v[1][1];
+	return *this;
+}
+
+inline Matrix2x2 Matrix2x2::operator+(const Matrix2x2& m)
+{
+	Matrix2x2 tmp(*this);
+	tmp += m;
+	return tmp;
+}
+
+inline Matrix2x2& Matrix2x2::operator+=(const Matrix2x2& m)
+{
+	v[0][0] += m.v[0][0]; v[0][1] += m.v[0][1];
+	v[1][0] += m.v[1][0]; v[1][1] += m.v[1][1];
+	return *this;
+}
+
+inline Matrix2x2 Matrix2x2::operator-(const Matrix2x2& m)
+{
+	Matrix2x2 tmp(*this);
+	tmp -= m;
+	return tmp;
+}
+
+inline Matrix2x2& Matrix2x2::operator-=(const Matrix2x2& m)
+{
+	v[0][0] -= m.v[0][0]; v[0][1] -= m.v[0][1];
+	v[1][0] -= m.v[1][0]; v[1][1] -= m.v[1][1];
+	return *this;
+}
+
+inline Matrix2x2 Matrix2x2::operator*(const Matrix2x2& m)
+{
+	Matrix2x2 tmp(*this);
+	tmp *= m;
+	return tmp;
+}
+
+inline Matrix2x2& Matrix2x2::operator*=(const Matrix2x2& m)
+{
+	Matrix2x2 tmp;
+	tmp.v[0][0] = v[0][0] * m.v[0][0] + v[0][1] * m.v[1][0];
+	tmp.v[0][1] = v[0][0] * m.v[0][1] + v[0][1] * m.v[1][1];
+	tmp.v[1][0] = v[1][0] * m.v[0][0] + v[1][1] * m.v[1][0];
+	tmp.v[1][1] = v[1][0] * m.v[0][1] + v[1][1] * m.v[1][1];
+	*this = tmp;
+	return *this;
+}
 
 #endif
