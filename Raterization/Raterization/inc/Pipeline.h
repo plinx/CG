@@ -97,7 +97,7 @@ struct Poly4D
 {
 	int state;
 	int attr;
-	int color;
+	Color color;
 
 	PPoint4D vlist = NULL;
 	int vert[3];
@@ -108,7 +108,7 @@ struct PolyFace4D
 {
 	int state;
 	int attr;
-	int color;
+	Color color;
 
 	Point4D vlist[3];
 	Point4D tvlist[3];
@@ -503,7 +503,9 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 			int green = (poly_surface_desc & 0x00f0);
 			int blue = (poly_surface_desc & 0x000f) << 4;
 			//std::cout << "red : " << red << " green : " << green << " blue : " << blue << std::endl;
-			obj->plist[poly].color = RGB(red, green, blue);
+			
+			// do not use the material in file
+			//obj->plist[poly].color.init(red, green, blue);
 		}
 
 		int shade_mode = (poly_surface_desc & PLX_SHADE_MODE_MASK);

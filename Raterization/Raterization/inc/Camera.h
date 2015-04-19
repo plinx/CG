@@ -468,7 +468,7 @@ inline void Camera::to_Screen(PRenderList4D rlist)
 		for (int vertex = 0; vertex < 3; vertex++)
 		{
 			curr_poly->tvlist[vertex].x = alpha + alpha * curr_poly->tvlist[vertex].x;
-			curr_poly->tvlist[vertex].y = beta - beta * curr_poly->tvlist[vertex].y;
+			curr_poly->tvlist[vertex].y = beta + beta * curr_poly->tvlist[vertex].y;
 		}
 	}
 }
@@ -483,7 +483,7 @@ inline void Camera::to_Screen(PObject4D obj)
 	for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 	{
 		obj->vlist_trans[vertex].x = alpha + alpha * obj->vlist_trans[vertex].x;
-		obj->vlist_trans[vertex].y = beta - beta * obj->vlist_trans[vertex].y;
+		obj->vlist_trans[vertex].y = beta + beta * obj->vlist_trans[vertex].y;
 	}
 }
 

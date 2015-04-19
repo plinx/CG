@@ -15,7 +15,7 @@ void TriangleDemo()
 
 	poly1.state = POLY4D_STATE_ACTIVE;
 	poly1.attr = 0;
-	poly1.color = RGB(0, 0, 0);
+	poly1.color.init(0, 0, 0);
 
 	poly1.vlist[0].x = 0;
 	poly1.vlist[0].y = 50;
@@ -185,11 +185,11 @@ void CubeDemo2()
 
 void TankDemo1()
 {
-	Point4D cam_pos(0, 0, -10, 1);
+	Point4D cam_pos(0, 0, -100, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
-	Point4D poly_pos(0, 0, 10, 1);
+	Point4D poly_pos(0, 0, 100, 1);
 	Camera camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 400, 400);
 	RenderList4D rlist;
 	Object4D obj;
@@ -203,11 +203,17 @@ void TankDemo1()
 	//obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
 	rlist.insert(&obj);
 	rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
-	obj.to_World(TRANSFORM_LOCAL_ONLY);
+	obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
 	obj.world_pos = poly_pos;
 	obj.world_pos.z += 100;
-	obj.to_World(TRANSFORM_LOCAL_ONLY);
+	obj.to_World(TRANSFORM_TRANS_ONLY);
+	obj.vlist_local[0].print();
+	obj.vlist_local[1].print();
+	std::cout << std::endl;
 	rlist.insert(&obj);
+	rlist.poly_data[0].vlist[0].print();
+	rlist.poly_data[0].vlist[1].print();
+	std::cout << std::endl;
 	rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 	rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
@@ -254,4 +260,5 @@ void TankDemo1()
 	std::cout << "curr_poly1 : (" << curr_poly->tvlist[1].x
 		<< "," << curr_poly->tvlist[1].y << ")" << std::endl;
 }
+
 

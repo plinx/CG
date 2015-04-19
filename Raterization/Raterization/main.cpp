@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Demos.h"
 
+//extern double sin_table[361];
+//extern double cos_table[361];
+
 //#define UNITTEST_MODE 
 #undef UNITTEST_MODE 
 

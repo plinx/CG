@@ -38,7 +38,7 @@ protected:
 private:
 	~Painter() = default;
 
-	int _width, _height, _bytePerLine;
+	int _width, _height, _bytesPerLine;
 	PBYTE _pixel;
 };
 
@@ -46,7 +46,9 @@ inline void Painter::init(int width, int height)
 {
 	_width = width;
 	_height = height;
-	_bytePerLine = _width * 4;
+	_bytesPerLine = _width * 3;
+	if (_bytesPerLine % 4 != 0)
+		_bytesPerLine += 4 - _bytesPerLine % 4;
 }
 
 inline void Painter::_setColor(PBYTE& pixel, Color& color)
@@ -55,34 +57,71 @@ inline void Painter::_setColor(PBYTE& pixel, Color& color)
 	pixel[0] = color.B;
 	pixel[1] = color.G;
 	pixel[2] = color.R;
-	pixel[3] = color.A;
+	//pixel[3] = color.A;
 }
 
 inline void Painter::drawPixel(int x, int y, Color& color)
 {
 	if (y < 0 || y > _width)
 		return;
-	_pixel = _scanLine + _bytePerLine * (y);
-	_pixel += x * 4;
+	_pixel = _scanLine + _bytesPerLine * (y);
+	_pixel += x * 3;
 	_setColor(_pixel, color);
 }
 
 inline void Painter::drawLine(int x1, int y1, int x2, int y2, Color& color)
 {
 	double delta;
-	if (y1 != y2)
-		delta = (float)(x2 - x1) / (y2 - y1);
-	else
-		drawHorizonLine(x1, x2, y1, color);
-
-	for (int y = 0; y < abs(y2 - y1); y++)
+	if (y1 == y2)
 	{
-		drawPixel((int)(x1 + delta * y), y, color);
+		drawHorizonLine(x1, x2, y1, color);
 	}
+	else if (x1 == x2)
+	{
+		drawVerticalLine(x1, y1, y2, color);
+	}
+	else
+	{
+		if (y2 < y1)
+		{
+			std::swap(x1, x2);
+			std::swap(y1, y2);
+		}
+		if (abs(y2 - y1) > abs(x2 - x1))
+		{
+			delta = (double)(x2 - x1) / (y2 - y1);
+			for (int y = 0; y < (y2 - y1); y++)
+			{
+				drawPixel((int)(x1 + delta * y), y + y1, color);
+			}
+		}
+		else
+		{
+			if (x2 < x1)
+			{
+				delta = (double)(y1 - y2) / (x1 - x2);
+				for (int x = 0; x < x1 - x2; x++)
+				{
+					drawPixel(x + x2, (int)(y2 + delta * x), color);
+				}
+			}
+			else
+			{
+				delta = (double)(y2 - y1) / (x2 - x1);
+				for (int x = 0; x < (x2 - x1); x++)
+				{
+					drawPixel(x + x1, (int)(y1 + delta * x), color);
+				}
+			}
+		}
+	}
+	
 }
 
 inline void Painter::drawVerticalLine(int x, int y1, int y2, Color& color)
 {
+	if (y2 < y1)
+		std::swap(y1, y2);
 	for (int y = y1; y < y2; y++)
 	{
 		drawPixel(x, y, color);
@@ -92,23 +131,25 @@ inline void Painter::drawVerticalLine(int x, int y1, int y2, Color& color)
 inline void Painter::drawHorizonLine(int x1, int x2, int y, Color& color)
 {
 	int tmpA = color.A;
-	_pixel = _scanLine + _bytePerLine * (y);
-	_pixel += x1 * 4;
+	_pixel = _scanLine + _bytesPerLine * (y);
+	if (x2 < x1)
+		std::swap(x1, x2);
+	_pixel += x1 * 3;
 	for (int x = x1; x < x2; x++)
 	{
 		_setColor(_pixel, color);
-		_pixel += 4;
+		_pixel += 3;
 	}
 }
 
 inline void Painter::drawHorizonLine(int x1, int x2, int y, Color& left, Color& right)
 {
-	_pixel = _scanLine + _bytePerLine * (y);
+	_pixel = _scanLine + _bytesPerLine * (y);
 	int len = abs(x2 - x1);
 	double len_div = 1 / (double)len;
 	Color delta(left, right);
 	Color tmp;
-	_pixel += x1 * 4;
+	_pixel += x1 * 3;
 	for (int x = 0; x < len; x++)
 	{
 		tmp.init((BYTE)(left.R + delta.R * x * len_div),
@@ -116,7 +157,7 @@ inline void Painter::drawHorizonLine(int x1, int x2, int y, Color& left, Color& 
 			(BYTE)(left.B + delta.B * x * len_div),
 			(BYTE)(left.A + delta.A * x * len_div));
 		_setColor(_pixel, tmp);
-		_pixel += 4;
+		_pixel += 3;
 	}
 }
 

@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 
+// Console demos
 void TriangleDemo();
 void CubeDemo1();
 void CubeDemo2();

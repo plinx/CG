@@ -29,6 +29,10 @@ public:
 
 	HBITMAP CreateDIB();
 	WPARAM Render(void);
+
+private:
+	// Window demos
+	void CircleDemo();
 };
 
 #endif
