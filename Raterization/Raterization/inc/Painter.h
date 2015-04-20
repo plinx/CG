@@ -149,6 +149,8 @@ inline void Painter::drawHorizonLine(int x1, int x2, int y, Color& left, Color& 
 	double len_div = 1 / (double)len;
 	Color delta(left, right);
 	Color tmp;
+	if (x2 < x1)
+		std::swap(x1, x2);
 	_pixel += x1 * 3;
 	for (int x = 0; x < len; x++)
 	{
@@ -339,8 +341,8 @@ inline void Painter::_drawFlatBottomTriangle(double x1, double y1, Color& c1,
 		scan_bottom = y1;
 
 	vertical_div = 1 / (y3 - y1);
-	delta_left = (x3 - x1) * vertical_div;
-	delta_right = (x3 - x2) * vertical_div;
+	delta_left = (x3 - x1) / (y3 - y1);
+	delta_right = (x3 - x2) / (y3 - y2);
 	delta_lcolor = c3 - c1;
 	delta_rcolor = c3 - c2;
 
@@ -355,7 +357,7 @@ inline void Painter::_drawFlatBottomTriangle(double x1, double y1, Color& c1,
 
 		// Color operator* operator/ must put the double value on rhs
 		drawHorizonLine((int)ceil(scan_left), (int)ceil(scan_right), 
-			(int)ceil(y), c1 + delta_lcolor.mul((y - y1) * vertical_div), c2 + delta_rcolor.mul((y - y2) * vertical_div));
+			(int)ceil(y), c1 + delta_lcolor.mul((y - y1) / (y3 - y1)), c2 + delta_rcolor.mul((y - y2) / (y3 - y2)));
 	}
 }
 inline void Painter::_drawFlatTopTriangle(double x1, double y1, Color& c1,

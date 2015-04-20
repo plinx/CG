@@ -152,46 +152,26 @@ WPARAM LWindow::Render(void)
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
-	/*FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	for (auto poly = 0; poly < rlist.num_polys; poly++)
+	
+
+#if 0
+	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
+	//painter.drawHorizonLine(100, 200, 100, Color(Red));
+	//painter.drawHorizonLine(200, 100, 200, Color(Blue));
+	//painter.drawTriangle(300, 100, 100, 300, 200, 400, Color(White));
+	for (int i = 0; i < 5; i++)
 	{
-		PPolyFace4D curr_poly = rlist.poly_ptrs[poly];
-		if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-			(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-			(curr_poly->state & POLY4D_STATE_BACKFACE))
-			continue;
-
-		apt[0].x = (LONG)curr_poly->tvlist[0].x;
-		apt[0].y = (LONG)curr_poly->tvlist[0].y;
-		apt[1].x = (LONG)curr_poly->tvlist[1].x;
-		apt[1].y = (LONG)curr_poly->tvlist[1].y;
-		apt[2].x = (LONG)curr_poly->tvlist[2].x;
-		apt[2].y = (LONG)curr_poly->tvlist[2].y;
-
-		painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y,
-			curr_poly->tvlist[1].x, curr_poly->tvlist[1].y,
-			curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, Color(Blue));
-		painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
-		painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
-		painter.drawLine(apt[2].x, apt[2].y, apt[0].x, apt[0].y, Color(White));
-		//MoveToEx(_hdcMem, apt[0].x, apt[0].y, NULL);
-		//LineTo(_hdcMem, apt[1].x, apt[1].y);
-		//MoveToEx(_hdcMem, apt[1].x, apt[1].y, NULL);
-		//LineTo(_hdcMem, apt[2].x, apt[2].y);
-		//MoveToEx(_hdcMem, apt[2].x, apt[2].y, NULL);
-		//LineTo(_hdcMem, apt[0].x, apt[0].y);
+		painter.drawTriangle(150 + 50 * i, 400, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
+		painter.drawTriangle(150 + 50 * i, 100, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
 	}
 
 	BitBlt(_hdc,
 		0, 0, _width, _height,
 		_hdcMem, 0, 0, SRCCOPY);
-	*/
-
 
 	//AlphaBlend(_hdc, 0, 0, _width, _height,
 	//	_hdcMem, 0, 0, _width, _height, blend);
 
-#if 0
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
 		TranslateMessage(&msg);
@@ -259,8 +239,8 @@ WPARAM LWindow::Render(void)
 				apt[2].x = (LONG)curr_poly->tvlist[2].x;
 				apt[2].y = (LONG)curr_poly->tvlist[2].y;
 
-				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, 
-					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y,
+				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, Color(Red),
+					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, Color(Green),
 					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, Color(Blue));
 				//painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
 				//painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
@@ -295,7 +275,7 @@ void LWindow::CircleDemo()
 {
 	for (int theta = 0; theta < 361; theta++)
 	{
-		painter.drawLine(200, 200, ceil(200 + 100 * sin(theta)), ceil(200 + 100 * cos(theta)));
+		painter.drawLine(200, 200, (int)ceil(200 + 100 * sin(theta)), (int)ceil(200 + 100 * cos(theta)));
 	}
 }
 
