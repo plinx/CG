@@ -1,18 +1,21 @@
 #ifndef Pipeline_h
 #define Pipeline_h
 
-enum InsertMode {
+enum InsertMode 
+{
 	OBJECT4D_LOCAL_INSERT = 0,
 	OBJECT4D_TRANS_INSERT,
 };
 
-enum {
+enum 
+{
 	OBJECT4D_MAX_VERTICES = 1024,
 	OBJECT4D_MAX_POLYS = 1024,
 	RENDERLIST4D_MAX_POLYS = 1024,
 };
 
-enum TransformMode {
+enum TransformMode 
+{
 	TRANSFORM_LOCAL_ONLY = 0,
 	TRANSFORM_TRANS_ONLY,
 	TRANSFORM_LOCAL_TO_TRANS,
@@ -81,7 +84,7 @@ struct Object4D
 	Vertex4D vlist_local[OBJECT4D_MAX_VERTICES];
 	Vertex4D vlist_trans[OBJECT4D_MAX_VERTICES];
 
-	int num_poly;
+	int num_polys;
 	Poly4D plist[OBJECT4D_MAX_POLYS];
 
 	Object4D() = default;
@@ -125,7 +128,7 @@ inline void Object4D::reset()
 {
 	state &= ~OBJECT4D_STATE_CULLED;
 
-	for (int poly = 0; poly < num_poly; poly++)
+	for (int poly = 0; poly < num_polys; poly++)
 	{
 		PPoly4D curr_poly = &plist[poly];
 
@@ -175,6 +178,7 @@ inline void Object4D::to_World(TransformMode mode)
 		for (int vertex = 0; vertex < num_vertices; vertex++)
 		{
 			vlist_trans[vertex] = vlist_local[vertex] + world_pos;
+			vlist_trans[vertex].color = vlist_local[vertex].color;
 		}
 	}
 	else
@@ -225,7 +229,7 @@ inline int RenderList4D::insert(PObject4D obj, InsertMode mode)
 		!(obj->state & OBJECT4D_STATE_VISIBLE))
 		return 0;
 
-	for (int poly = 0; poly < obj->num_poly; poly++)
+	for (int poly = 0; poly < obj->num_polys; poly++)
 	{
 		PPoly4D curr_poly = &obj->plist[poly];
 
@@ -237,10 +241,13 @@ inline int RenderList4D::insert(PObject4D obj, InsertMode mode)
 		//PPoint4D vlist_old = curr_poly->vlist;
 		PVertex4D vlist_old = curr_poly->vlist;
 		if (mode == OBJECT4D_TRANS_INSERT)
+		{
 			curr_poly->vlist = obj->vlist_trans;
+		}
 		else // OBJECT4D_LOCAL_INSERT
+		{
 			curr_poly->vlist = obj->vlist_local;
-
+		}
 
 		if (!this->insert(curr_poly))
 		{
@@ -379,10 +386,10 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 	obj->world_pos = *pos;
 	iss.str(data[offset]);
 	offset++;
-	iss >> obj->name >> obj->num_vertices >> obj->num_poly;
+	iss >> obj->name >> obj->num_vertices >> obj->num_polys;
 	//std::cout << "name : " << obj->name << std::endl;
 	//std::cout << "vertices : " << obj->num_vertices << std::endl;
-	//std::cout << "poly : " << obj->num_poly << std::endl;
+	//std::cout << "poly : " << obj->num_polys << std::endl;
 
 	for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 	{
@@ -403,7 +410,7 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 	int poly_surface_desc = 0;
 	int poly_num_verts = 0;
 	int poly = 0;
-	for (int poly = 0; poly < obj->num_poly; poly++)
+	for (int poly = 0; poly < obj->num_polys; poly++)
 	{
 		iss.clear();
 		iss.str(data[poly + offset]);

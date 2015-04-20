@@ -102,7 +102,7 @@ void CubeDemo1()
 	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
-	for (auto poly = 0; poly < obj.num_poly; poly++)
+	for (auto poly = 0; poly < obj.num_polys; poly++)
 	{
 		if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
 			(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
@@ -142,7 +142,7 @@ void CubeDemo2()
 	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
-	for (auto poly = 0; poly < obj.num_poly; poly++)
+	for (auto poly = 0; poly < obj.num_polys; poly++)
 	{
 		if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
 			(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||
@@ -166,7 +166,7 @@ void CubeDemo2()
 	camera.from_World(&obj);
 	camera.to_Perspective(&obj);
 	camera.to_Screen(&obj);
-	for (auto poly = 0; poly < obj.num_poly; poly++)
+	for (auto poly = 0; poly < obj.num_polys; poly++)
 	{
 		if (!(obj.plist[poly].state & POLY4D_STATE_ACTIVE) ||
 			(obj.plist[poly].state & POLY4D_STATE_CLIPPED) ||

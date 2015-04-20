@@ -21,6 +21,7 @@
 #include "inc/Matrix.h"
 #include "inc/Pipeline.h"
 #include "inc/Camera.h"
+#include "inc/Light.h"
 
 #ifndef TestCase_h
 #include "inc/TestCase.h"

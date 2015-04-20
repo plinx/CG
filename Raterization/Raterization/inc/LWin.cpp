@@ -147,12 +147,27 @@ WPARAM LWindow::Render(void)
 	RenderList4D rlist;
 	Object4D obj;
 	Matrix4x4 mrot;
-	POINT apt[3];
+	Light light(0, LIGHT_ON, LIGHT_ATTR_AMBIENT, 
+		Color(White), Color(Black), Color(Black), 
+		Point4D(0, 0, 0, 1), Vector4D(0, 0, 0, 1), 
+		0, 0, 0, 0, 0, 0);
+	LightList lightList;
+
+	//POINT apt[3];
 
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
-	
+	obj.vlist_local[0].color.init(255, 155, 0);
+	obj.vlist_local[1].color.init(255, 155, 0);
+	obj.vlist_local[2].color.init(255, 155, 0);
+	obj.vlist_local[3].color.init(255, 155, 0);
+	obj.vlist_local[4].color.init(0, 0, 155);
+	obj.vlist_local[5].color.init(0, 0, 155);
+	obj.vlist_local[6].color.init(0, 0, 155);
+	obj.vlist_local[7].color.init(0, 0, 155);
+
+	lightList.insert(light);
 
 #if 0
 	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
@@ -195,23 +210,24 @@ WPARAM LWindow::Render(void)
 			static int ang_y = 5;
 			static int ang_z = 0;
 
-			if (GetKeyState(VK_LEFT) < 0) ang_y+=5;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y-=5;
-			if (GetKeyState(VK_UP) < 0) ang_x+=5;
-			if (GetKeyState(VK_DOWN) < 0) ang_x-=5;
-			if (GetKeyState(VK_SPACE) < 0) camera.pos.y+=5;
-			if (GetKeyState(0x56) < 0) camera.pos.y-=5;
+			if (GetKeyState(VK_LEFT) < 0) ang_y+=1;
+			if (GetKeyState(VK_RIGHT) < 0) ang_y-=1;
+			if (GetKeyState(VK_UP) < 0) ang_x+=1;
+			if (GetKeyState(VK_DOWN) < 0) ang_x-=1;
+			if (GetKeyState(VK_SPACE) < 0) camera.pos.y+=1;
+			if (GetKeyState(0x56) < 0) camera.pos.y-=1;
 
 			mrot.build(ang_x, ang_y, ang_z);
 
 			//obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
 			rlist.reset();
-			rlist.insert(&obj);
-			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
+			//rlist.insert(&obj);
+			//rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 			obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
 			//obj.world_pos = poly_pos;
 			//obj.world_pos.z += 0;
-			obj.to_World(TRANSFORM_TRANS_ONLY);
+			//obj.to_World(TRANSFORM_TRANS_ONLY);
+			//lightList.on(&obj);
 			rlist.insert(&obj);
 			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 			rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
@@ -232,16 +248,17 @@ WPARAM LWindow::Render(void)
 					(curr_poly->state & POLY4D_STATE_BACKFACE))
 					continue;
 
-				apt[0].x = (LONG)curr_poly->tvlist[0].x;
+				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, curr_poly->vlist[0].color,
+					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, curr_poly->vlist[1].color,
+					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, curr_poly->vlist[2].color);
+
+				/*apt[0].x = (LONG)curr_poly->tvlist[0].x;
 				apt[0].y = (LONG)curr_poly->tvlist[0].y;
 				apt[1].x = (LONG)curr_poly->tvlist[1].x;
 				apt[1].y = (LONG)curr_poly->tvlist[1].y;
 				apt[2].x = (LONG)curr_poly->tvlist[2].x;
-				apt[2].y = (LONG)curr_poly->tvlist[2].y;
+				apt[2].y = (LONG)curr_poly->tvlist[2].y;*/
 
-				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, Color(Red),
-					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, Color(Green),
-					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, Color(Blue));
 				//painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
 				//painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
 				//painter.drawLine(apt[2].x, apt[2].y, apt[0].x, apt[0].y, Color(White));

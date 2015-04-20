@@ -1,8 +1,5 @@
-﻿  Demos.cpp
-  Generating Code...
-  Compiling...
-  main.cpp
-  TestCase.cpp
-  LWin.cpp
-  Generating Code...
+﻿  LWin.cpp
+h:\dreamcode\cg\raterization\raterization\inc\light.h(68): warning C4101: 'dp' : unreferenced local variable
+h:\dreamcode\cg\raterization\raterization\inc\light.h(68): warning C4101: 'intensity' : unreferenced local variable
+h:\dreamcode\cg\raterization\raterization\inc\light.h(68): warning C4101: 'dist' : unreferenced local variable
   Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

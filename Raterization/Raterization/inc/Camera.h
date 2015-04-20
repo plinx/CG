@@ -351,7 +351,7 @@ inline void Camera::remove_Backfaces(PObject4D obj)
 	if (obj->state & OBJECT4D_STATE_CULLED)
 		return;
 
-	for (int poly = 0; poly < obj->num_poly; poly++)
+	for (int poly = 0; poly < obj->num_polys; poly++)
 	{
 		PPoly4D curr_poly = &obj->plist[poly];
 
