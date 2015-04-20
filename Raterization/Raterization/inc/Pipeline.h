@@ -1,105 +1,46 @@
 #ifndef Pipeline_h
 #define Pipeline_h
 
-enum {
+enum InsertMode {
 	OBJECT4D_LOCAL_INSERT = 0,
 	OBJECT4D_TRANS_INSERT,
+};
+
+enum {
 	OBJECT4D_MAX_VERTICES = 1024,
 	OBJECT4D_MAX_POLYS = 1024,
 	RENDERLIST4D_MAX_POLYS = 1024,
+};
+
+enum TransformMode {
+	TRANSFORM_LOCAL_ONLY = 0,
+	TRANSFORM_TRANS_ONLY,
+	TRANSFORM_LOCAL_TO_TRANS,
 };
 
 #define OBJECT4D_STATE_ACTIVE           0x0001
 #define OBJECT4D_STATE_VISIBLE          0x0002 
 #define OBJECT4D_STATE_CULLED           0x0004
 
-#define PLX_RGB_MASK          0x8000   // mask to extract RGB or indexed color
-#define PLX_SHADE_MODE_MASK   0x6000   // mask to extract shading mode
-#define PLX_2SIDED_MASK       0x1000   // mask for double sided
-#define PLX_COLOR_MASK        0x0fff   // xxxxrrrrggggbbbb, 4-bits per channel RGB
-// xxxxxxxxiiiiiiii, indexed mode 8-bit index
-
-// these are the comparision flags after masking
-// color mode of polygon
-#define PLX_COLOR_MODE_RGB_FLAG     0x8000   // this poly uses RGB color
-#define PLX_COLOR_MODE_INDEXED_FLAG 0x0000   // this poly uses an indexed 8-bit color 
-
 // double sided flag
 #define PLX_2SIDED_FLAG              0x1000   // this poly is double sided
 #define PLX_1SIDED_FLAG              0x0000   // this poly is single sided
 
-// shading mode of polygon
-#define PLX_SHADE_MODE_PURE_FLAG      0x0000  // this poly is a constant color
-#define PLX_SHADE_MODE_CONSTANT_FLAG  0x0000  // alias
-#define PLX_SHADE_MODE_FLAT_FLAG      0x2000  // this poly uses flat shading
-#define PLX_SHADE_MODE_GOURAUD_FLAG   0x4000  // this poly used gouraud shading
-#define PLX_SHADE_MODE_PHONG_FLAG     0x6000  // this poly uses phong shading
-#define PLX_SHADE_MODE_FASTPHONG_FLAG 0x6000  // this poly uses phong shading (alias)
-
-/*
-#define POLY4D_ATTR_2SIDED              0x0001
-#define POLY4D_ATTR_TRANSPARENT         0x0002
-#define POLY4D_ATTR_8BITCOLOR           0x0004
-#define POLY4D_ATTR_RGB16               0x0008
-#define POLY4D_ATTR_RGB24               0x0010
-
-#define POLY4D_ATTR_SHADE_MODE_PURE       0x0020
-#define POLY4D_ATTR_SHADE_MODE_CONSTANT   0x0020 // (alias)
-#define POLY4D_ATTR_SHADE_MODE_FLAT       0x0040
-#define POLY4D_ATTR_SHADE_MODE_GOURAUD    0x0080
-#define POLY4D_ATTR_SHADE_MODE_PHONG      0x0100
-#define POLY4D_ATTR_SHADE_MODE_FASTPHONG  0x0100 // (alias)
-#define POLY4D_ATTR_SHADE_MODE_TEXTURE    0x0200
-
-#define POLY4D_STATE_ACTIVE             0x0001
-#define POLY4D_STATE_CLIPPED            0x0002
-#define POLY4D_STATE_BACKFACE           0x0004
-*/
-
 const int POLY4D_ATTR_2SIDED = 0x0001;
 const int POLY4D_ATTR_TRANSPARENT = 0x0002;
-const int POLY4D_ATTR_8BITCOLOR = 0x0004;
-const int POLY4D_ATTR_RGB16 = 0x0008;
-const int POLY4D_ATTR_RGB24 = 0x0010;
-
-const int POLY4D_ATTR_SHADE_MODE_PURE = 0x0020;
-const int POLY4D_ATTR_SHADE_MODE_CONSTANT = 0x0020; // (alias)
-const int POLY4D_ATTR_SHADE_MODE_FLAT = 0x0040;
-const int POLY4D_ATTR_SHADE_MODE_GOURAUD = 0x0080;
-const int POLY4D_ATTR_SHADE_MODE_PHONG = 0x0100;
-const int POLY4D_ATTR_SHADE_MODE_FASTPHONG = 0x0100; // (alias)
-const int POLY4D_ATTR_SHADE_MODE_TEXTURE = 0x0200;
 
 const int POLY4D_STATE_ACTIVE = 0x0001;
 const int POLY4D_STATE_CLIPPED = 0x0002;
 const int POLY4D_STATE_BACKFACE = 0x0004;
 
-// defines for objects version 1
-#define OBJECT4D_MAX_VERTICES           1024  // 64
-#define OBJECT4D_MAX_POLYS              1024 // 128
-
-// states for objects
-#define OBJECT4D_STATE_ACTIVE           0x0001
-#define OBJECT4D_STATE_VISIBLE          0x0002 
-#define OBJECT4D_STATE_CULLED           0x0004
-
-#define TRANSFORM_LOCAL_ONLY       0  // perform the transformation in place on the
-// local/world vertex list 
-#define TRANSFORM_TRANS_ONLY       1  // perfrom the transformation in place on the 
-// "transformed" vertex list
-
-#define TRANSFORM_LOCAL_TO_TRANS   2  // perform the transformation to the local
-// vertex list, but store the results in the
-// transformed vertex list
-
-// Objects
 struct Poly4D
 {
 	int state;
 	int attr;
 	Color color;
 
-	PPoint4D vlist = NULL;
+	//PPoint4D vlist = NULL;
+	PVertex4D vlist = NULL;
 	int vert[3];
 };
 typedef Poly4D* PPoly4D;
@@ -110,8 +51,10 @@ struct PolyFace4D
 	int attr;
 	Color color;
 
-	Point4D vlist[3];
-	Point4D tvlist[3];
+	//Point4D vlist[3];
+	//Point4D tvlist[3];
+	Vertex4D vlist[3];
+	Vertex4D tvlist[3];
 
 	PolyFace4D* next = NULL;
 	PolyFace4D* prev = NULL;
@@ -133,8 +76,10 @@ struct Object4D
 	Vector4D ux, uy, uz;
 
 	int num_vertices;
-	Point4D vlist_local[OBJECT4D_MAX_VERTICES];
-	Point4D vlist_trans[OBJECT4D_MAX_VERTICES];
+	//Point4D vlist_local[OBJECT4D_MAX_VERTICES];
+	//Point4D vlist_trans[OBJECT4D_MAX_VERTICES];
+	Vertex4D vlist_local[OBJECT4D_MAX_VERTICES];
+	Vertex4D vlist_trans[OBJECT4D_MAX_VERTICES];
 
 	int num_poly;
 	Poly4D plist[OBJECT4D_MAX_POLYS];
@@ -142,97 +87,10 @@ struct Object4D
 	Object4D() = default;
 	~Object4D() = default;
 
-	void clear() { memset(this, 0, sizeof(Object4D)); }
-	void reset() 
-	{
-		state &= ~OBJECT4D_STATE_CULLED;
-
-		for (int poly = 0; poly < num_poly; poly++)
-		{
-			PPoly4D curr_poly = &plist[poly];
-
-			if (!(curr_poly->state & POLY4D_STATE_ACTIVE))
-				continue;
-
-			curr_poly->state &= ~POLY4D_STATE_CLIPPED;
-			curr_poly->state &= ~POLY4D_STATE_BACKFACE;
-		}
-	}
-	void convert() 
-	{
-		for (int vertex = 0; vertex < num_vertices; vertex++)
-		{
-			vlist_trans[vertex].x /= vlist_trans[vertex].w;
-			vlist_trans[vertex].y /= vlist_trans[vertex].w;
-			vlist_trans[vertex].z /= vlist_trans[vertex].w;
-		}
-	}
-	double compute_radius() {
-		avg_radius = 0;
-		max_radius = 0;
-
-		for (int vertex = 0; vertex < num_vertices; vertex++)
-		{
-			double length = vlist_local[vertex].length();
-			avg_radius += length;
-
-			if (length > max_radius)
-				max_radius = length;
-		}
-
-		avg_radius /= num_vertices;
-
-		return max_radius;
-	}
-
-	void rotate(PMatrix4x4 m, int select, int basis)
-	{
-		switch (select)
-		{
-		case TRANSFORM_LOCAL_ONLY:
-			for (int vertex = 0; vertex < num_vertices; vertex++)
-			{
-				vlist_local[vertex] = m->mul(&vlist_local[vertex]);
-			}
-		case TRANSFORM_TRANS_ONLY:
-			for (int vertex = 0; vertex < num_vertices; vertex++)
-			{
-				vlist_trans[vertex] = m->mul(&vlist_trans[vertex]);
-			}
-		case TRANSFORM_LOCAL_TO_TRANS:
-			for (int vertex = 0; vertex < num_vertices; vertex++)
-			{
-				vlist_trans[vertex] = m->mul(&vlist_local[vertex]);
-			}
-		default:
-			break;
-		}
-
-		if (basis)
-		{
-			ux = m->mul(&ux);
-			uy = m->mul(&uy);
-			uz = m->mul(&uz);
-		}
-	}
-	void to_World(int select = TRANSFORM_LOCAL_TO_TRANS)
-	{
-		if (select == TRANSFORM_LOCAL_TO_TRANS)
-		{
-			for (int vertex = 0; vertex < num_vertices; vertex++)
-			{
-				vlist_trans[vertex] = vlist_local[vertex] + world_pos;
-			}
-		}
-		else
-		{
-			for (int vertex = 0; vertex < num_vertices; vertex++)
-			{
-				vlist_local[vertex] += world_pos;
-			}
-		}
-	}
-
+	void clear();
+	void reset();
+	void rotate(PMatrix4x4 m, TransformMode mode, int basis);
+	void to_World(TransformMode mode = TRANSFORM_LOCAL_TO_TRANS);
 };
 typedef Object4D* PObject4D;
 
@@ -248,65 +106,213 @@ struct RenderList4D
 	RenderList4D() { num_polys = 0; }
 	~RenderList4D() = default;
 
-	void reset() { num_polys = 0; }
-	int insert(PPoly4D poly)
+	void reset();
+	int insert(PPoly4D poly);
+	int insert(PObject4D obj, InsertMode mode = OBJECT4D_TRANS_INSERT);	
+	void rotate(PMatrix4x4 m, TransformMode mode);
+	void to_World(PPoint4D pos, TransformMode mode);
+	
+};
+typedef RenderList4D* PRenderList4D;
+
+// Object4D methods implement
+inline void Object4D::clear() 
+{ 
+	memset(this, 0, sizeof(Object4D)); 
+}
+
+inline void Object4D::reset()
+{
+	state &= ~OBJECT4D_STATE_CULLED;
+
+	for (int poly = 0; poly < num_poly; poly++)
 	{
-		if (num_polys >= RENDERLIST4D_MAX_POLYS)
-			return 0;
+		PPoly4D curr_poly = &plist[poly];
 
-		poly_ptrs[num_polys] = &poly_data[num_polys];
-		poly_data[num_polys].state = poly->state;
-		poly_data[num_polys].attr = poly->attr;
-		poly_data[num_polys].color = poly->color;
+		if (!(curr_poly->state & POLY4D_STATE_ACTIVE))
+			continue;
 
-		poly_data[num_polys].tvlist[0] = poly->vlist[poly->vert[0]];
-		poly_data[num_polys].tvlist[1] = poly->vlist[poly->vert[1]];
-		poly_data[num_polys].tvlist[2] = poly->vlist[poly->vert[2]];
-		poly_data[num_polys].vlist[0] = poly->vlist[poly->vert[0]];
-		poly_data[num_polys].vlist[1] = poly->vlist[poly->vert[1]];
-		poly_data[num_polys].vlist[2] = poly->vlist[poly->vert[2]];
-
-		if (num_polys != 0)
-		{
-			poly_data[num_polys].prev = &poly_data[num_polys - 1];
-			poly_data[num_polys - 1].next = &poly_data[num_polys];
-		}
-		num_polys++;
-		return 1;
+		curr_poly->state &= ~POLY4D_STATE_CLIPPED;
+		curr_poly->state &= ~POLY4D_STATE_BACKFACE;
 	}
-	int insert(PObject4D obj, int select = OBJECT4D_TRANS_INSERT)
+}
+
+inline void Object4D::rotate(PMatrix4x4 m, TransformMode mode, int basis)
+{
+	switch (mode)
 	{
-		if (!(obj->state & OBJECT4D_STATE_ACTIVE) ||
-			(obj->state & OBJECT4D_STATE_CULLED) ||
-			!(obj->state & OBJECT4D_STATE_VISIBLE))
-			return 0;
-
-		for (int poly = 0; poly < obj->num_poly; poly++)
+	case TRANSFORM_LOCAL_ONLY:
+		for (int vertex = 0; vertex < num_vertices; vertex++)
 		{
-			PPoly4D curr_poly = &obj->plist[poly];
+			vlist_local[vertex] = m->mul(&vlist_local[vertex]);
+		}
+	case TRANSFORM_TRANS_ONLY:
+		for (int vertex = 0; vertex < num_vertices; vertex++)
+		{
+			vlist_trans[vertex] = m->mul(&vlist_trans[vertex]);
+		}
+	case TRANSFORM_LOCAL_TO_TRANS:
+		for (int vertex = 0; vertex < num_vertices; vertex++)
+		{
+			vlist_trans[vertex] = m->mul(&vlist_local[vertex]);
+		}
+	default:
+		break;
+	}
 
-			if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+	if (basis)
+	{
+		ux = m->mul(&ux);
+		uy = m->mul(&uy);
+		uz = m->mul(&uz);
+	}
+}
+
+inline void Object4D::to_World(TransformMode mode)
+{
+	if (mode == TRANSFORM_LOCAL_TO_TRANS)
+	{
+		for (int vertex = 0; vertex < num_vertices; vertex++)
+		{
+			vlist_trans[vertex] = vlist_local[vertex] + world_pos;
+		}
+	}
+	else
+	{
+		for (int vertex = 0; vertex < num_vertices; vertex++)
+		{
+			vlist_local[vertex] += world_pos;
+		}
+	}
+}
+
+// RenderList4D methods implement
+inline void RenderList4D::reset() 
+{ 
+	num_polys = 0; 
+}
+
+inline int RenderList4D::insert(PPoly4D poly)
+{
+	if (num_polys >= RENDERLIST4D_MAX_POLYS)
+		return 0;
+
+	poly_ptrs[num_polys] = &poly_data[num_polys];
+	poly_data[num_polys].state = poly->state;
+	poly_data[num_polys].attr = poly->attr;
+	poly_data[num_polys].color = poly->color;
+
+	poly_data[num_polys].tvlist[0] = poly->vlist[poly->vert[0]];
+	poly_data[num_polys].tvlist[1] = poly->vlist[poly->vert[1]];
+	poly_data[num_polys].tvlist[2] = poly->vlist[poly->vert[2]];
+	poly_data[num_polys].vlist[0] = poly->vlist[poly->vert[0]];
+	poly_data[num_polys].vlist[1] = poly->vlist[poly->vert[1]];
+	poly_data[num_polys].vlist[2] = poly->vlist[poly->vert[2]];
+
+	if (num_polys != 0)
+	{
+		poly_data[num_polys].prev = &poly_data[num_polys - 1];
+		poly_data[num_polys - 1].next = &poly_data[num_polys];
+	}
+	num_polys++;
+	return 1;
+}
+
+inline int RenderList4D::insert(PObject4D obj, InsertMode mode)
+{
+	if (!(obj->state & OBJECT4D_STATE_ACTIVE) ||
+		(obj->state & OBJECT4D_STATE_CULLED) ||
+		!(obj->state & OBJECT4D_STATE_VISIBLE))
+		return 0;
+
+	for (int poly = 0; poly < obj->num_poly; poly++)
+	{
+		PPoly4D curr_poly = &obj->plist[poly];
+
+		if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+			(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+			(curr_poly->state & POLY4D_STATE_BACKFACE))
+			continue;
+
+		//PPoint4D vlist_old = curr_poly->vlist;
+		PVertex4D vlist_old = curr_poly->vlist;
+		if (mode == OBJECT4D_TRANS_INSERT)
+			curr_poly->vlist = obj->vlist_trans;
+		else // OBJECT4D_LOCAL_INSERT
+			curr_poly->vlist = obj->vlist_local;
+
+
+		if (!this->insert(curr_poly))
+		{
+			curr_poly->vlist = vlist_old;
+			return 0;
+		}
+		curr_poly->vlist = vlist_old;
+	}
+	return 1;
+}
+
+inline void RenderList4D::rotate(PMatrix4x4 m, TransformMode mode)
+{
+	switch (mode)
+	{
+	case TRANSFORM_LOCAL_ONLY:
+		for (int poly = 0; poly < num_polys; poly++)
+		{
+			PPolyFace4D curr_poly = poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
 				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
 				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
 
-			PPoint4D vlist_old = curr_poly->vlist;
-			if (select == OBJECT4D_TRANS_INSERT)
-				curr_poly->vlist = obj->vlist_trans;
-			else // OBJECT4D_LOCAL_INSERT
-				curr_poly->vlist = obj->vlist_local;
-
-
-			if (!this->insert(curr_poly))
+			for (int vertex = 0; vertex < 3; vertex++)
 			{
-				curr_poly->vlist = vlist_old;
-				return 0;
+				curr_poly->vlist[vertex] = m->mul(&curr_poly->vlist[vertex]);
 			}
-			curr_poly->vlist = vlist_old;
 		}
-		return 1;
+		break;
+	case TRANSFORM_TRANS_ONLY:
+		for (int poly = 0; poly < num_polys; poly++)
+		{
+			PPolyFace4D curr_poly = poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex] = m->mul(&curr_poly->tvlist[vertex]);
+			}
+		}
+	case TRANSFORM_LOCAL_TO_TRANS:
+		for (int poly = 0; poly < num_polys; poly++)
+		{
+			PPolyFace4D curr_poly = poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
+			{
+				curr_poly->tvlist[vertex] = m->mul(&curr_poly->vlist[vertex]);
+			}
+		}
+	default:
+		break;
 	}
-	void convert()
+}
+
+inline void RenderList4D::to_World(PPoint4D pos, TransformMode mode)
+{
+	if (mode == TRANSFORM_LOCAL_TO_TRANS)
 	{
 		for (int poly = 0; poly < num_polys; poly++)
 		{
@@ -320,111 +326,29 @@ struct RenderList4D
 
 			for (int vertex = 0; vertex < 3; vertex++)
 			{
-				curr_poly->tvlist[vertex].x /= curr_poly->tvlist[vertex].w;
-				curr_poly->tvlist[vertex].y /= curr_poly->tvlist[vertex].w;
-				curr_poly->tvlist[vertex].z /= curr_poly->tvlist[vertex].w;
+				curr_poly->tvlist[vertex] = curr_poly->vlist[vertex] + *pos;
 			}
 		}
 	}
-	void rotate(PMatrix4x4 m, int select) 
+	else
 	{
-		switch (select)
+		for (int poly = 0; poly < num_polys; poly++)
 		{
-		case TRANSFORM_LOCAL_ONLY:
-			for (int poly = 0; poly < num_polys; poly++) 
+			PPolyFace4D curr_poly = poly_ptrs[poly];
+
+			if ((curr_poly == NULL) ||
+				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+				(curr_poly->state & POLY4D_STATE_BACKFACE))
+				continue;
+
+			for (int vertex = 0; vertex < 3; vertex++)
 			{
-				PPolyFace4D curr_poly = poly_ptrs[poly];
-
-				if ((curr_poly == NULL) ||
-					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-
-				for (int vertex = 0; vertex < 3; vertex++)
-				{
-					curr_poly->vlist[vertex] = m->mul(&curr_poly->vlist[vertex]);
-				}
-			}
-			break;
-		case TRANSFORM_TRANS_ONLY:
-			for (int poly = 0; poly < num_polys; poly++)
-			{
-				PPolyFace4D curr_poly = poly_ptrs[poly];
-
-				if ((curr_poly == NULL) ||
-					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-
-				for (int vertex = 0; vertex < 3; vertex++)
-				{
-					curr_poly->tvlist[vertex] = m->mul(&curr_poly->tvlist[vertex]);
-				}
-			}
-		case TRANSFORM_LOCAL_TO_TRANS:
-			for (int poly = 0; poly < num_polys; poly++)
-			{
-				PPolyFace4D curr_poly = poly_ptrs[poly];
-
-				if ((curr_poly == NULL) ||
-					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-				
-				for (int vertex = 0; vertex < 3; vertex++)
-				{
-					curr_poly->tvlist[vertex] = m->mul(&curr_poly->vlist[vertex]);
-				}
-			}
-		default:
-			break;
-		}
-	}
-
-	void to_World(PPoint4D pos, int select)
-	{
-		if (select == TRANSFORM_LOCAL_TO_TRANS)
-		{
-			for (int poly = 0; poly < num_polys; poly++)
-			{
-				PPolyFace4D curr_poly = poly_ptrs[poly];
-
-				if ((curr_poly == NULL) ||
-					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-
-				for (int vertex = 0; vertex < 3; vertex++)
-				{
-					curr_poly->tvlist[vertex] = curr_poly->vlist[vertex] + *pos;
-				}
-			}
-		}
-		else
-		{
-			for (int poly = 0; poly < num_polys; poly++)
-			{
-				PPolyFace4D curr_poly = poly_ptrs[poly];
-
-				if ((curr_poly == NULL) ||
-					!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-
-				for (int vertex = 0; vertex < 3; vertex++)
-				{
-					curr_poly->tvlist[vertex] += *pos;
-				}
+				curr_poly->tvlist[vertex] += *pos;
 			}
 		}
 	}
-};
-typedef RenderList4D* PRenderList4D;
+}
 
 // file loader
 
@@ -474,7 +398,7 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 	}
 	offset += obj->num_vertices;
 
-	obj->compute_radius();
+	//obj->compute_radius();
 
 	int poly_surface_desc = 0;
 	int poly_num_verts = 0;
@@ -493,39 +417,6 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 		if (poly_surface_desc & PLX_2SIDED_FLAG)
 		{
 			obj->plist[poly].attr |= POLY4D_ATTR_2SIDED;
-		}
-
-		if (poly_surface_desc & PLX_COLOR_MODE_RGB_FLAG)
-		{
-			obj->plist[poly].attr |= POLY4D_ATTR_RGB16;
-
-			int red = (poly_surface_desc & 0x0f00) >> 4;
-			int green = (poly_surface_desc & 0x00f0);
-			int blue = (poly_surface_desc & 0x000f) << 4;
-			//std::cout << "red : " << red << " green : " << green << " blue : " << blue << std::endl;
-			
-			// do not use the material in file
-			//obj->plist[poly].color.init(red, green, blue);
-		}
-
-		int shade_mode = (poly_surface_desc & PLX_SHADE_MODE_MASK);
-
-		switch (shade_mode)
-		{
-		case PLX_SHADE_MODE_PURE_FLAG:
-			obj->plist[poly].attr |= POLY4D_ATTR_SHADE_MODE_PURE;
-			break;
-		case PLX_SHADE_MODE_FLAT_FLAG:
-			obj->plist[poly].attr |= POLY4D_ATTR_SHADE_MODE_FLAT;
-			break;
-		case PLX_SHADE_MODE_GOURAUD_FLAG:
-			obj->plist[poly].attr |= POLY4D_ATTR_SHADE_MODE_GOURAUD;
-			break;
-		case PLX_SHADE_MODE_PHONG_FLAG:
-			obj->plist[poly].attr |= POLY4D_ATTR_SHADE_MODE_PHONG;
-			break;
-		default:
-			break;
 		}
 
 		obj->plist[poly].state = POLY4D_STATE_ACTIVE;

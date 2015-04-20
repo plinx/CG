@@ -104,6 +104,7 @@ struct Matrix4x4
 	Matrix1x4 mul(Matrix1x4* m);
 	Vector3D mul(Vector3D* vec);
 	Vector4D mul(Vector4D* vec);
+	Vertex4D mul(Vertex4D* vertex);
 
 	// override operator
 	Matrix4x4& operator=(const Matrix4x4& m);
@@ -439,6 +440,16 @@ inline Vector4D Matrix4x4::mul(Vector4D* vec)
 	tmp.y = v[0][1] * vec->x + v[1][1] * vec->y + v[2][1] * vec->z + v[3][1] * vec->w;
 	tmp.z = v[0][2] * vec->x + v[1][2] * vec->y + v[2][2] * vec->z + v[3][2] * vec->w;
 	tmp.w = v[0][3] * vec->x + v[1][3] * vec->y + v[2][3] * vec->z + v[3][3] * vec->w;
+	return tmp;
+}
+
+inline Vertex4D Matrix4x4::mul(Vertex4D* vert)
+{
+	Vertex4D tmp;
+	tmp.x = v[0][0] * vert->x + v[1][0] * vert->y + v[2][0] * vert->z + v[3][0] * vert->w;
+	tmp.y = v[0][1] * vert->x + v[1][1] * vert->y + v[2][1] * vert->z + v[3][1] * vert->w;
+	tmp.z = v[0][2] * vert->x + v[1][2] * vert->y + v[2][2] * vert->z + v[3][2] * vert->w;
+	tmp.w = v[0][3] * vert->x + v[1][3] * vert->y + v[2][3] * vert->z + v[3][3] * vert->w;
 	return tmp;
 }
 

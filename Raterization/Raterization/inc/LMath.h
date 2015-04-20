@@ -2,7 +2,7 @@
 #define LMath_h
 
 #include <math.h>
-#include "Vec.h"
+#include "Vector.h"
 
 const double PI = ((double)3.1415926535f);
 const double PI2 = ((double)6.283185307f);
@@ -34,11 +34,6 @@ extern double cos_table[361];
 void Build_SinCos_Tables();
 double Fast_sin(double theta);
 double Fast_cos(double theta);
-
-struct Vertex2D
-{
-	double x, y;
-};
 
 struct Line2D
 {

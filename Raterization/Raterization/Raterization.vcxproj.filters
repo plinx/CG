@@ -27,9 +27,6 @@
     <ClInclude Include="inc\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\Vec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="inc\LMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -49,6 +46,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Demos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
