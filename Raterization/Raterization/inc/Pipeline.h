@@ -178,7 +178,8 @@ inline void Object4D::to_World(TransformMode mode)
 		for (int vertex = 0; vertex < num_vertices; vertex++)
 		{
 			vlist_trans[vertex] = vlist_local[vertex] + world_pos;
-			vlist_trans[vertex].color = vlist_local[vertex].color;
+			// implement vlist_trans.color = vlist_local.color in operator+()
+			//vlist_trans[vertex].color = vlist_local[vertex].color;
 		}
 	}
 	else

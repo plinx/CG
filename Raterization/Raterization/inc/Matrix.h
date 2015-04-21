@@ -450,6 +450,7 @@ inline Vertex4D Matrix4x4::mul(Vertex4D* vert)
 	tmp.y = v[0][1] * vert->x + v[1][1] * vert->y + v[2][1] * vert->z + v[3][1] * vert->w;
 	tmp.z = v[0][2] * vert->x + v[1][2] * vert->y + v[2][2] * vert->z + v[3][2] * vert->w;
 	tmp.w = v[0][3] * vert->x + v[1][3] * vert->y + v[2][3] * vert->z + v[3][3] * vert->w;
+	tmp.color = vert->color;
 	return tmp;
 }
 

@@ -3,8 +3,9 @@
 
 enum LightType
 {
-	LIGHT_ATTR_AMBIENT = 0,
-	LIGHT_ATTR_INFINITE,
+	// delete ambient light
+	//LIGHT_ATTR_AMBIENT = 1,
+	LIGHT_ATTR_INFINITE = 1,
 	LIGHT_ATTR_POINT,
 };
 
@@ -21,7 +22,7 @@ struct Light
 	int state;
 	int attr;
 
-	Color ambient;
+	//Color ambient;
 	Color diffuse;
 	Color specular;
 
@@ -33,14 +34,15 @@ struct Light
 
 	Light() = default;
 	~Light() = default;
-	Light(int i, int s, int a, const Color& amb, const Color& diff, const Color& spec,
+	Light(int i, int s, int a, const Color& diff, const Color& spec,
 		const Point4D& p, const Vector4D& d, double c, double l, double q,
 		double inner, double outter, double pf)
-		: id(i), state(s), attr(a), ambient(amb), diffuse(diff), specular(spec),
+		//: id(i), state(s), attr(a), ambient(amb), diffuse(diff), specular(spec),
+		: id(i), state(s), attr(a), diffuse(diff), specular(spec),
 		pos(p), dir(d), kc(c), kl(l), kq(q),
 		spot_inner(inner), spot_outter(outter), powerfactor(pf) {}
 
-	int init(int s, int i, int a, const Color& amb, const Color& diff, const Color& spec,
+	int init(int s, int i, int a, const Color& diff, const Color& spec,
 		const Point4D& p, const Vector4D& d, double c, double l, double q,
 		double inner, double outter, double pf);
 	int reset();
@@ -62,7 +64,7 @@ struct LightList
 		light_nums++;
 	}
 
-	int on(PObject4D obj)// , PCamera cam)
+	int rayOn(PObject4D obj)// , PCamera cam)
 	{
 		int Rbase, Gbase, Bbase, Rsum, Gsum, Bsum;// , shaded_color;
 		double dp, dist, intensity;// , nl, atten;
@@ -72,7 +74,6 @@ struct LightList
 			(obj->state & OBJECT4D_STATE_CULLED) ||
 			!(obj->state & OBJECT4D_STATE_VISIBLE))
 			return 0;
-
 
 		for (int poly = 0; poly < obj->num_polys; poly++)
 		{
@@ -96,12 +97,6 @@ struct LightList
 				if (list[i].state)
 					continue;
 
-				if (list[i].attr & LIGHT_ATTR_AMBIENT)
-				{
-					Rsum += list[i].ambient.R * Rbase / 255;
-					Gsum += list[i].ambient.G * Gbase / 255;
-					Bsum += list[i].ambient.B * Bbase / 255;
-				}
 				/*else if (it->attr & LIGHT_ATTR_INFINITE)
 				{
 					Vector4D u, v, n;
@@ -119,19 +114,19 @@ struct LightList
 				}*/
 			} // end of iterator in light list
 
-			curr_poly->color.init(max(Rsum, 255), max(Gsum, 255), max(Bsum, 255));
+			curr_poly->color.init(min(Rsum, 255), min(Gsum, 255), min(Bsum, 255));
 		}
 		return 1;
 	}
 };
 
 // Light methods implement
-inline int Light::init(int s, int i, int a, const Color& amb, const Color& diff, const Color& spec,
+inline int Light::init(int s, int i, int a, const Color& diff, const Color& spec,
 	const Point4D& p, const Vector4D& d, double c, double l, double q,
 	double inner, double outter, double pf)
 {
 	state = s; id = i; attr = a;
-	ambient = amb; diffuse = diff; specular = spec;
+	diffuse = diff; specular = spec;
 	pos = p; dir = d; kc = c; kl = l; kq = q;
 	spot_inner = inner; spot_outter = outter;
 	powerfactor = pf;

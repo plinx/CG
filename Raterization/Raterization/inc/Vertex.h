@@ -8,7 +8,8 @@ struct Vertex4D : public Vector4D
 
 	// override operator
 	Vertex4D& operator=(const Vertex4D& vert);
-	Vertex4D& operator=(const Vector4D& vert);
+	Vertex4D& operator=(const Vector4D& vec);
+	Vertex4D operator+(const Vector4D& vec);
 };
 typedef Vertex4D* PVertex4D;
 
@@ -21,10 +22,19 @@ inline Vertex4D& Vertex4D::operator=(const Vertex4D& vert)
 	return *this;
 }
 
-inline Vertex4D& Vertex4D::operator=(const Vector4D& v)
+inline Vertex4D& Vertex4D::operator=(const Vector4D& vec)
 {
-	x = v.x; y = v.y; z = v.z; w = 1.0;
+	x = vec.x; y = vec.y; z = vec.z; w = 1.0;
 	return *this;
+}
+
+inline Vertex4D Vertex4D::operator+(const Vector4D& v)
+{
+	Vertex4D tmp;
+	tmp = *this;
+	tmp.x += v.x; tmp.y += v.y; tmp.z += v.z; w = 1.0;
+
+	return tmp;
 }
 
 #endif

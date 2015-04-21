@@ -167,18 +167,25 @@ WPARAM LWindow::Render(void)
 	obj.vlist_local[6].color.init(0, 0, 155);
 	obj.vlist_local[7].color.init(0, 0, 155);
 
+	for (int i = 0; i < obj.num_polys; i++)
+	{
+		obj.plist[i].color.init(255, 255, 0);
+	}
+
 	lightList.insert(light);
 
 #if 0
 	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	//painter.drawHorizonLine(100, 200, 100, Color(Red));
 	//painter.drawHorizonLine(200, 100, 200, Color(Blue));
-	//painter.drawTriangle(300, 100, 100, 300, 200, 400, Color(White));
-	for (int i = 0; i < 5; i++)
+	//painter.drawTriangle(166, 200, Color(Red), 167, 260, Color(Green), 240, 288, Color(Blue));
+	//painter.drawTriangle(100, 100, Color(Blue), 100, 300, Color(Red), 300, 150, Color(Blue));
+	painter.drawTriangle(260, 260, 200, 260, 180, 300, Color(Red));
+	/*for (int i = 0; i < 5; i++)
 	{
 		painter.drawTriangle(150 + 50 * i, 400, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
 		painter.drawTriangle(150 + 50 * i, 100, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
-	}
+	}*/
 
 	BitBlt(_hdc,
 		0, 0, _width, _height,
@@ -221,13 +228,8 @@ WPARAM LWindow::Render(void)
 
 			//obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
 			rlist.reset();
-			//rlist.insert(&obj);
-			//rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 			obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
-			//obj.world_pos = poly_pos;
-			//obj.world_pos.z += 0;
-			//obj.to_World(TRANSFORM_TRANS_ONLY);
-			//lightList.on(&obj);
+			//lightList.rayOn(&obj);
 			rlist.insert(&obj);
 			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
 			rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
@@ -248,9 +250,9 @@ WPARAM LWindow::Render(void)
 					(curr_poly->state & POLY4D_STATE_BACKFACE))
 					continue;
 
-				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, curr_poly->vlist[0].color,
-					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, curr_poly->vlist[1].color,
-					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, curr_poly->vlist[2].color);
+				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, curr_poly->tvlist[0].color,
+					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, curr_poly->tvlist[1].color,
+					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, curr_poly->tvlist[2].color);
 
 				/*apt[0].x = (LONG)curr_poly->tvlist[0].x;
 				apt[0].y = (LONG)curr_poly->tvlist[0].y;
