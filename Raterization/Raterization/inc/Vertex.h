@@ -16,8 +16,9 @@ typedef Vertex4D* PVertex4D;
 inline Vertex4D& Vertex4D::operator=(const Vertex4D& vert)
 {
 	x = vert.x; y = vert.y; z = vert.z; w = 1.0;
-	normal.x = vert.normal.x; normal.y = vert.normal.y;
-	normal.z = vert.normal.z; normal.w = vert.normal.w;
+	normal = vert.normal;
+	//normal.x = vert.normal.x; normal.y = vert.normal.y;
+	//normal.z = vert.normal.z; normal.w = vert.normal.w;
 	color = vert.color;
 	return *this;
 }

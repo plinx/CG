@@ -147,10 +147,10 @@ WPARAM LWindow::Render(void)
 	RenderList4D rlist;
 	Object4D obj;
 	Matrix4x4 mrot;
-	Light light(0, LIGHT_ON, LIGHT_ATTR_AMBIENT, 
-		Color(White), Color(Black), Color(Black), 
-		Point4D(0, 0, 0, 1), Vector4D(0, 0, 0, 1), 
-		0, 0, 0, 0, 0, 0);
+	Light light(0, LIGHT_ON, LIGHT_ATTR_INFINITE,
+		Color(255, 255, 0), Color(Black),
+		Point4D(0, 0, 0, 1), Vector4D(-1, -1, 1, 1),
+		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
 
 	//POINT apt[3];
@@ -158,6 +158,8 @@ WPARAM LWindow::Render(void)
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
+	// init obj, camera
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
 	obj.vlist_local[0].color.init(255, 155, 0);
 	obj.vlist_local[1].color.init(255, 155, 0);
 	obj.vlist_local[2].color.init(255, 155, 0);
@@ -214,27 +216,32 @@ WPARAM LWindow::Render(void)
 		else
 		{
 			static int ang_x = 0;
-			static int ang_y = 5;
+			static int ang_y = 0;
 			static int ang_z = 0;
 
-			if (GetKeyState(VK_LEFT) < 0) ang_y+=1;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y-=1;
-			if (GetKeyState(VK_UP) < 0) ang_x+=1;
-			if (GetKeyState(VK_DOWN) < 0) ang_x-=1;
-			if (GetKeyState(VK_SPACE) < 0) camera.pos.y+=1;
-			if (GetKeyState(0x56) < 0) camera.pos.y-=1;
+			if (GetKeyState(VK_LEFT) < 0) ang_y += 1;
+			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 1;
+			if (GetKeyState(VK_UP) < 0) ang_x += 1;
+			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1;
+			if (GetKeyState(VK_SPACE) < 0) camera.pos.y += 1;
+			if (GetKeyState(0x56) < 0) camera.pos.y -= 1;
 
 			mrot.build(ang_x, ang_y, ang_z);
-
-			//obj.rotate(&mrot, TRANSFORM_LOCAL_ONLY, 1);
+			obj.reset();
 			rlist.reset();
-			obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
-			//lightList.rayOn(&obj);
+			obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+			//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
+			obj.to_World(TRANSFORM_TRANS_ONLY);
+			camera.remove_Backfaces(&obj);
+			//obj.compute_Vertex(); // compute the vertex normal before light ray on
+			// we could put it in obj remove backfaces to avoid counting face normal
+			// make a mix version later
+			lightList.rayOn(&obj); // compute light ray on obj after remove backfaces
 			rlist.insert(&obj);
-			rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS);
-			rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY);
-			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-			camera.remove_Backfaces(&rlist);
+			//rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS); // no need to rotate twice
+			//rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY); // no need to transform to world twice
+			//camera.remove_Backfaces(&rlist);	// no need to remove backface twice
+			//lightList.rayOn(&obj); // compute light ray on renderlist after remove backfaces
 			camera.from_World(&rlist);
 			camera.to_Perspective(&rlist);
 			camera.to_Screen(&rlist);

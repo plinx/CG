@@ -67,7 +67,7 @@ struct LightList
 	int rayOn(PObject4D obj)// , PCamera cam)
 	{
 		int Rbase, Gbase, Bbase, Rsum, Gsum, Bsum;// , shaded_color;
-		double dp, dist, intensity;// , nl, atten;
+		double dp;// , dist, intensity, nl, atten;
 		//Color shaded_color;
 
 		if (!(obj->state & OBJECT4D_STATE_ACTIVE) ||
@@ -78,14 +78,15 @@ struct LightList
 		for (int poly = 0; poly < obj->num_polys; poly++)
 		{
 			PPoly4D curr_poly = &obj->plist[poly];
-			int index0 = curr_poly->vert[0];
-			int index1 = curr_poly->vert[1];
-			int index2 = curr_poly->vert[2];
 
 			if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
 				(curr_poly->state & POLY4D_STATE_CLIPPED) ||
 				(curr_poly->state & POLY4D_STATE_BACKFACE))
 				continue;
+
+			int vert0 = curr_poly->vert[0];
+			int vert1 = curr_poly->vert[1];
+			int vert2 = curr_poly->vert[2];
 
 			Rbase = curr_poly->color.R;
 			Gbase = curr_poly->color.G;
@@ -97,21 +98,29 @@ struct LightList
 				if (list[i].state)
 					continue;
 
-				/*else if (it->attr & LIGHT_ATTR_INFINITE)
+				if (list[i].attr & LIGHT_ATTR_INFINITE)
 				{
-					Vector4D u, v, n;
-
-					u.init(&obj->vlist_trans[index0], &obj->vlist_trans[index1]);
-					v.init(&obj->vlist_trans[index0], &obj->vlist_trans[index2]);
-					n = u.cross(&v);
-
-					dp = n.dot(&it->dir);
-
+					//dp = obj->vlist_trans[0].dot(&list[i].dir);
+					dp = obj->vlist_trans[vert0].normal.dot(&list[i].dir);
 					if (dp > 0)
 					{
-
+						//obj->vlist_trans[0].color.init(255, 255, 255);
 					}
-				}*/
+					//dp = obj->vlist_trans[1].dot(&list[i].dir);
+					//dp = curr_poly->vlist[1].normal.dot(&list[i].dir);
+					dp = obj->vlist_trans[vert1].normal.dot(&list[i].dir);
+					if (dp > 0)
+					{
+						//obj->vlist_trans[1].color.init(255, 255, 255);
+					}
+					//dp = obj->vlist_trans[2].dot(&list[i].dir);
+					//dp = curr_poly->vlist[1].normal.dot(&list[i].dir);
+					dp = obj->vlist_trans[vert2].normal.dot(&list[i].dir);
+					if (dp > 0)
+					{
+						//obj->vlist_trans[2].color.init(255, 255, 255);
+					}
+				}
 			} // end of iterator in light list
 
 			curr_poly->color.init(min(Rsum, 255), min(Gsum, 255), min(Bsum, 255));

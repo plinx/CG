@@ -21,9 +21,21 @@ enum TransformMode
 	TRANSFORM_LOCAL_TO_TRANS,
 };
 
-#define OBJECT4D_STATE_ACTIVE           0x0001
-#define OBJECT4D_STATE_VISIBLE          0x0002 
-#define OBJECT4D_STATE_CULLED           0x0004
+enum RenderState
+{
+	OBJECT4D_STATE_ACTIVE = 1,	// 0x0001
+	OBJECT4D_STATE_VISIBLE = 2,	// 0x0002
+	OBJECT4D_STATE_CULLED = 4,	// 0x0004
+	POLY4D_STATE_ACTIVE = 1,	// 0x0001
+	POLY4D_STATE_CLIPPED = 2,	// 0x0002
+	POLY4D_STATE_BACKFACE = 4,	// 0x0004
+};
+//const int OBJECT4D_STATE_ACTIVE = 0x0001;
+//const int OBJECT4D_STATE_VISIBLE = 0x0002;
+//const int OBJECT4D_STATE_CULLED = 0x0004;
+//const int POLY4D_STATE_ACTIVE = 0x0001;
+//const int POLY4D_STATE_CLIPPED = 0x0002;
+//const int POLY4D_STATE_BACKFACE = 0x0004;
 
 // double sided flag
 #define PLX_2SIDED_FLAG              0x1000   // this poly is double sided
@@ -31,10 +43,6 @@ enum TransformMode
 
 const int POLY4D_ATTR_2SIDED = 0x0001;
 const int POLY4D_ATTR_TRANSPARENT = 0x0002;
-
-const int POLY4D_STATE_ACTIVE = 0x0001;
-const int POLY4D_STATE_CLIPPED = 0x0002;
-const int POLY4D_STATE_BACKFACE = 0x0004;
 
 struct Poly4D
 {
@@ -94,6 +102,7 @@ struct Object4D
 	void reset();
 	void rotate(PMatrix4x4 m, TransformMode mode, int basis);
 	void to_World(TransformMode mode = TRANSFORM_LOCAL_TO_TRANS);
+	void compute_Vertex();
 };
 typedef Object4D* PObject4D;
 
@@ -138,6 +147,11 @@ inline void Object4D::reset()
 		curr_poly->state &= ~POLY4D_STATE_CLIPPED;
 		curr_poly->state &= ~POLY4D_STATE_BACKFACE;
 	}
+
+	// use vertex list trans rather than vertex list local 
+	// use vertex list trans and no need to reset normal
+	for (int vertex = 0; vertex < num_vertices; vertex++)
+		vlist_trans[vertex].normal.zero();
 }
 
 inline void Object4D::rotate(PMatrix4x4 m, TransformMode mode, int basis)
@@ -182,12 +196,45 @@ inline void Object4D::to_World(TransformMode mode)
 			//vlist_trans[vertex].color = vlist_local[vertex].color;
 		}
 	}
-	else
+	else if (mode == TRANSFORM_TRANS_ONLY)
 	{
 		for (int vertex = 0; vertex < num_vertices; vertex++)
 		{
-			vlist_local[vertex] += world_pos;
+			vlist_trans[vertex] += world_pos;
 		}
+	}
+}
+inline void Object4D::compute_Vertex()
+{
+	int vertex_count[OBJECT4D_MAX_VERTICES];
+
+	memset(vertex_count, 0, sizeof(int) * OBJECT4D_MAX_VERTICES);
+	for (int poly = 0; poly < num_polys; poly++)
+	{
+		int vert0 = plist[poly].vert[0];
+		int vert1 = plist[poly].vert[1];
+		int vert2 = plist[poly].vert[2];
+
+		Vector4D u(&vlist_local[vert0], &vlist_local[vert1]);
+		Vector4D v(&vlist_local[vert0], &vlist_local[vert2]);
+		Vector4D n(u.cross(&v));
+
+		vertex_count[vert0]++;
+		vertex_count[vert1]++;
+		vertex_count[vert2]++;
+
+		// init vertex normal to zero
+		// vertex normal add face normal
+		// use vertex list trans rather than vertex list local
+		//vlist_trans[vert0].normal += n;
+		//vlist_trans[vert1].normal += n;
+		//vlist_trans[vert2].normal += n;
+	}
+
+	for (int vertex = 0; vertex < num_vertices; vertex++)
+	{
+		//vlist_trans[vertex].normal /= vertex_count[vertex];
+		//vlist_trans[vertex].normal.normalize();
 	}
 }
 
@@ -210,6 +257,7 @@ inline int RenderList4D::insert(PPoly4D poly)
 	poly_data[num_polys].tvlist[0] = poly->vlist[poly->vert[0]];
 	poly_data[num_polys].tvlist[1] = poly->vlist[poly->vert[1]];
 	poly_data[num_polys].tvlist[2] = poly->vlist[poly->vert[2]];
+
 	poly_data[num_polys].vlist[0] = poly->vlist[poly->vert[0]];
 	poly_data[num_polys].vlist[1] = poly->vlist[poly->vert[1]];
 	poly_data[num_polys].vlist[2] = poly->vlist[poly->vert[2]];
@@ -338,7 +386,7 @@ inline void RenderList4D::to_World(PPoint4D pos, TransformMode mode)
 			}
 		}
 	}
-	else
+	else if (mode == TRANSFORM_TRANS_ONLY)
 	{
 		for (int poly = 0; poly < num_polys; poly++)
 		{

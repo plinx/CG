@@ -114,6 +114,8 @@ struct Vector4D
 	Vector4D& operator-=(const Vector4D& v);
 	Vector4D operator*(const double k);
 	Vector4D& operator*=(const double k);
+	Vector4D& operator/=(const double k);
+	Vector4D operator/(const double k);
 	bool operator==(const Vector4D& v);
 	bool operator!=(const Vector4D& v);
 };
@@ -437,6 +439,7 @@ inline Vector4D& Vector4D::operator-=(const Vector4D& v)
 { 
 	x -= v.x; y -= v.y; z -= v.z; w = 1.0; return *this; 
 }
+
 inline Vector4D Vector4D::operator*(const double k)
 {
 	Vector4D tmp;
@@ -444,9 +447,21 @@ inline Vector4D Vector4D::operator*(const double k)
 	return tmp;
 }
 
-inline Vector4D& Vector4D::operator*=(const double k) 
+inline Vector4D& Vector4D::operator/=(const double k) 
 { 
-	x *= k; y *= k; z *= k; w = 1.0; return *this; 
+	x /= k; y /= k; z /= k; w = 1.0; return *this; 
+}
+
+inline Vector4D Vector4D::operator/(const double k)
+{
+	Vector4D tmp;
+	tmp.x = x / k; tmp.y = y / k; tmp.z = z / k; tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::operator*=(const double k)
+{
+	x *= k; y *= k; z *= k; w = 1.0; return *this;
 }
 
 inline bool Vector4D::operator==(const Vector4D& v)

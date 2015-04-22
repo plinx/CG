@@ -370,6 +370,10 @@ inline void Camera::remove_Backfaces(PObject4D obj)
 		Vector4D n(u.cross(&v));
 		Vector4D view(&obj->vlist_trans[vert0], &pos);
 
+		obj->vlist_local[vert0].normal = n;
+		obj->vlist_local[vert1].normal = n;
+		obj->vlist_local[vert2].normal = n;
+
 		//n.print(); view.print();
 		double dp = n.dot(&view);
 		if (dp <= 0.0)
@@ -393,12 +397,9 @@ inline void Camera::remove_Backfaces(PRenderList4D rlist)
 			(curr_poly->state & POLY4D_STATE_BACKFACE))
 			continue;
 
-		Vector4D u, v, n;
-
-		u.init(&curr_poly->tvlist[0], &curr_poly->tvlist[1]);
-		v.init(&curr_poly->tvlist[0], &curr_poly->tvlist[2]);
-		n = u.cross(&v);
-
+		Vector4D u(&curr_poly->tvlist[0], &curr_poly->tvlist[1]);
+		Vector4D v(&curr_poly->tvlist[0], &curr_poly->tvlist[2]);
+		Vector4D n(u.cross(&v));
 		Vector4D view(&curr_poly->tvlist[0], &pos);
 
 		double dp = n.dot(&view);
