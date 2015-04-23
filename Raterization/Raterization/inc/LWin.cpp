@@ -113,9 +113,9 @@ WPARAM LWindow::Render(void)
 	// window init
 	MSG msg;
 	HBITMAP hBitmap;
-	BLENDFUNCTION blend;
+	//BLENDFUNCTION blend;
 
-	HPEN hPen;
+	//HPEN hPen;
 	RECT rect;
 
 	ShowWindow(_hwnd, SW_SHOWNORMAL);
@@ -126,14 +126,14 @@ WPARAM LWindow::Render(void)
 	SetRect(&rect, 0, 0, _width, _height);
 	hBitmap = CreateDIB();
 	SelectObject(_hdcMem, hBitmap);
-	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	SelectObject(_hdcMem, hPen);
+	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
+	//hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+	//SelectObject(_hdcMem, hPen);
 	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	blend.BlendOp = AC_SRC_OVER;
-	blend.BlendFlags = 0;
-	blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
-	blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
+	//blend.BlendOp = AC_SRC_OVER;
+	//blend.BlendFlags = 0;
+	//blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
+	//blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
 
 	//painter.drawLine(100, 200, 300, 100, Color(Black));
 	//painter.drawTriangle(100, 300, 100, 200, 300, 200, Color(Black));
@@ -149,7 +149,7 @@ WPARAM LWindow::Render(void)
 	Matrix4x4 mrot;
 	Light light(0, LIGHT_ON, LIGHT_ATTR_INFINITE,
 		Color(255, 255, 0), Color(Black),
-		Point4D(0, 0, 0, 1), Vector4D(-1, -1, 1, 1),
+		Point4D(0, 0, 0, 1), Vector4D(0, -1, 0, 1),
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
 
@@ -160,18 +160,13 @@ WPARAM LWindow::Render(void)
 
 	// init obj, camera
 	camera.build_Euler(CAM_ROT_SEQ_ZYX);
-	obj.vlist_local[0].color.init(255, 155, 0);
-	obj.vlist_local[1].color.init(255, 155, 0);
-	obj.vlist_local[2].color.init(255, 155, 0);
-	obj.vlist_local[3].color.init(255, 155, 0);
-	obj.vlist_local[4].color.init(0, 0, 155);
-	obj.vlist_local[5].color.init(0, 0, 155);
-	obj.vlist_local[6].color.init(0, 0, 155);
-	obj.vlist_local[7].color.init(0, 0, 155);
 
-	for (int i = 0; i < obj.num_polys; i++)
+	for (int poly = 0; poly < obj.num_polys; poly++)
 	{
-		obj.plist[i].color.init(255, 255, 0);
+		obj.plist[poly].color.init(0, 0, 155);
+		obj.vlist_local[obj.plist[poly].vert[0]].color.init(0, 0, 155);
+		obj.vlist_local[obj.plist[poly].vert[1]].color.init(0, 0, 155);
+		obj.vlist_local[obj.plist[poly].vert[2]].color.init(0, 0, 155);
 	}
 
 	lightList.insert(light);
@@ -233,7 +228,7 @@ WPARAM LWindow::Render(void)
 			//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
 			obj.to_World(TRANSFORM_TRANS_ONLY);
 			camera.remove_Backfaces(&obj);
-			//obj.compute_Vertex(); // compute the vertex normal before light ray on
+			obj.compute_Vertex(); // compute the vertex normal before light ray on
 			// we could put it in obj remove backfaces to avoid counting face normal
 			// make a mix version later
 			lightList.rayOn(&obj); // compute light ray on obj after remove backfaces

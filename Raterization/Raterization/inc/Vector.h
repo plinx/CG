@@ -24,9 +24,10 @@ struct Vector2D
 	void init(double ix, double iy);
 	void init(const Vector2D* begin, const Vector2D* end);
 	double length() const;
-	void normalize();
 	double dot(const Vector2D* v);
 	double cos(const Vector2D* v);
+	Vector2D reverse();
+	Vector2D& normalize();
 
 	// override operator
 	Vector2D& operator=(const Vector2D& v);
@@ -61,10 +62,11 @@ struct Vector3D
 	void init(const Vector3D* begin, const Vector3D* end);
 	double length() const;
 	double Fast_length();
-	void normalize();
 	double dot(const Vector3D* v);
 	double cos(const Vector3D* v);
 	Vector3D cross(Vector3D* v);
+	Vector3D reverse();
+	Vector3D& normalize();
 
 	// overrride operator
 	Vector3D& operator=(const Vector3D& v);
@@ -101,10 +103,11 @@ struct Vector4D
 	void init(const Vector4D* begin, const Vector4D* end);
 	double length() const;
 	double Fast_length();
-	void normalize();
 	double dot(const Vector4D* v);
 	double cos(const Vector4D* v);
 	Vector4D cross(const Vector4D* v);
+	Vector4D reverse();
+	Vector4D& normalize();
 
 	// override operator
 	Vector4D& operator=(const Vector4D& v);
@@ -145,14 +148,6 @@ inline double Vector2D::length() const
 	return sqrt(x*x + y*y); 
 }
 
-inline void Vector2D::normalize()
-{
-	double length = this->length();
-	if (length < EPSILON_E5) return;
-	double length_inv = 1.0 / length;
-	x = x * length_inv; y = y * length_inv;
-}
-
 inline double Vector2D::dot(const Vector2D* v) 
 {
 	return x * v->x + y * v->y; 
@@ -161,6 +156,22 @@ inline double Vector2D::dot(const Vector2D* v)
 inline double Vector2D::cos(const Vector2D* v) 
 { 
 	return this->dot(v) / (this->length() * v->length()); 
+}
+
+inline Vector2D Vector2D::reverse()
+{
+	Vector2D tmp(*this);
+	tmp.x = -tmp.x; tmp.y = -tmp.y;
+	return tmp;
+}
+
+inline Vector2D& Vector2D::normalize()
+{
+	double length = this->length();
+	if (length < EPSILON_E5) return *this;
+	double length_inv = 1.0 / length;
+	x = x * length_inv; y = y * length_inv;
+	return *this;
 }
 
 inline Vector2D& Vector2D::operator=(const Vector2D& v) 
@@ -259,15 +270,6 @@ inline double Vector3D::Fast_length()
 	return ((double)(dist >> 10));
 }
 
-inline void Vector3D::normalize()
-{
-	auto length = this->length();
-	if (length < EPSILON_E5)
-		return;
-	auto length_inv = 1.0 / length;
-	x *= length_inv; y *= length_inv; z *= length_inv;
-}
-
 inline double Vector3D::dot(const Vector3D* v) 
 { 
 	return x * v->x + y * v->y + z * v->z; 
@@ -283,6 +285,22 @@ inline Vector3D Vector3D::cross(Vector3D* v)
 	Vector3D tmp;
 	tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x)); tmp.z = (x * v->y) - (y * v->x);
 	return tmp;
+}
+
+inline Vector3D Vector3D::reverse()
+{
+	Vector3D tmp(*this);
+	tmp.x = -tmp.x; tmp.y = -tmp.y; tmp.z = -tmp.z;
+	return *this;
+}
+
+inline Vector3D& Vector3D::normalize()
+{
+	auto length = this->length();
+	if (length < EPSILON_E5) return *this;
+	auto length_inv = 1.0 / length;
+	x *= length_inv; y *= length_inv; z *= length_inv;
+	return *this;
 }
 
 inline Vector3D& Vector3D::operator=(const Vector3D& v)
@@ -384,15 +402,6 @@ inline double Vector4D::Fast_length()
 	return ((double)(dist >> 10));
 }
 
-inline void Vector4D::normalize()
-{
-	auto length = this->length();
-	if (length < EPSILON_E5)
-		return;
-	auto length_inv = 1.0 / length;
-	x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
-}
-
 inline double Vector4D::dot(const Vector4D* v) 
 {
 	return x * v->x + y * v->y + z * v->z; 
@@ -409,6 +418,22 @@ inline Vector4D Vector4D::cross(const Vector4D* v)
 	tmp.x = (y * v->z) - (z * v->y); tmp.y = -((x * v->z) - (z * v->x));
 	tmp.z = (x * v->y) - (y * v->x); tmp.w = 1.0;
 	return tmp;
+}
+
+inline Vector4D Vector4D::reverse()
+{
+	Vector4D tmp(*this);
+	tmp.x = -tmp.x; tmp.y = -tmp.y; tmp.z = -tmp.z; tmp.w = 1.0;
+	return tmp;
+}
+
+inline Vector4D& Vector4D::normalize()
+{
+	auto length = this->length();
+	if (length < EPSILON_E5) return *this;
+	auto length_inv = 1.0 / length;
+	x *= length_inv; y *= length_inv; z *= length_inv; w = 1.0;
+	return *this;
 }
 
 inline Vector4D& Vector4D::operator=(const Vector4D& v) 

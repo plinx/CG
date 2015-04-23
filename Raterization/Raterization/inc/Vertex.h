@@ -6,6 +6,8 @@ struct Vertex4D : public Vector4D
 	Vector4D normal;
 	Color color;
 
+	//Vertex4D& normalize();
+
 	// override operator
 	Vertex4D& operator=(const Vertex4D& vert);
 	Vertex4D& operator=(const Vector4D& vec);

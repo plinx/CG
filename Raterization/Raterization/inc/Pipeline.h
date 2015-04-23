@@ -151,7 +151,10 @@ inline void Object4D::reset()
 	// use vertex list trans rather than vertex list local 
 	// use vertex list trans and no need to reset normal
 	for (int vertex = 0; vertex < num_vertices; vertex++)
+	{
 		vlist_trans[vertex].normal.zero();
+		vlist_trans[vertex].color = vlist_local[vertex].color;
+	}
 }
 
 inline void Object4D::rotate(PMatrix4x4 m, TransformMode mode, int basis)
@@ -206,35 +209,43 @@ inline void Object4D::to_World(TransformMode mode)
 }
 inline void Object4D::compute_Vertex()
 {
-	int vertex_count[OBJECT4D_MAX_VERTICES];
+	double vertex_angle[OBJECT4D_MAX_VERTICES];
 
-	memset(vertex_count, 0, sizeof(int) * OBJECT4D_MAX_VERTICES);
+	memset(vertex_angle, 0, sizeof(double) * OBJECT4D_MAX_VERTICES);
 	for (int poly = 0; poly < num_polys; poly++)
 	{
 		int vert0 = plist[poly].vert[0];
 		int vert1 = plist[poly].vert[1];
 		int vert2 = plist[poly].vert[2];
 
-		Vector4D u(&vlist_local[vert0], &vlist_local[vert1]);
-		Vector4D v(&vlist_local[vert0], &vlist_local[vert2]);
+		//Vector4D u(&vlist_local[vert0], &vlist_local[vert1]); // vec01
+		//Vector4D v(&vlist_local[vert0], &vlist_local[vert2]); // vec02
+		Vector4D u(&vlist_trans[vert0], &vlist_trans[vert1]); // vec01
+		Vector4D v(&vlist_trans[vert0], &vlist_trans[vert2]); // vec02
 		Vector4D n(u.cross(&v));
+		n.normalize();
 
-		vertex_count[vert0]++;
-		vertex_count[vert1]++;
-		vertex_count[vert2]++;
+		Vector4D vec12(&vlist_local[vert1], &vlist_local[vert2]);	// vec12
+		double angle0 = acos(u.normalize().dot(&v.normalize()));	// vec01.dot(vec02), vec01 and vec02 normalize
+		double angle1 = acos(u.reverse().dot(&vec12.normalize()));	// vec10.dot(vec12), vec12 normalize
+		double angle2 = acos(v.reverse().dot(&vec12.reverse()));	// vec20.dot(vec21), all vecs were normalized
+
+		vertex_angle[vert0] += angle0;
+		vertex_angle[vert1] += angle1;
+		vertex_angle[vert2] += angle2;
 
 		// init vertex normal to zero
 		// vertex normal add face normal
 		// use vertex list trans rather than vertex list local
-		//vlist_trans[vert0].normal += n;
-		//vlist_trans[vert1].normal += n;
-		//vlist_trans[vert2].normal += n;
+		vlist_trans[vert0].normal += n * angle0;
+		vlist_trans[vert1].normal += n * angle1;
+		vlist_trans[vert2].normal += n * angle2;
 	}
 
 	for (int vertex = 0; vertex < num_vertices; vertex++)
 	{
-		//vlist_trans[vertex].normal /= vertex_count[vertex];
-		//vlist_trans[vertex].normal.normalize();
+		vlist_trans[vertex].normal /= vertex_angle[vertex];
+		vlist_trans[vertex].normal.normalize();
 	}
 }
 
