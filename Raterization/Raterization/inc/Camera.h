@@ -370,9 +370,9 @@ inline void Camera::remove_Backfaces(PObject4D obj)
 		Vector4D n(u.cross(&v));
 		Vector4D view(&obj->vlist_trans[vert0], &pos);
 
-		obj->vlist_local[vert0].normal = n;
-		obj->vlist_local[vert1].normal = n;
-		obj->vlist_local[vert2].normal = n;
+		//obj->vlist_local[vert0].normal = n;
+		//obj->vlist_local[vert1].normal = n;
+		//obj->vlist_local[vert2].normal = n;
 
 		//n.print(); view.print();
 		double dp = n.dot(&view);

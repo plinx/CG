@@ -404,8 +404,8 @@ inline double Vector4D::Fast_length()
 
 inline double Vector4D::dot(const Vector4D* v) 
 {
-	//return x * v->x + y * v->y + z * v->z;  // right-handed coordinate
-	return x * v->x - y * v->y + z * v->z;	  // left-handed coordinate
+	return x * v->x + y * v->y + z * v->z;  // right-handed coordinate
+	//return x * v->x - y * v->y + z * v->z;	  // left-handed coordinate
 }
 
 inline double Vector4D::cos(const Vector4D* v) 
@@ -417,8 +417,8 @@ inline Vector4D Vector4D::cross(const Vector4D* v)
 {
 	Vector4D tmp;
 	tmp.x = (y * v->z) - (z * v->y); 
-	//tmp.y = (z * v->x) - (x * v->z); // this is a right-handed coordinate
-	tmp.y = (x * v->z) - (z * v->x); // this is a left-handed coordinate
+	tmp.y = (z * v->x) - (x * v->z); // this is a right-handed coordinate
+	//tmp.y = (x * v->z) - (z * v->x); // this is a left-handed coordinate
 	tmp.z = (x * v->y) - (y * v->x); 
 	tmp.w = 1.0;
 	return tmp;

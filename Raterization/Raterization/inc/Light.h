@@ -113,9 +113,9 @@ struct LightList
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert0].color.init(
-							max(light.R * (-dp), Rbase),
-							max(light.G * (-dp), Gbase),
-							max(light.B * (-dp), Bbase));
+							min(light.R * (-dp) + Rbase, 255),
+							min(light.G * (-dp) + Gbase, 255),
+							min(light.B * (-dp) + Bbase, 255));
 							//min(Rbase - light.R * dp, 255), 
 							//min(Gbase - light.G * dp, 255),
 							//min(Bbase - light.B * dp, 255));
@@ -124,9 +124,12 @@ struct LightList
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert1].color.init(
-							max(light.R * (-dp), Rbase),
-							max(light.G * (-dp), Gbase),
-							max(light.B * (-dp), Bbase));
+							//max(light.R * (-dp), Rbase),
+							//max(light.G * (-dp), Gbase),
+							//max(light.B * (-dp), Bbase));
+							min(light.R * (-dp) + Rbase, 255),
+							min(light.G * (-dp) + Gbase, 255),
+							min(light.B * (-dp) + Bbase, 255));
 							//min(Rbase - light.R * dp, 255),
 							//min(Gbase - light.G * dp, 255),
 							//min(Bbase - light.B * dp, 255));
@@ -135,9 +138,12 @@ struct LightList
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert2].color.init(
-							max(light.R * (-dp), Rbase),
-							max(light.G * (-dp), Gbase),
-							max(light.B * (-dp), Bbase));
+							//max(light.R * (-dp), Rbase),
+							//max(light.G * (-dp), Gbase),
+							//max(light.B * (-dp), Bbase));
+							min(light.R * (-dp) + Rbase, 255),
+							min(light.G * (-dp) + Gbase, 255),
+							min(light.B * (-dp) + Bbase, 255));
 							//min(Rbase - light.R * dp, 255),
 							//min(Gbase - light.G * dp, 255),
 							//min(Bbase - light.B * dp, 255));

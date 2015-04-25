@@ -148,8 +148,8 @@ WPARAM LWindow::Render(void)
 	Object4D obj;
 	Matrix4x4 mrot;
 	Light light(0, LIGHT_ON, LIGHT_ATTR_INFINITE,
-		Color(155, 155, 0), Color(Black),
-		Point4D(0, 0, 0, 1), Vector4D(0, -1, 0, 1),
+		Color(255, 255, 0), Color(Black),
+		Point4D(0, 0, 0, 1), Vector4D(-1, -1, 0, 1),
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
 
@@ -210,7 +210,7 @@ WPARAM LWindow::Render(void)
 		}
 		else
 		{
-			static int ang_x = 180;
+			static int ang_x = 0;
 			static int ang_y = 0;
 			static int ang_z = 0;
 
