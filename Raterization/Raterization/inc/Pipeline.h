@@ -245,7 +245,7 @@ inline void Object4D::compute_Vertex()
 	for (int vertex = 0; vertex < num_vertices; vertex++)
 	{
 		vlist_trans[vertex].normal /= vertex_angle[vertex];
-		vlist_trans[vertex].normal.normalize();
+		vlist_trans[vertex].normal.normalize();					// the result has already been normalized
 	}
 }
 

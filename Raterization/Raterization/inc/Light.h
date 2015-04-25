@@ -113,25 +113,34 @@ struct LightList
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert0].color.init(
-							max(Rbase + light.R, 255), 
-							max(Gbase + light.G, 255),
-							max(Bbase + light.B, 255));
+							max(light.R * (-dp), Rbase),
+							max(light.G * (-dp), Gbase),
+							max(light.B * (-dp), Bbase));
+							//min(Rbase - light.R * dp, 255), 
+							//min(Gbase - light.G * dp, 255),
+							//min(Bbase - light.B * dp, 255));
 					}
 					dp = obj->vlist_trans[vert1].normal.dot(&list[i].dir);
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert1].color.init(
-							max(Rbase + light.R, 255),
-							max(Gbase + light.G, 255),
-							max(Bbase + light.B, 255));
+							max(light.R * (-dp), Rbase),
+							max(light.G * (-dp), Gbase),
+							max(light.B * (-dp), Bbase));
+							//min(Rbase - light.R * dp, 255),
+							//min(Gbase - light.G * dp, 255),
+							//min(Bbase - light.B * dp, 255));
 					}
 					dp = obj->vlist_trans[vert2].normal.dot(&list[i].dir);
 					if (dp <= 0.0)
 					{
 						obj->vlist_trans[vert2].color.init(
-							max(Rbase + light.R, 255),
-							max(Gbase + light.G, 255),
-							max(Bbase + light.B, 255));
+							max(light.R * (-dp), Rbase),
+							max(light.G * (-dp), Gbase),
+							max(light.B * (-dp), Bbase));
+							//min(Rbase - light.R * dp, 255),
+							//min(Gbase - light.G * dp, 255),
+							//min(Bbase - light.B * dp, 255));
 					}
 				}
 			} // end of iterator in light list

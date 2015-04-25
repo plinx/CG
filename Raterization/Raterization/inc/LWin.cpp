@@ -148,7 +148,7 @@ WPARAM LWindow::Render(void)
 	Object4D obj;
 	Matrix4x4 mrot;
 	Light light(0, LIGHT_ON, LIGHT_ATTR_INFINITE,
-		Color(255, 255, 0), Color(Black),
+		Color(155, 155, 0), Color(Black),
 		Point4D(0, 0, 0, 1), Vector4D(0, -1, 0, 1),
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
@@ -210,7 +210,7 @@ WPARAM LWindow::Render(void)
 		}
 		else
 		{
-			static int ang_x = 0;
+			static int ang_x = 180;
 			static int ang_y = 0;
 			static int ang_z = 0;
 
@@ -218,8 +218,10 @@ WPARAM LWindow::Render(void)
 			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 1;
 			if (GetKeyState(VK_UP) < 0) ang_x += 1;
 			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1;
-			if (GetKeyState(VK_SPACE) < 0) camera.pos.y += 1;
-			if (GetKeyState(0x56) < 0) camera.pos.y -= 1;
+			if (GetKeyState(VK_SPACE) < 0) ang_z += 1;
+			if (GetKeyState(0x56) < 0) ang_z -= 1;
+			//if (GetKeyState(VK_SPACE) < 0) camera.pos.y += 1;
+			//if (GetKeyState(0x56) < 0) camera.pos.y -= 1;
 
 			mrot.build(ang_x, ang_y, ang_z);
 			obj.reset();
