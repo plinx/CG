@@ -115,7 +115,7 @@ WPARAM LWindow::Render(void)
 	HBITMAP hBitmap;
 	//BLENDFUNCTION blend;
 
-	//HPEN hPen;
+	HPEN hPen;
 	RECT rect;
 
 	ShowWindow(_hwnd, SW_SHOWNORMAL);
@@ -127,8 +127,8 @@ WPARAM LWindow::Render(void)
 	hBitmap = CreateDIB();
 	SelectObject(_hdcMem, hBitmap);
 	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	//hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	//SelectObject(_hdcMem, hPen);
+	hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+	SelectObject(_hdcMem, hPen);
 	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	//blend.BlendOp = AC_SRC_OVER;
 	//blend.BlendFlags = 0;
@@ -153,14 +153,12 @@ WPARAM LWindow::Render(void)
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
 
-	//POINT apt[3];
+	POINT apt[3];
 
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
-	// init obj, camera
-	camera.build_Euler(CAM_ROT_SEQ_ZYX);
-
+	// init obj
 	for (int poly = 0; poly < obj.num_polys; poly++)
 	{
 		obj.plist[poly].color.init(0, 0, 155);
@@ -177,7 +175,12 @@ WPARAM LWindow::Render(void)
 	//painter.drawHorizonLine(200, 100, 200, Color(Blue));
 	//painter.drawTriangle(166, 200, Color(Red), 167, 260, Color(Green), 240, 288, Color(Blue));
 	//painter.drawTriangle(100, 100, Color(Blue), 100, 300, Color(Red), 300, 150, Color(Blue));
-	painter.drawTriangle(260, 260, 200, 260, 180, 300, Color(Red));
+	painter.drawTriangle(400, 100, 500, 100, 500, 250, Color(Red));
+	painter.drawHorizonLine(580, 380, 300, Color(Blue));
+	painter.drawHorizonLine(180, 280, 101, Color(Blue));
+	painter.drawHorizonLine(100, 200, 560, Color(White));
+	painter.drawVerticalLine(100, 100, 560, Color(White));
+	painter.drawLine(263, 133, 133, 133, Color(White));
 	/*for (int i = 0; i < 5; i++)
 	{
 		painter.drawTriangle(150 + 50 * i, 400, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
@@ -218,23 +221,46 @@ WPARAM LWindow::Render(void)
 			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 1;
 			if (GetKeyState(VK_UP) < 0) ang_x += 1;
 			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1;
-			if (GetKeyState(VK_SPACE) < 0) ang_z += 1;
-			if (GetKeyState(0x56) < 0) ang_z -= 1;
-			//if (GetKeyState(VK_SPACE) < 0) camera.pos.y += 1;
-			//if (GetKeyState(0x56) < 0) camera.pos.y -= 1;
+			if (GetKeyState(VK_SPACE) < 0) camera.pos.y -= 1;
+			if (GetKeyState(0x56) < 0) camera.pos.y += 1;
+			if (GetKeyState(VK_W) < 0) camera.pos.z -= 1;
+			if (GetKeyState(VK_S) < 0) camera.pos.z += 1;
+			if (GetKeyState(VK_A) < 0) camera.pos.x -= 1;
+			if (GetKeyState(VK_D) < 0) camera.pos.x += 1;
+			camera.build_Euler(CAM_ROT_SEQ_ZYX);
 
 			mrot.build(ang_x, ang_y, ang_z);
-			obj.reset();
 			rlist.reset();
-			obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+			obj.reset();
+			for (int i = 0; i < 2; i++)
+			{
+				for (int j = 0; j < 2; j++)
+				{
+					obj.world_pos = poly_pos;
+					obj.world_pos.z = i * 10;
+					obj.world_pos.x = j * 10;
+					obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+					//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
+					obj.to_World(TRANSFORM_TRANS_ONLY);
+					camera.remove_Backfaces(&obj);
+					obj.compute_Vertex(); // compute the vertex normal before light ray on
+					// we could put it in obj remove backfaces to avoid counting face normal
+					// make a mix version later
+					lightList.rayOn(&obj); // compute light ray on obj after compute vetex normal
+					rlist.insert(&obj);
+				}
+			}
+			//obj.reset();
+			//rlist.reset();
+			//obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
 			//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
-			obj.to_World(TRANSFORM_TRANS_ONLY);
-			camera.remove_Backfaces(&obj);
-			obj.compute_Vertex(); // compute the vertex normal before light ray on
+			//obj.to_World(TRANSFORM_TRANS_ONLY);
+			//camera.remove_Backfaces(&obj);
+			//obj.compute_Vertex(); // compute the vertex normal before light ray on
 			// we could put it in obj remove backfaces to avoid counting face normal
 			// make a mix version later
-			lightList.rayOn(&obj); // compute light ray on obj after remove backfaces
-			rlist.insert(&obj);
+			//lightList.rayOn(&obj); // compute light ray on obj after remove backfaces
+			//rlist.insert(&obj);
 			//rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS); // no need to rotate twice
 			//rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY); // no need to transform to world twice
 			//camera.remove_Backfaces(&rlist);	// no need to remove backface twice
@@ -242,7 +268,7 @@ WPARAM LWindow::Render(void)
 			camera.from_World(&rlist);
 			camera.to_Perspective(&rlist);
 			camera.to_Screen(&rlist);
-
+			rlist.zsort();
 
 			FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 
@@ -263,17 +289,18 @@ WPARAM LWindow::Render(void)
 				apt[1].x = (LONG)curr_poly->tvlist[1].x;
 				apt[1].y = (LONG)curr_poly->tvlist[1].y;
 				apt[2].x = (LONG)curr_poly->tvlist[2].x;
-				apt[2].y = (LONG)curr_poly->tvlist[2].y;*/
+				apt[2].y = (LONG)curr_poly->tvlist[2].y;
 
-				//painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
-				//painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
-				//painter.drawLine(apt[2].x, apt[2].y, apt[0].x, apt[0].y, Color(White));
-				//MoveToEx(_hdcMem, apt[0].x, apt[0].y, NULL);
-				//LineTo(_hdcMem, apt[1].x, apt[1].y);
-				//MoveToEx(_hdcMem, apt[1].x, apt[1].y, NULL);
-				//LineTo(_hdcMem, apt[2].x, apt[2].y);
-				//MoveToEx(_hdcMem, apt[2].x, apt[2].y, NULL);
-				//LineTo(_hdcMem, apt[0].x, apt[0].y);
+				painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
+				painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
+				painter.drawLine(apt[2].x, apt[2].y, apt[0].x, apt[0].y, Color(White));
+
+				MoveToEx(_hdcMem, apt[0].x, apt[0].y, NULL);
+				LineTo(_hdcMem, apt[1].x, apt[1].y);
+				MoveToEx(_hdcMem, apt[1].x, apt[1].y, NULL);
+				LineTo(_hdcMem, apt[2].x, apt[2].y);
+				MoveToEx(_hdcMem, apt[2].x, apt[2].y, NULL);
+				LineTo(_hdcMem, apt[0].x, apt[0].y);*/
 			}
 
 			BitBlt(_hdc,

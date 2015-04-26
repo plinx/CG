@@ -11,6 +11,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "inc/Keyboard.h"
 #include "inc/LWin.h"
 #include "inc/Color.h"
 #include "inc/Painter.h"

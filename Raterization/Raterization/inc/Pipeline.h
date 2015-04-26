@@ -123,7 +123,7 @@ struct RenderList4D
 	int insert(PObject4D obj, InsertMode mode = OBJECT4D_TRANS_INSERT);	
 	void rotate(PMatrix4x4 m, TransformMode mode);
 	void to_World(PPoint4D pos, TransformMode mode);
-	
+	void zsort();
 };
 typedef RenderList4D* PRenderList4D;
 
@@ -152,6 +152,7 @@ inline void Object4D::reset()
 	// use vertex list trans and no need to reset normal
 	for (int vertex = 0; vertex < num_vertices; vertex++)
 	{
+		//vlist_trans[vertex] = vlist_local[vertex];
 		vlist_trans[vertex].normal.zero();
 		vlist_trans[vertex].color = vlist_local[vertex].color;
 	}
@@ -314,7 +315,7 @@ inline int RenderList4D::insert(PObject4D obj, InsertMode mode)
 			curr_poly->vlist = vlist_old;
 			return 0;
 		}
-		curr_poly->vlist = vlist_old;
+		//curr_poly->vlist = vlist_old;
 	}
 	return 1;
 }
@@ -493,5 +494,26 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 	return 1;
 }
 
+inline int Compare_avgz(const void* arg1, const void* arg2)
+{
+	double z1, z2;
+	PPolyFace4D poly1 = *((PPolyFace4D*)arg1);
+	PPolyFace4D poly2 = *((PPolyFace4D*)arg2);
+
+	z1 = 0.333 * (poly1->tvlist[0].z + poly1->tvlist[1].z + poly1->tvlist[2].z);
+	z2 = 0.333 * (poly2->tvlist[0].z + poly2->tvlist[1].z + poly2->tvlist[2].z);
+
+	if (z1 > z2)
+		return -1;
+	else if (z1 < z2)
+		return 1;
+	else
+		return 0;
+}
+
+inline void RenderList4D::zsort()
+{
+	qsort(poly_ptrs, this->num_polys, sizeof(PPolyFace4D), Compare_avgz);
+}
 
 #endif

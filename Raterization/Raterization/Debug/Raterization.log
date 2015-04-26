@@ -1,15 +1,9 @@
 ﻿  Demos.cpp
-h:\dreamcode\cg\raterization\raterization\inc\light.h(118): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\light.h(132): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\light.h(146): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
   Generating Code...
   Compiling...
-  LWin.cpp
-h:\dreamcode\cg\raterization\raterization\inc\light.h(118): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\light.h(132): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-h:\dreamcode\cg\raterization\raterization\inc\light.h(146): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
   main.cpp
   TestCase.cpp
+  LWin.cpp
+h:\dreamcode\cg\raterization\raterization\inc\lwin.cpp(156): warning C4101: 'apt' : unreferenced local variable
+  Generating Code...
   Raterization.vcxproj -> H:\DreamCode\CG\Raterization\Debug\Raterization.exe

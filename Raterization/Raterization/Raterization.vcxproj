@@ -68,6 +68,7 @@
     <ClInclude Include="Demos.h" />
     <ClInclude Include="inc\Camera.h" />
     <ClInclude Include="inc\Color.h" />
+    <ClInclude Include="inc\Keyboard.h" />
     <ClInclude Include="inc\Light.h" />
     <ClInclude Include="inc\LMath.h" />
     <ClInclude Include="inc\LWin.h" />
