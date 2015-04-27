@@ -217,9 +217,9 @@ WPARAM LWindow::Render(void)
 			static int ang_y = 0;
 			static int ang_z = 0;
 
-			if (GetKeyState(VK_LEFT) < 0) ang_y += 1;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 1;
-			if (GetKeyState(VK_UP) < 0) ang_x += 1;
+			if (GetKeyState(VK_LEFT) < 0) ang_y += 2;
+			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 2;
+			if (GetKeyState(VK_UP) < 0) ang_x += 2;
 			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1;
 			if (GetKeyState(VK_SPACE) < 0) camera.pos.y -= 1;
 			if (GetKeyState(0x56) < 0) camera.pos.y += 1;
@@ -231,11 +231,11 @@ WPARAM LWindow::Render(void)
 
 			mrot.build(ang_x, ang_y, ang_z);
 			rlist.reset();
-			obj.reset();
 			for (int i = 0; i < 2; i++)
 			{
 				for (int j = 0; j < 2; j++)
 				{
+					obj.reset();
 					obj.world_pos = poly_pos;
 					obj.world_pos.z = i * 10;
 					obj.world_pos.x = j * 10;
