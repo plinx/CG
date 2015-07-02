@@ -31,7 +31,8 @@ public:
 	WPARAM Render(void);
 
 private:
-	// Window demos
+	// Render demos
+	void PixelDemo();
 	void CircleDemo();
 };
 

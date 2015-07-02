@@ -383,7 +383,7 @@ void CoordinateTest()
 	UT_ASSERT(tmp2D.x < 1.413 || 1.415 < tmp2D.x, "Polar2D toPoint() error.");
 	polar0.init(&tmp2D);
 	UT_ASSERT(polar0.r != 2.0 || polar0.theta != PI_DIV_4, "Polar2D init() error.");
-	double tmpx, tmpy;
+	float tmpx, tmpy;
 	polar0.toXY(&tmpx, &tmpy);
 	UT_ASSERT(tmpx < 1.413 || 1.415 < tmpx, "Polar2D toXY() error.");
 	polar0.init(0, PI);
@@ -403,7 +403,7 @@ void CoordinateTest()
 	UT_ASSERT(tmp3D.x < 1.413 || 1.415 < tmp3D.x || tmp3D.z != 2.0, "Cylindrical3D toPoint() error.");
 	cy0.init(&tmp3D);
 	UT_ASSERT(cy0.r != 2.0 || cy0.z != 2.0, "Cylindrical3D init() error.");
-	double tmpz;
+	float tmpz;
 	cy0.toXYZ(&tmpx, &tmpy, &tmpz);
 	UT_ASSERT(tmpx < 1.413 || 1.415 < tmpx || tmpz != 2.0, "Cylindrical3D toXYZ() error.");
 	cy0.init(0.0, PI, 0.0);
@@ -474,9 +474,9 @@ void LinePlaneTest()
 	UT_ASSERT(plane2.pos.x != 1.0 || plane2.normal.z != 1.0, "Plane3D copy constructor error.");
 	ptmp.init(2, 2, 2);
 	UT_ASSERT(plane0.compute(&ptmp) < 1.0, "Plane3D compute() error.");
-	double t;
+	float t;
 	UT_ASSERT(plane0.intersect(&line3, &t, &ptmp) != LINE_INTERSECT_IN_SEGMENT, "Plane3D intersect() error.");
-	UT_ASSERT(t < 0.49 || 0.51 < t, "Plane3D intersect(double) error.");
+	UT_ASSERT(t < 0.49 || 0.51 < t, "Plane3D intersect(float) error.");
 	UT_ASSERT(ptmp.x < 0.99 || 1.01 < ptmp.x, "Plane3D intersect(Point) error.");
 	plane0.zero();
 	plane0 = plane1;

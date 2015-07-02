@@ -28,24 +28,24 @@ struct Light
 
 	Point4D pos;
 	Vector4D dir;
-	double kc, kl, kq;
-	double spot_inner, spot_outter;
-	double powerfactor;
+	float kc, kl, kq;
+	float spot_inner, spot_outter;
+	float powerfactor;
 
 	Light() = default;
 	~Light() = default;
 	Light(const Light& rhs) { *this = rhs; }
 	Light(int i, int s, int a, const Color& diff, const Color& spec,
-		const Point4D& p, const Vector4D& d, double c, double l, double q,
-		double inner, double outter, double pf)
+		const Point4D& p, const Vector4D& d, float c, float l, float q,
+		float inner, float outter, float pf)
 		//: id(i), state(s), attr(a), ambient(amb), diffuse(diff), specular(spec),
 		: id(i), state(s), attr(a), diffuse(diff), specular(spec),
 		pos(p), dir(d), kc(c), kl(l), kq(q),
 		spot_inner(inner), spot_outter(outter), powerfactor(pf) {}
 
 	int init(int s, int i, int a, const Color& diff, const Color& spec,
-		const Point4D& p, const Vector4D& d, double c, double l, double q,
-		double inner, double outter, double pf);
+		const Point4D& p, const Vector4D& d, float c, float l, float q,
+		float inner, float outter, float pf);
 	int reset();
 
 	Light& operator=(const Light& rhs) {
@@ -75,7 +75,7 @@ struct LightList
 	int rayOn(PObject4D obj)// , PCamera cam)
 	{
 		int Rbase, Gbase, Bbase, Rsum, Gsum, Bsum;// , shaded_color;
-		double dp;// , dist, intensity, nl, atten;
+		float dp;// , dist, intensity, nl, atten;
 		//Color shaded_color;
 
 		if (!(obj->state & OBJECT4D_STATE_ACTIVE) ||
@@ -159,8 +159,8 @@ struct LightList
 
 // Light methods implement
 inline int Light::init(int s, int i, int a, const Color& diff, const Color& spec,
-	const Point4D& p, const Vector4D& d, double c, double l, double q,
-	double inner, double outter, double pf)
+	const Point4D& p, const Vector4D& d, float c, float l, float q,
+	float inner, float outter, float pf)
 {
 	state = s; id = i; attr = a;
 	diffuse = diff; specular = spec;

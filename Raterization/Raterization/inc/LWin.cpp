@@ -3,8 +3,8 @@
 
 #pragma comment(lib, "Msimg32.lib")
 
-extern double sin_table[361];
-extern double cos_table[361];
+extern float sin_table[361];
+extern float cos_table[361];
 
 #define VK_E 0x45
 #define VK_Q 0x51
@@ -110,25 +110,37 @@ HBITMAP LWindow::CreateDIB()
 
 WPARAM LWindow::Render(void)
 {
-	// window init
 	MSG msg;
 	HBITMAP hBitmap;
-	//BLENDFUNCTION blend;
-
-	HPEN hPen;
-	RECT rect;
 
 	ShowWindow(_hwnd, SW_SHOWNORMAL);
 	UpdateWindow(_hwnd);
-	
+
 	_hdc = GetDC(_hwnd);
 	_hdcMem = CreateCompatibleDC(_hdc);
-	SetRect(&rect, 0, 0, _width, _height);
 	hBitmap = CreateDIB();
 	SelectObject(_hdcMem, hBitmap);
+
+	PixelDemo();
+
+	while (GetMessage(&msg, NULL, 0, 0))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+
+	ReleaseDC(_hwnd, _hdc);
+	DeleteDC(_hdcMem);
+	DeleteObject(hBitmap);
+
+	return msg.wParam;
+}
+
+#if 0
+
 	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	SelectObject(_hdcMem, hPen);
+	//hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+	//SelectObject(_hdcMem, hPen);
 	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	//blend.BlendOp = AC_SRC_OVER;
 	//blend.BlendFlags = 0;
@@ -169,7 +181,7 @@ WPARAM LWindow::Render(void)
 
 	lightList.insert(light);
 
-#if 0
+//#if 0
 	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
 	//painter.drawHorizonLine(100, 200, 100, Color(Red));
 	//painter.drawHorizonLine(200, 100, 200, Color(Blue));
@@ -200,7 +212,7 @@ WPARAM LWindow::Render(void)
 		DispatchMessage(&msg);
 	}
 
-#else
+//#else
 	while (TRUE)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -213,20 +225,20 @@ WPARAM LWindow::Render(void)
 		}
 		else
 		{
-			static int ang_x = 0;
-			static int ang_y = 0;
-			static int ang_z = 0;
+			static float ang_x = 0.0;
+			static float ang_y = 0.0;
+			static float ang_z = 0.0;
 
-			if (GetKeyState(VK_LEFT) < 0) ang_y += 2;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 2;
-			if (GetKeyState(VK_UP) < 0) ang_x += 2;
-			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1;
-			if (GetKeyState(VK_SPACE) < 0) camera.pos.y -= 1;
-			if (GetKeyState(0x56) < 0) camera.pos.y += 1;
-			if (GetKeyState(VK_W) < 0) camera.pos.z -= 1;
-			if (GetKeyState(VK_S) < 0) camera.pos.z += 1;
-			if (GetKeyState(VK_A) < 0) camera.pos.x -= 1;
-			if (GetKeyState(VK_D) < 0) camera.pos.x += 1;
+			if (GetKeyState(VK_LEFT) < 0) ang_y += 2.0;
+			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 2.0;
+			if (GetKeyState(VK_UP) < 0) ang_x += 2.0;
+			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1.0;
+			if (GetKeyState(VK_SPACE) < 0) camera.pos.y -= 1.0;
+			if (GetKeyState(0x56) < 0) camera.pos.y += 1.0;
+			if (GetKeyState(VK_W) < 0) camera.pos.z -= 1.0;
+			if (GetKeyState(VK_S) < 0) camera.pos.z += 1.0;
+			if (GetKeyState(VK_A) < 0) camera.pos.x -= 1.0;
+			if (GetKeyState(VK_D) < 0) camera.pos.x += 1.0;
 			camera.build_Euler(CAM_ROT_SEQ_ZYX);
 
 			mrot.build(ang_x, ang_y, ang_z);
@@ -237,8 +249,8 @@ WPARAM LWindow::Render(void)
 				{
 					obj.reset();
 					obj.world_pos = poly_pos;
-					obj.world_pos.z = i * 10;
-					obj.world_pos.x = j * 10;
+					obj.world_pos.z = (float)i * 10;
+					obj.world_pos.x = (float)j * 10;
 					obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
 					//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
 					obj.to_World(TRANSFORM_TRANS_ONLY);
@@ -313,14 +325,17 @@ WPARAM LWindow::Render(void)
 	}
 #endif
 
-	ReleaseDC(_hwnd, _hdc);
-	DeleteDC(_hdcMem);
-	DeleteObject(hBitmap);
+// Render demos
+void LWindow::PixelDemo()
+{
+	for (int i = 100, j = 100; i < 400; i++, j++)
+		painter.drawPixel(i, j, Color(ColorStyle::White));
 
-	return msg.wParam;
+	BitBlt(_hdc,
+		0, 0, _width, _height,
+		_hdcMem, 0, 0, SRCCOPY);
 }
 
-// Window demos
 void LWindow::CircleDemo()
 {
 	for (int theta = 0; theta < 361; theta++)

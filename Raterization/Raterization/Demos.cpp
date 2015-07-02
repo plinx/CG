@@ -46,7 +46,7 @@ void TriangleDemo()
 	for (int i = 0; i < 90; i++)
 	{
 		static Matrix4x4 mrot;
-		static double ang_y = 300;
+		static float ang_y = 300;
 		rlist.poly_data[0] = poly1;
 		rlist.poly_data[0].vlist[0].print();
 		rlist.poly_data[0].vlist[1].print();

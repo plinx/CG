@@ -38,17 +38,17 @@ struct Camera
 	Vector4D u, v, n;
 	Point4D target;
 
-	double view_h, view_v;
-	double view_dist;
-	double fov;
+	float view_h, view_v;
+	float view_dist;
+	float fov;
 
-	double near_clip, far_clip;
+	float near_clip, far_clip;
 
 	Plane3D right_plane, left_plane, top_plane, bottom_plane;
 
-	double viewplane_width, viewplane_height;
-	double viewport_width, viewport_height, viewport_cx, viewport_cy;
-	double aspect_ratio;
+	float viewplane_width, viewplane_height;
+	float viewport_width, viewport_height, viewport_cx, viewport_cy;
+	float aspect_ratio;
 
 	Matrix4x4 mcam, mper, mscr;
 
@@ -56,11 +56,11 @@ struct Camera
 	Camera() = default;
 	~Camera() = default;
 	Camera(int a, Point4D p, Vector4D d, Point4D t,
-		double nc, double fc, double f, double w, double h);
+		float nc, float fc, float f, float w, float h);
 
 	// basic methods
 	void init(int a, Point4D p, Vector4D d, Point4D t,
-		double nc, double fc, double f, double w, double h);
+		float nc, float fc, float f, float w, float h);
 	void build_Euler(int cam_rot_seq);
 	void build_UVN(int mode);
 	void from_World(PObject4D obj);
@@ -79,7 +79,7 @@ typedef Camera* PCamera;
 
 // Camera methods implement
 inline Camera::Camera(int a, Point4D p, Vector4D d, Point4D t,
-	double nc, double fc, double f, double w, double h)
+	float nc, float fc, float f, float w, float h)
 	: attr(a), pos(p), dir(d), target(t),
 	near_clip(nc), far_clip(fc), fov(f), viewport_width(w), viewport_height(h)
 {
@@ -98,9 +98,9 @@ inline Camera::Camera(int a, Point4D p, Vector4D d, Point4D t,
 	mscr.unit();
 
 	viewplane_width = 2.0;
-	viewplane_height = 2.0 / aspect_ratio;
-	double tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
-	view_dist = (0.5) * viewplane_width * tan_fov_div2;
+	viewplane_height = (float)2.0 / aspect_ratio;
+	float tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
+	view_dist = (float)(0.5) * viewplane_width * tan_fov_div2;
 	if (89.99 < fov && fov < 90.01)
 	{
 		Point3D pt_origin(0, 0, 0);
@@ -116,19 +116,20 @@ inline Camera::Camera(int a, Point4D p, Vector4D d, Point4D t,
 	else
 	{
 		Point3D pt_origin(0, 0, 0);
-		Vector3D vn(view_dist, 0, -viewplane_width / 2.0);
+		Vector3D vn(view_dist, 0, (float)(-viewplane_width / 2.0));
 		right_plane.init(pt_origin, vn, 1);
-		vn.init(-(int)view_dist, 0, -viewplane_width / 2.0);
+		//vn.init(-(int)view_dist, 0, (float)(-viewplane_width / 2.0));
+		vn.init(-ceil(view_dist), 0, (float)(-viewplane_width / 2.0));
 		left_plane.init(pt_origin, vn, 1);
-		vn.init(0, view_dist, -viewplane_height / 2.0);
+		vn.init(0, view_dist, (float)(-viewplane_height / 2.0));
 		top_plane.init(pt_origin, vn, 1);
-		vn.init(0, -view_dist, -viewplane_width / 2.0);
+		vn.init(0, -view_dist, (float)(-viewplane_width / 2.0));
 		bottom_plane.init(pt_origin, vn, 1);
 	}
 }
 
 inline void Camera::init(int a, Point4D p, Vector4D d, Point4D t,
-	double nc, double fc, double f, double w, double h)
+	float nc, float fc, float f, float w, float h)
 {
 	attr = a; pos = p; dir = d; target = t;
 	near_clip = nc; far_clip = fc; fov = f; viewport_width = w; viewport_height = h;
@@ -146,9 +147,9 @@ inline void Camera::init(int a, Point4D p, Vector4D d, Point4D t,
 	mscr.unit();
 
 	viewplane_width = 2.0;
-	viewplane_height = 2.0 / aspect_ratio;
-	double tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
-	view_dist = (0.5) * viewplane_width * tan_fov_div2;
+	viewplane_height = (float)2.0 / aspect_ratio;
+	float tan_fov_div2 = tan(Angle_to_Radian(fov / 2));
+	view_dist = (float)(0.5) * viewplane_width * tan_fov_div2;
 	if (89.99 < fov && fov < 90.01)
 	{
 		Point3D pt_origin(0, 0, 0);
@@ -164,13 +165,14 @@ inline void Camera::init(int a, Point4D p, Vector4D d, Point4D t,
 	else
 	{
 		Point3D pt_origin(0, 0, 0);
-		Vector3D vn(view_dist, 0, -viewplane_width / 2.0);
+		Vector3D vn(view_dist, 0, (float)(-viewplane_width / 2.0));
 		right_plane.init(pt_origin, vn, 1);
-		vn.init(-(int)view_dist, 0, -viewplane_width / 2.0);
+		//vn.init(-(int)view_dist, 0, (float)(-viewplane_width / 2.0));
+		vn.init(-ceil(view_dist), 0, (float)(-viewplane_width / 2.0));
 		left_plane.init(pt_origin, vn, 1);
-		vn.init(0, view_dist, -viewplane_height / 2.0);
+		vn.init(0, view_dist, (float)(-viewplane_height / 2.0));
 		top_plane.init(pt_origin, vn, 1);
-		vn.init(0, -view_dist, -viewplane_width / 2.0);
+		vn.init(0, -view_dist, (float)(-viewplane_width / 2.0));
 		bottom_plane.init(pt_origin, vn, 1);
 	}
 }
@@ -183,12 +185,12 @@ inline void Camera::build_Euler(int cam_rot_seq)
 		0, 0, 1, 0,
 		-pos.x, -pos.y, -pos.z, 1);
 
-	double theta_x = dir.x;
-	double theta_y = dir.y;
-	double theta_z = dir.z;
+	float theta_x = dir.x;
+	float theta_y = dir.y;
+	float theta_z = dir.z;
 
-	double cos_theta = Fast_cos(theta_x);
-	double sin_theta = -Fast_sin(theta_x);
+	float cos_theta = Fast_cos(theta_x);
+	float sin_theta = -Fast_sin(theta_x);
 	mx_inv.init(1, 0, 0, 0,
 		0, cos_theta, sin_theta, 0,
 		0, -sin_theta, cos_theta, 0,
@@ -250,18 +252,18 @@ inline void Camera::build_UVN(int mode)
 
 	if (mode == UVN_MODE_SPHERICAL)
 	{
-		double phi = dir.x;
-		double theta = dir.y;
+		float phi = dir.x;
+		float theta = dir.y;
 
-		double sin_phi = Fast_sin(phi);
-		double cos_phi = Fast_cos(phi);
+		float sin_phi = Fast_sin(phi);
+		float cos_phi = Fast_cos(phi);
 
-		double sin_theta = Fast_sin(theta);
-		double cos_theta = Fast_cos(theta);
+		float sin_theta = Fast_sin(theta);
+		float cos_theta = Fast_cos(theta);
 
-		target.x = -1.0 * sin_phi * sin_theta;
-		target.y = 1.0 * cos_phi;
-		target.z = 1.0 * sin_phi * cos_theta;
+		target.x = (float)-1.0 * sin_phi * sin_theta;
+		target.y = (float)1.0 * cos_phi;
+		target.z = (float)1.0 * sin_phi * cos_theta;
 	}
 	n = target - pos;
 	v.init(0, 1, 0);
@@ -324,7 +326,7 @@ inline int Camera::cull(PObject4D obj, int cull_flag)
 
 	if (cull_flag & CULL_OBJECT_X_PLANE)
 	{
-		double z_test = (0.5) * viewplane_width * sphere_pos.z / view_dist;
+		float z_test = (float)(0.5) * viewplane_width * sphere_pos.z / view_dist;
 		if (((sphere_pos.x + obj->max_radius) < -z_test) ||
 			((sphere_pos.x - obj->max_radius) > z_test))
 		{
@@ -335,7 +337,7 @@ inline int Camera::cull(PObject4D obj, int cull_flag)
 
 	if (cull_flag & CULL_OBJECT_Y_PLANE)
 	{
-		double z_test = (0.5) * viewplane_height * sphere_pos.z / view_dist;
+		float z_test = (float)(0.5) * viewplane_height * sphere_pos.z / view_dist;
 		if (((sphere_pos.x + obj->max_radius) < -z_test) ||
 			((sphere_pos.x - obj->max_radius) > z_test))
 		{
@@ -375,7 +377,7 @@ inline void Camera::remove_Backfaces(PObject4D obj)
 		//obj->vlist_local[vert2].normal = n;
 
 		//n.print(); view.print();
-		double dp = n.dot(&view);
+		float dp = n.dot(&view);
 		if (dp <= 0.0)
 		{
 			curr_poly->state |= POLY4D_STATE_BACKFACE;
@@ -402,7 +404,7 @@ inline void Camera::remove_Backfaces(PRenderList4D rlist)
 		Vector4D n(u.cross(&v));
 		Vector4D view(&curr_poly->tvlist[0], &pos);
 
-		double dp = n.dot(&view);
+		float dp = n.dot(&view);
 		if (dp <= 0.0)
 			curr_poly->state |= POLY4D_STATE_BACKFACE;
 	}
@@ -410,10 +412,10 @@ inline void Camera::remove_Backfaces(PRenderList4D rlist)
 
 inline void Camera::build_Screen_Matrix4x4(PMatrix4x4 m)
 {
-	//double alpha = 0.5 * viewport_width - 0.5;
-	//double beta = 0.5 * viewport_height - 0.5;
-	double alpha = 0.5 * viewport_width;
-	double beta = 0.5 * viewport_height;
+	//float alpha = 0.5 * viewport_width - 0.5;
+	//float beta = 0.5 * viewport_height - 0.5;
+	float alpha = (float)0.5 * viewport_width;
+	float beta = (float)0.5 * viewport_height;
 	m->init(alpha, 0, 0, 0,
 		0, -beta, 0, 0,
 		alpha, beta, 1, 0,
@@ -424,7 +426,7 @@ inline void Camera::to_Perspective(PObject4D obj)
 {
 	for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 	{
-		double z = obj->vlist_trans[vertex].z;
+		float z = obj->vlist_trans[vertex].z;
 		obj->vlist_trans[vertex].x = view_dist * obj->vlist_trans[vertex].x / z;
 		obj->vlist_trans[vertex].y = view_dist * obj->vlist_trans[vertex].y * aspect_ratio / z;
 	}
@@ -444,7 +446,7 @@ inline void Camera::to_Perspective(PRenderList4D rlist)
 
 		for (int vertex = 0; vertex < 3; vertex++)
 		{
-			double z = curr_poly->tvlist[vertex].z;
+			float z = curr_poly->tvlist[vertex].z;
 			curr_poly->tvlist[vertex].x = view_dist * curr_poly->tvlist[vertex].x / z;
 			curr_poly->tvlist[vertex].y = view_dist * curr_poly->tvlist[vertex].y * aspect_ratio / z;
 		}
@@ -463,8 +465,8 @@ inline void Camera::to_Screen(PRenderList4D rlist)
 			(curr_poly->state & POLY4D_STATE_BACKFACE))
 			continue;
 
-		double alpha = 0.5 * viewport_width;
-		double beta = 0.5 * viewport_height;
+		float alpha = (float)0.5 * viewport_width;
+		float beta = (float)0.5 * viewport_height;
 
 		for (int vertex = 0; vertex < 3; vertex++)
 		{
@@ -476,10 +478,10 @@ inline void Camera::to_Screen(PRenderList4D rlist)
 
 inline void Camera::to_Screen(PObject4D obj)
 {
-	//double alpha = 0.5 * viewport_width - 0.5;
-	//double beta = 0.5 * viewport_height - 0.5;
-	double alpha = 0.5 * viewport_width;
-	double beta = 0.5 * viewport_height;
+	//float alpha = 0.5 * viewport_width - 0.5;
+	//float beta = 0.5 * viewport_height - 0.5;
+	float alpha = (float)0.5 * viewport_width;
+	float beta = (float)0.5 * viewport_height;
 
 	for (int vertex = 0; vertex < obj->num_vertices; vertex++)
 	{

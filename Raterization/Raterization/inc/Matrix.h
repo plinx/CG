@@ -2,44 +2,44 @@
 #define Matrix_h
 
 // Unit Matrix
-const double Unit_M4x4[4][4] = {
+const float Unit_M4x4[4][4] = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,
 	0, 0, 0, 1
 };
 
-const double Unit_M4x3[4][3] = {
+const float Unit_M4x3[4][3] = {
 	1, 0, 0,
 	0, 1, 0,
 	0, 0, 1,
 	0, 0, 0
 };
 
-const double Unit_M3x3[3][3] = {
+const float Unit_M3x3[3][3] = {
 	1, 0, 0,
 	0, 1, 0,
 	0, 0, 1
 };
 
-const double Unit_M2x2[2][2] = {
+const float Unit_M2x2[2][2] = {
 	1, 0,
 	0, 1
 };
 
 struct Matrix1x4
 {
-	double v[4];
+	float v[4];
 
 	// Constructor
 	Matrix1x4() = default;
 	~Matrix1x4() = default;
 	Matrix1x4(const Matrix1x4& m) { *this = m; }
-	Matrix1x4(double m0, double m1, double m2, double m3);
+	Matrix1x4(float m0, float m1, float m2, float m3);
 
 	// Methods
 	void zero();
-	void init(double m0, double m1, double m2, double m3);
+	void init(float m0, float m1, float m2, float m3);
 
 	// override operator
 	Matrix1x4& operator=(const Matrix1x4& m);
@@ -48,23 +48,23 @@ typedef Matrix1x4* PMatrix1x4;
 
 struct Matrix4x3
 {
-	double v[4][3];
+	float v[4][3];
 
 	// Constructor
 	Matrix4x3() = default;
 	~Matrix4x3() = default;
 	Matrix4x3(const Matrix4x3& m) { *this = m; }
-	Matrix4x3(double m00, double m01, double m02,
-		double m10, double m11, double m12,
-		double m20, double m21, double m22,
-		double m30, double m31, double m32);
+	Matrix4x3(float m00, float m01, float m02,
+		float m10, float m11, float m12,
+		float m20, float m21, float m22,
+		float m30, float m31, float m32);
 
 	// methods
 	void zero();
-	void init(double m00, double m01, double m02,
-		double m10, double m11, double m12,
-		double m20, double m21, double m22,
-		double m30, double m31, double m32);
+	void init(float m00, float m01, float m02,
+		float m10, float m11, float m12,
+		float m20, float m21, float m22,
+		float m30, float m31, float m32);
 	void unit();
 	Vector3D mul(Vector3D* vec);
 	Vector4D mul(Vector4D* vec);
@@ -77,28 +77,28 @@ typedef Matrix4x3* PMatrix4x3;
 
 struct Matrix4x4
 {
-	double v[4][4];
+	float v[4][4];
 
 	// Constructor
 	Matrix4x4() = default;
 	~Matrix4x4() = default;
 	Matrix4x4(const Matrix4x4& m) { *this = m; }
-	Matrix4x4(double m00, double m01, double m02, double m03,
-		double m10, double m11, double m12, double m13,
-		double m20, double m21, double m22, double m23,
-		double m30, double m31, double m32, double m33);
+	Matrix4x4(float m00, float m01, float m02, float m03,
+		float m10, float m11, float m12, float m13,
+		float m20, float m21, float m22, float m23,
+		float m30, float m31, float m32, float m33);
 
 	// Basic methods
-	void init(double m00, double m01, double m02, double m03,
-		double m10, double m11, double m12, double m13,
-		double m20, double m21, double m22, double m23,
-		double m30, double m31, double m32, double m33);
+	void init(float m00, float m01, float m02, float m03,
+		float m10, float m11, float m12, float m13,
+		float m20, float m21, float m22, float m23,
+		float m30, float m31, float m32, float m33);
 	void zero();
 	void unit();
 	void transpose();
 	void swap(Matrix1x4* m, int c);
-	double simple_det();
-	void build(double theta_x, double theta_y, double theta_z);
+	float simple_det();
+	void build(float theta_x, float theta_y, float theta_z);
 
 	Matrix4x4 inverse();
 	Matrix1x4 mul(Matrix1x4* m);
@@ -118,17 +118,17 @@ typedef Matrix4x4* PMatrix4x4;
 
 struct Matrix1x3
 {
-	double v[3];
+	float v[3];
 
 	// Constructor
 	Matrix1x3() = default;
 	~Matrix1x3() = default;
 	Matrix1x3(const Matrix1x3& m) { *this = m; }
-	Matrix1x3(double m0, double m1, double m2);
+	Matrix1x3(float m0, float m1, float m2);
 
 	// basic methods
 	void zero();
-	void init(double m0, double m1, double m2);
+	void init(float m0, float m1, float m2);
 
 	// override operator
 	Matrix1x3& operator=(const Matrix1x3& m);
@@ -137,17 +137,17 @@ typedef Matrix1x3* PMatrix1x3;
 
 struct Matrix3x2
 {
-	double v[3][2];
+	float v[3][2];
 
 	// Constructor
 	Matrix3x2() = default;
 	~Matrix3x2() = default;
 	Matrix3x2(const Matrix3x2& m) { *this = m; }
-	Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21);
+	Matrix3x2(float m00, float m01, float m10, float m11, float m20, float m21);
 
 	// basic methods
 	void zero();
-	void init(double m00, double m01, double m10, double m11, double m20, double m21);
+	void init(float m00, float m01, float m10, float m11, float m20, float m21);
 
 	// override operator
 	Matrix3x2& operator=(const Matrix3x2& m);
@@ -156,25 +156,25 @@ typedef Matrix3x2* PMatrix3x2;
 
 struct Matrix3x3
 {
-	double v[3][3];
+	float v[3][3];
 
 	// Constructor
 	Matrix3x3() = default;
 	~Matrix3x3() = default;
 	Matrix3x3(const Matrix3x3& m) { *this = m; }
-	Matrix3x3(double m00, double m01, double m02,
-		double m10, double m11, double m12,
-		double m20, double m21, double m22);
+	Matrix3x3(float m00, float m01, float m02,
+		float m10, float m11, float m12,
+		float m20, float m21, float m22);
 
 	// basic methods
 	void zero();
-	void init(double m00, double m01, double m02,
-		double m10, double m11, double m12,
-		double m20, double m21, double m22);
+	void init(float m00, float m01, float m02,
+		float m10, float m11, float m12,
+		float m20, float m21, float m22);
 	void unit();
 	void transpose();
 	void swap(Matrix1x3* m, int c);
-	double det();
+	float det();
 	Matrix3x3 inverse();
 
 	// override operator
@@ -188,17 +188,17 @@ typedef Matrix3x3* PMatrix3x3;
 
 struct Matrix1x2
 {
-	double v[2];
+	float v[2];
 
 	// Constructor
 	Matrix1x2() = default;
 	~Matrix1x2() = default;
 	Matrix1x2(const Matrix1x2& m) { *this = m; }
-	Matrix1x2(double m0, double m1);
+	Matrix1x2(float m0, float m1);
 
 	// basic methods
 	void zero();
-	void init(double m0, double m1);
+	void init(float m0, float m1);
 	void mul_3x2(const Matrix3x2* m);
 
 	// override operator
@@ -208,21 +208,21 @@ typedef Matrix1x2* PMatrix1x2;
 
 struct Matrix2x2
 {
-	double v[2][2];
+	float v[2][2];
 
 	// Constructor
 	Matrix2x2() = default;
 	~Matrix2x2() = default;
 	Matrix2x2(const Matrix2x2& m) { *this = m; }
-	Matrix2x2(double m00, double m01, double m10, double m11);
+	Matrix2x2(float m00, float m01, float m10, float m11);
 
 	// basic methods
 	void zero();
-	void init(double m00, double m01, double m10, double m11);
+	void init(float m00, float m01, float m10, float m11);
 	void unit();
 	void transpose();
 	void swap(Matrix1x2* m, int c);
-	double det(); 
+	float det(); 
 	Matrix2x2 inverse();
 
 	// override operator
@@ -239,7 +239,7 @@ typedef Matrix2x2* PMatrix2x2;
 
 
 // Matrix1x4 methods implement
-inline Matrix1x4::Matrix1x4(double m0, double m1, double m2, double m3)
+inline Matrix1x4::Matrix1x4(float m0, float m1, float m2, float m3)
 {
 	v[0] = m0; v[1] = m1; v[2] = m2; v[3] = m3;
 }
@@ -249,7 +249,7 @@ inline void Matrix1x4::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix1x4::init(double m0, double m1, double m2, double m3)
+inline void Matrix1x4::init(float m0, float m1, float m2, float m3)
 {
 	v[0] = m0; v[1] = m1; v[2] = m2; v[3] = m3;
 }
@@ -261,10 +261,10 @@ inline Matrix1x4& Matrix1x4::operator=(const Matrix1x4& m)
 }
 
 // Matrix4x3 methods implement
-inline Matrix4x3::Matrix4x3(double m00, double m01, double m02,
-	double m10, double m11, double m12,
-	double m20, double m21, double m22,
-	double m30, double m31, double m32)
+inline Matrix4x3::Matrix4x3(float m00, float m01, float m02,
+	float m10, float m11, float m12,
+	float m20, float m21, float m22,
+	float m30, float m31, float m32)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
 	v[1][0] = m00; v[1][1] = m01; v[1][2] = m02;
@@ -277,10 +277,10 @@ inline void Matrix4x3::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix4x3::init(double m00, double m01, double m02,
-	double m10, double m11, double m12,
-	double m20, double m21, double m22,
-	double m30, double m31, double m32)
+inline void Matrix4x3::init(float m00, float m01, float m02,
+	float m10, float m11, float m12,
+	float m20, float m21, float m22,
+	float m30, float m31, float m32)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
 	v[1][0] = m00; v[1][1] = m01; v[1][2] = m02;
@@ -330,10 +330,10 @@ inline void Matrix4x3::swap(Matrix1x4* m, int c)
 }
 
 // Matrix4x4 methods implement
-inline Matrix4x4::Matrix4x4(double m00, double m01, double m02, double m03,
-	double m10, double m11, double m12, double m13,
-	double m20, double m21, double m22, double m23,
-	double m30, double m31, double m32, double m33)
+inline Matrix4x4::Matrix4x4(float m00, float m01, float m02, float m03,
+	float m10, float m11, float m12, float m13,
+	float m20, float m21, float m22, float m23,
+	float m30, float m31, float m32, float m33)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02; v[0][3] = m03;
 	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12; v[1][3] = m13;
@@ -341,10 +341,10 @@ inline Matrix4x4::Matrix4x4(double m00, double m01, double m02, double m03,
 	v[3][0] = m30; v[3][1] = m31; v[3][2] = m32; v[3][3] = m33;
 }
 
-inline void Matrix4x4::init(double m00, double m01, double m02, double m03,
-	double m10, double m11, double m12, double m13,
-	double m20, double m21, double m22, double m23,
-	double m30, double m31, double m32, double m33)
+inline void Matrix4x4::init(float m00, float m01, float m02, float m03,
+	float m10, float m11, float m12, float m13,
+	float m20, float m21, float m22, float m23,
+	float m30, float m31, float m32, float m33)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02; v[0][3] = m03;
 	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12; v[1][3] = m13;
@@ -377,7 +377,7 @@ inline void Matrix4x4::swap(Matrix1x4* m, int c)
 	v[3][c] = m->v[3];
 }
 
-inline double Matrix4x4::simple_det()
+inline float Matrix4x4::simple_det()
 {
 	return (v[0][0] * (v[1][1] * v[2][2] - v[1][2] * v[2][1])
 		- v[0][1] * (v[1][0] * v[2][2] - v[1][2] * v[2][0])
@@ -387,10 +387,10 @@ inline Matrix4x4 Matrix4x4::inverse()
 {
 	Matrix4x4 tmp;
 	tmp.zero();
-	auto det = this->simple_det();
+	float det = this->simple_det();
 	if (abs(det) < EPSILON_E5)
 		return tmp;
-	auto det_inv = 1.0 / det;
+	float det_inv = (float)1.0 / det;
 	tmp.v[0][0] = det_inv * (v[1][1] * v[2][2] - v[1][2] * v[2][1]);
 	tmp.v[0][1] = -det_inv * (v[0][1] * v[2][2] - v[2][1] * v[0][2]);
 	tmp.v[0][2] = det_inv * (v[0][1] * v[1][2] - v[1][1] * v[0][2]);
@@ -507,10 +507,10 @@ inline Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& m)
 	return *this;
 }
 
-inline void Matrix4x4::build(double theta_x, double theta_y, double theta_z)
+inline void Matrix4x4::build(float theta_x, float theta_y, float theta_z)
 {
 	Matrix4x4 mx, my, mz, mtmp;
-	double sin_theta = 0, cos_theta = 0;
+	float sin_theta = 0, cos_theta = 0;
 	int rot_seq = 0;
 
 	this->unit();
@@ -639,7 +639,7 @@ inline void Matrix4x4::build(double theta_x, double theta_y, double theta_z)
 }
 
 // Matrix1x3 methods implement
-inline Matrix1x3::Matrix1x3(double m0, double m1, double m2)
+inline Matrix1x3::Matrix1x3(float m0, float m1, float m2)
 {
 	v[0] = m0; v[1] = m1; v[2] = m2;
 }
@@ -649,7 +649,7 @@ inline void Matrix1x3::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix1x3::init(double m0, double m1, double m2)
+inline void Matrix1x3::init(float m0, float m1, float m2)
 {
 	v[0] = m0; v[1] = m1; v[2] = m2;
 }
@@ -661,7 +661,7 @@ inline Matrix1x3& Matrix1x3::operator=(const Matrix1x3& m)
 }
 
 // Matrix3x2 methods implement
-inline Matrix3x2::Matrix3x2(double m00, double m01, double m10, double m11, double m20, double m21)
+inline Matrix3x2::Matrix3x2(float m00, float m01, float m10, float m11, float m20, float m21)
 {
 	v[0][0] = m00; v[0][1] = m01;
 	v[1][0] = m10; v[1][1] = m11;
@@ -673,7 +673,7 @@ inline void Matrix3x2::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix3x2::init(double m00, double m01, double m10, double m11, double m20, double m21)
+inline void Matrix3x2::init(float m00, float m01, float m10, float m11, float m20, float m21)
 {
 	v[0][0] = m00; v[0][1] = m01;
 	v[1][0] = m10; v[1][1] = m11;
@@ -689,9 +689,9 @@ inline Matrix3x2& Matrix3x2::operator=(const Matrix3x2& m)
 }
 
 // Matrix3x3 methods implement
-inline Matrix3x3::Matrix3x3(double m00, double m01, double m02,
-	double m10, double m11, double m12,
-	double m20, double m21, double m22)
+inline Matrix3x3::Matrix3x3(float m00, float m01, float m02,
+	float m10, float m11, float m12,
+	float m20, float m21, float m22)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
 	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
@@ -703,9 +703,9 @@ inline void Matrix3x3::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix3x3::init(double m00, double m01, double m02,
-	double m10, double m11, double m12,
-	double m20, double m21, double m22)
+inline void Matrix3x3::init(float m00, float m01, float m02,
+	float m10, float m11, float m12,
+	float m20, float m21, float m22)
 {
 	v[0][0] = m00; v[0][1] = m01; v[0][2] = m02;
 	v[1][0] = m10; v[1][1] = m11; v[1][2] = m12;
@@ -729,7 +729,7 @@ inline void Matrix3x3::swap(Matrix1x3* m, int c)
 	v[0][c] = m->v[0]; v[1][c] = m->v[1]; v[2][c] = m->v[2];
 }
 
-inline double Matrix3x3::det()
+inline float Matrix3x3::det()
 {
 	return (v[0][0] * (v[1][1] * v[2][2] - v[1][2] * v[2][1]) -
 		v[0][1] * (v[1][0] * v[2][2] - v[1][2] * v[2][0]) +
@@ -741,10 +741,10 @@ inline Matrix3x3 Matrix3x3::inverse()
 	Matrix3x3 m;
 	m.zero();
 
-	auto det = this->det();
+	float det = this->det();
 	if (abs(det) < EPSILON_E5)
 		return m;
-	auto det_inv = 1.0 / det;
+	float det_inv = (float)1.0 / det;
 	m.v[0][0] = det_inv * (v[1][1] * v[2][2] - v[1][2] * v[2][1]);
 	m.v[1][0] = -det_inv * (v[1][0] * v[2][2] - v[1][2] * v[2][0]);
 	m.v[2][0] = det_inv * (v[1][0] * v[2][1] - v[1][1] * v[2][0]);
@@ -809,7 +809,7 @@ inline Matrix3x3& Matrix3x3::operator*=(const Matrix3x3& m)
 }
 
 // Matrix1x2 methods implement
-inline Matrix1x2::Matrix1x2(double m0, double m1)
+inline Matrix1x2::Matrix1x2(float m0, float m1)
 {
 	v[0] = m0; v[1] = m1;
 }
@@ -819,15 +819,15 @@ inline void Matrix1x2::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix1x2::init(double m0, double m1)
+inline void Matrix1x2::init(float m0, float m1)
 {
 	v[0] = m0; v[1] = m1;
 }
 
 inline void Matrix1x2::mul_3x2(const Matrix3x2* m)
 {
-	auto v1 = v[0] * m->v[0][0] + v[1] * m->v[1][0] + m->v[2][0];
-	auto v2 = v[0] * m->v[0][1] + v[1] * m->v[1][1] + m->v[2][1];
+	float v1 = v[0] * m->v[0][0] + v[1] * m->v[1][0] + m->v[2][0];
+	float v2 = v[0] * m->v[0][1] + v[1] * m->v[1][1] + m->v[2][1];
 	v[0] = v1; v[1] = v2;
 }
 
@@ -838,7 +838,7 @@ inline Matrix1x2& Matrix1x2::operator=(const Matrix1x2& m)
 }
 
 // Matrix2x2 methods implement
-inline Matrix2x2::Matrix2x2(double m00, double m01, double m10, double m11)
+inline Matrix2x2::Matrix2x2(float m00, float m01, float m10, float m11)
 {
 	v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
 }
@@ -848,7 +848,7 @@ inline void Matrix2x2::zero()
 	memset(v, 0, sizeof(v)); 
 }
 
-inline void Matrix2x2::init(double m00, double m01, double m10, double m11)
+inline void Matrix2x2::init(float m00, float m01, float m10, float m11)
 {
 	v[0][0] = m00; v[0][1] = m01; v[1][0] = m10; v[1][1] = m11;
 }
@@ -868,7 +868,7 @@ inline void Matrix2x2::swap(Matrix1x2* m, int c)
 	v[0][c] = m->v[0]; v[1][c] = m->v[1];
 }
 
-inline double Matrix2x2::det() 
+inline float Matrix2x2::det() 
 {
 	return v[0][0] * v[1][1] - v[1][0] * v[0][1]; 
 }
@@ -877,11 +877,11 @@ inline Matrix2x2 Matrix2x2::inverse()
 {
 	Matrix2x2 m;
 	m.zero();
-	auto det = this->det();
+	float det = this->det();
 	if (abs(det) < EPSILON_E5)
 		return m;
 
-	auto det_inv = 1.0 / det;
+	float det_inv = (float)1.0 / det;
 	m.v[0][0] = v[0][0] * det_inv;
 	m.v[0][1] = v[0][1] * det_inv;
 	m.v[1][0] = v[1][0] * det_inv;

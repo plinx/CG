@@ -22,8 +22,8 @@ struct Color
 	void init(int r, int g, int b) { R = r; G = g; B = b; A = 255; }
 	void init(int r, int g, int b, int a) { R = r; G = g; B = b; A = a; }
 	void reset() { R = 0; G = 0; B = 0; A = 255; }
-	void alpha(double scale) { A = (int)(A * scale); }
-	Color mul(double scale);
+	void alpha(float scale) { A = (int)(A * scale); }
+	Color mul(float scale);
 
 	// override operator
 	Color& operator=(const Color& rhs);
@@ -64,7 +64,7 @@ inline Color::Color(const Color& left, const Color& right)
 	A = right.A - left.A;
 }
 
-inline Color Color::mul(double scale)
+inline Color Color::mul(float scale)
 {
 	Color tmpColor;
 	tmpColor.R = (int)min(R * scale, 255);

@@ -37,8 +37,8 @@ enum RenderState
 //const int POLY4D_STATE_CLIPPED = 0x0002;
 //const int POLY4D_STATE_BACKFACE = 0x0004;
 
-// double sided flag
-#define PLX_2SIDED_FLAG              0x1000   // this poly is double sided
+// float sided flag
+#define PLX_2SIDED_FLAG              0x1000   // this poly is float sided
 #define PLX_1SIDED_FLAG              0x0000   // this poly is single sided
 
 const int POLY4D_ATTR_2SIDED = 0x0001;
@@ -78,8 +78,8 @@ struct Object4D
 	std::string name;
 	int state;
 	int attr;
-	double avg_radius;
-	double max_radius;
+	float avg_radius;
+	float max_radius;
 
 	Point4D world_pos;
 
@@ -210,9 +210,9 @@ inline void Object4D::to_World(TransformMode mode)
 }
 inline void Object4D::compute_Vertex()
 {
-	double vertex_angle[OBJECT4D_MAX_VERTICES];
+	float vertex_angle[OBJECT4D_MAX_VERTICES];
 
-	memset(vertex_angle, 0, sizeof(double) * OBJECT4D_MAX_VERTICES);
+	memset(vertex_angle, 0, sizeof(float) * OBJECT4D_MAX_VERTICES);
 	for (int poly = 0; poly < num_polys; poly++)
 	{
 		int vert0 = plist[poly].vert[0];
@@ -227,9 +227,9 @@ inline void Object4D::compute_Vertex()
 		n.normalize();
 
 		Vector4D vec12(&vlist_local[vert1], &vlist_local[vert2]);	// vec12
-		double angle0 = acos(u.normalize().dot(&v.normalize()));	// vec01.dot(vec02), vec01 and vec02 normalize
-		double angle1 = acos(u.reverse().dot(&vec12.normalize()));	// vec10.dot(vec12), vec12 normalize
-		double angle2 = acos(v.reverse().dot(&vec12.reverse()));	// vec20.dot(vec21), all vecs were normalized
+		float angle0 = acos(u.normalize().dot(&v.normalize()));	// vec01.dot(vec02), vec01 and vec02 normalize
+		float angle1 = acos(u.reverse().dot(&vec12.normalize()));	// vec10.dot(vec12), vec12 normalize
+		float angle2 = acos(v.reverse().dot(&vec12.reverse()));	// vec20.dot(vec21), all vecs were normalized
 
 		vertex_angle[vert0] += angle0;
 		vertex_angle[vert1] += angle1;
@@ -496,12 +496,12 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 
 inline int Compare_avgz(const void* arg1, const void* arg2)
 {
-	double z1, z2;
+	float z1, z2;
 	PPolyFace4D poly1 = *((PPolyFace4D*)arg1);
 	PPolyFace4D poly2 = *((PPolyFace4D*)arg2);
 
-	z1 = 0.333 * (poly1->tvlist[0].z + poly1->tvlist[1].z + poly1->tvlist[2].z);
-	z2 = 0.333 * (poly2->tvlist[0].z + poly2->tvlist[1].z + poly2->tvlist[2].z);
+	z1 = (float)0.333 * (poly1->tvlist[0].z + poly1->tvlist[1].z + poly1->tvlist[2].z);
+	z2 = (float)0.333 * (poly2->tvlist[0].z + poly2->tvlist[1].z + poly2->tvlist[2].z);
 
 	if (z1 > z2)
 		return -1;
