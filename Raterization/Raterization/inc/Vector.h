@@ -128,12 +128,12 @@ typedef Point4D* PPoint4D;
 
 
 // Vector2D methods implement
-inline void Vector2D::zero() 
+inline void Vector2D::zero()
 { 
 	x = y = 0.0; 
 }
 
-inline void Vector2D::init(float ix, float iy) 
+inline void Vector2D::init(float ix, float iy)
 {
 	x = ix; y = iy; 
 }

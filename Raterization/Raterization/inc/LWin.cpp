@@ -121,7 +121,7 @@ WPARAM LWindow::Render(void)
 	hBitmap = CreateDIB();
 	SelectObject(_hdcMem, hBitmap);
 
-	PixelDemo();
+	LineDemo();
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
@@ -326,7 +326,7 @@ WPARAM LWindow::Render(void)
 #endif
 
 // Render demos
-void LWindow::PixelDemo()
+void LWindow::LineDemo()
 {
 	for (int i = 100, j = 100; i < 400; i++, j++)
 		painter.drawPixel(i, j, Color(ColorStyle::White));

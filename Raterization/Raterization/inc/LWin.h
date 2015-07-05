@@ -20,7 +20,7 @@ public:
 		painter.init(_width, _height);
 		//ScanLine = NULL;
 	}
-	//~LWindow() = default;
+	~LWindow() = default;
 
 	BOOL Create(LPCTSTR lpszClass, LPCTSTR lpszName, DWORD dwstyle,
 		int x, int y, int nWidth, int nHeight, HWND hParent, HMENU hMenu, HINSTANCE hInstance);
@@ -32,7 +32,7 @@ public:
 
 private:
 	// Render demos
-	void PixelDemo();
+	void LineDemo();
 	void CircleDemo();
 };
 
