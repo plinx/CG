@@ -33,6 +33,9 @@ public:
 private:
 	// Render demos
 	void LineDemo();
+	void CubeDemo1();
+	void CubeDemo2();
+	void TriangleDemo();
 	void CircleDemo();
 };
 

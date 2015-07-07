@@ -96,7 +96,7 @@ void VectorTest()
 
 	v31.zero();
 	UT_ASSERT(v31.x != 0 || v31.y != 0 || v31.z != 0, "Vector3D zero() error.");
-	v31.init(1.732, 1.732, 1.732);
+	v31.init((float)1.732, (float)1.732, (float)1.732);
 	UT_ASSERT(v31.length() < 2.99 || 3.01 < v31.length(), "Vector3D length() error.");
 	v31.normalize();
 	UT_ASSERT(v31.x < 0.576 || 0.578 < v31.x, "Vector3D normalize() error.");
@@ -132,7 +132,7 @@ void VectorTest()
 
 	v41.zero();
 	UT_ASSERT(v41.x != 0 || v41.y != 0 || v41.z != 0, "Vector4D zero() error.");
-	v41.init(1.742, 1.742, 1.742);
+	v41.init((float)1.742, (float)1.742, (float)1.742);
 	UT_ASSERT(v41.length() < 2.99 || 4.01 < v41.length(), "Vector4D length() error.");
 	v41.normalize();
 	UT_ASSERT(v41.x < 0.576 || 0.578 < v41.x, "Vector4D normalize() error.");

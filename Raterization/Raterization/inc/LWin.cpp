@@ -120,8 +120,12 @@ WPARAM LWindow::Render(void)
 	_hdcMem = CreateCompatibleDC(_hdc);
 	hBitmap = CreateDIB();
 	SelectObject(_hdcMem, hBitmap);
+	Build_SinCos_Tables();
 
-	LineDemo();
+	//LineDemo();
+	//CubeDemo1();
+	//TriangleDemo();
+	CubeDemo2();
 
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
@@ -136,20 +140,72 @@ WPARAM LWindow::Render(void)
 	return msg.wParam;
 }
 
-#if 0
+// Render demos
+void LWindow::LineDemo()
+{
+	for (int i = 100, j = 100; i < 400; i++, j++)
+		painter.drawPixel(i, j, Color(ColorStyle::White));
 
-	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(WHITE_BRUSH));
-	//hPen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-	//SelectObject(_hdcMem, hPen);
-	//FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	//blend.BlendOp = AC_SRC_OVER;
-	//blend.BlendFlags = 0;
-	//blend.AlphaFormat = AC_SRC_ALPHA; // use source alpha
-	//blend.SourceConstantAlpha = 0xff; // opaque (disable constant alpha)
+	BitBlt(_hdc,
+		0, 0, _width, _height,
+		_hdcMem, 0, 0, SRCCOPY);
+}
 
-	//painter.drawLine(100, 200, 300, 100, Color(Black));
-	//painter.drawTriangle(100, 300, 100, 200, 300, 200, Color(Black));
+void LWindow::CubeDemo1()
+{
+	Point4D cam_pos(0, 0, -10, 1);
+	Point4D cam_target(0, 0, 0, 0);
+	Vector4D cam_dir(0, 0, 0, 1);
+	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
+	Point4D poly_pos(0, 0, 0, 1);
+	Camera camera(0, cam_pos, cam_dir, cam_target, 50.0, 500.0, 90.0, 400, 400);
+	RenderList4D rlist;
+	Object4D obj;
+	Matrix4x4 mrot;
 
+	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
+
+	float ang_x = 35.0;
+	float ang_y = 35.0;
+	float ang_z = 0.0;
+
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
+	mrot.build(ang_x, ang_y, ang_z);
+	rlist.reset();
+	obj.reset();
+	obj.world_pos = poly_pos;
+	obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+	//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
+	obj.to_World(TRANSFORM_TRANS_ONLY);
+	camera.remove_Backfaces(&obj);
+	rlist.insert(&obj);
+	camera.from_World(&rlist);
+	camera.to_Perspective(&rlist);
+	camera.to_Screen(&rlist);
+
+	for (auto poly = 0; poly < rlist.num_polys; poly++)
+	{
+		PPolyList4D curr_poly = rlist.poly_ptrs[poly];
+		if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+			(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+			(curr_poly->state & POLY4D_STATE_BACKFACE))
+			continue;
+
+		painter.drawLine((int)curr_poly->tvlist[0].x, (int)curr_poly->tvlist[0].y,
+			(int)curr_poly->tvlist[1].x, (int)curr_poly->tvlist[1].y, Color(White));
+		painter.drawLine((int)curr_poly->tvlist[1].x, (int)curr_poly->tvlist[1].y,
+			(int)curr_poly->tvlist[2].x, (int)curr_poly->tvlist[2].y, Color(White));
+		painter.drawLine((int)curr_poly->tvlist[2].x, (int)curr_poly->tvlist[2].y,
+			(int)curr_poly->tvlist[0].x, (int)curr_poly->tvlist[0].y, Color(White));
+	}
+
+	BitBlt(_hdc,
+		0, 0, _width, _height,
+		_hdcMem, 0, 0, SRCCOPY);
+}
+
+void LWindow::CubeDemo2()
+{
 	Point4D cam_pos(0, 0, -10, 1);
 	Point4D cam_target(0, 0, 0, 0);
 	Vector4D cam_dir(0, 0, 0, 1);
@@ -165,8 +221,6 @@ WPARAM LWindow::Render(void)
 		0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 	LightList lightList;
 
-	POINT apt[3];
-
 	Build_SinCos_Tables();
 	Load_Object4D_PLG(&obj, "resource/cube2.plg", &vscale, &vpos, &vrot);
 
@@ -181,155 +235,62 @@ WPARAM LWindow::Render(void)
 
 	lightList.insert(light);
 
-//#if 0
-	FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-	//painter.drawHorizonLine(100, 200, 100, Color(Red));
-	//painter.drawHorizonLine(200, 100, 200, Color(Blue));
-	//painter.drawTriangle(166, 200, Color(Red), 167, 260, Color(Green), 240, 288, Color(Blue));
-	//painter.drawTriangle(100, 100, Color(Blue), 100, 300, Color(Red), 300, 150, Color(Blue));
-	painter.drawTriangle(400, 100, 500, 100, 500, 250, Color(Red));
-	painter.drawHorizonLine(580, 380, 300, Color(Blue));
-	painter.drawHorizonLine(180, 280, 101, Color(Blue));
-	painter.drawHorizonLine(100, 200, 560, Color(White));
-	painter.drawVerticalLine(100, 100, 560, Color(White));
-	painter.drawLine(263, 133, 133, 133, Color(White));
-	/*for (int i = 0; i < 5; i++)
+	float ang_x = 35.0;
+	float ang_y = 35.0;
+	float ang_z = 0.0;
+	camera.build_Euler(CAM_ROT_SEQ_ZYX);
+
+	mrot.build(ang_x, ang_y, ang_z);
+	rlist.reset();
+	for (int i = 0; i < 2; i++)
 	{
-		painter.drawTriangle(150 + 50 * i, 400, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
-		painter.drawTriangle(150 + 50 * i, 100, Color(Red), 300, 200, Color(Green), 200, 200, Color(Blue));
-	}*/
+		for (int j = 0; j < 2; j++)
+		{
+			obj.reset();
+			obj.world_pos = poly_pos;
+			obj.world_pos.z = (float)i * 10;
+			obj.world_pos.x = (float)j * 10;
+			obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
+			//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
+			obj.to_World(TRANSFORM_TRANS_ONLY);
+			camera.remove_Backfaces(&obj);
+			obj.compute_Vertex(); // compute the vertex normal before light ray on
+			// we could put it in obj remove backfaces to avoid counting face normal
+			// make a mix version later
+			lightList.rayOn(&obj); // compute light ray on obj after compute vetex normal
+			rlist.insert(&obj);
+		}
+	}
+	camera.from_World(&rlist);
+	camera.to_Perspective(&rlist);
+	camera.to_Screen(&rlist);
+	rlist.zsort();
+
+	for (auto poly = 0; poly < rlist.num_polys; poly++)
+	{
+		PPolyList4D curr_poly = rlist.poly_ptrs[poly];
+		if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
+			(curr_poly->state & POLY4D_STATE_CLIPPED) ||
+			(curr_poly->state & POLY4D_STATE_BACKFACE))
+			continue;
+
+		painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, curr_poly->tvlist[0].color,
+			curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, curr_poly->tvlist[1].color,
+			curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, curr_poly->tvlist[2].color);
+
+	}
 
 	BitBlt(_hdc,
 		0, 0, _width, _height,
 		_hdcMem, 0, 0, SRCCOPY);
 
-	//AlphaBlend(_hdc, 0, 0, _width, _height,
-	//	_hdcMem, 0, 0, _width, _height, blend);
+}
 
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-//#else
-	while (TRUE)
-	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
-			//if (msg.message == WM_QUIT)
-				break;
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else
-		{
-			static float ang_x = 0.0;
-			static float ang_y = 0.0;
-			static float ang_z = 0.0;
-
-			if (GetKeyState(VK_LEFT) < 0) ang_y += 2.0;
-			if (GetKeyState(VK_RIGHT) < 0) ang_y -= 2.0;
-			if (GetKeyState(VK_UP) < 0) ang_x += 2.0;
-			if (GetKeyState(VK_DOWN) < 0) ang_x -= 1.0;
-			if (GetKeyState(VK_SPACE) < 0) camera.pos.y -= 1.0;
-			if (GetKeyState(0x56) < 0) camera.pos.y += 1.0;
-			if (GetKeyState(VK_W) < 0) camera.pos.z -= 1.0;
-			if (GetKeyState(VK_S) < 0) camera.pos.z += 1.0;
-			if (GetKeyState(VK_A) < 0) camera.pos.x -= 1.0;
-			if (GetKeyState(VK_D) < 0) camera.pos.x += 1.0;
-			camera.build_Euler(CAM_ROT_SEQ_ZYX);
-
-			mrot.build(ang_x, ang_y, ang_z);
-			rlist.reset();
-			for (int i = 0; i < 2; i++)
-			{
-				for (int j = 0; j < 2; j++)
-				{
-					obj.reset();
-					obj.world_pos = poly_pos;
-					obj.world_pos.z = (float)i * 10;
-					obj.world_pos.x = (float)j * 10;
-					obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
-					//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
-					obj.to_World(TRANSFORM_TRANS_ONLY);
-					camera.remove_Backfaces(&obj);
-					obj.compute_Vertex(); // compute the vertex normal before light ray on
-					// we could put it in obj remove backfaces to avoid counting face normal
-					// make a mix version later
-					lightList.rayOn(&obj); // compute light ray on obj after compute vetex normal
-					rlist.insert(&obj);
-				}
-			}
-			//obj.reset();
-			//rlist.reset();
-			//obj.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS, 1);
-			//obj.to_World(TRANSFORM_LOCAL_TO_TRANS);
-			//obj.to_World(TRANSFORM_TRANS_ONLY);
-			//camera.remove_Backfaces(&obj);
-			//obj.compute_Vertex(); // compute the vertex normal before light ray on
-			// we could put it in obj remove backfaces to avoid counting face normal
-			// make a mix version later
-			//lightList.rayOn(&obj); // compute light ray on obj after remove backfaces
-			//rlist.insert(&obj);
-			//rlist.rotate(&mrot, TRANSFORM_LOCAL_TO_TRANS); // no need to rotate twice
-			//rlist.to_World(&poly_pos, TRANSFORM_TRANS_ONLY); // no need to transform to world twice
-			//camera.remove_Backfaces(&rlist);	// no need to remove backface twice
-			//lightList.rayOn(&obj); // compute light ray on renderlist after remove backfaces
-			camera.from_World(&rlist);
-			camera.to_Perspective(&rlist);
-			camera.to_Screen(&rlist);
-			rlist.zsort();
-
-			FillRect(_hdcMem, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
-
-			for (auto poly = 0; poly < rlist.num_polys; poly++)
-			{
-				PPolyFace4D curr_poly = rlist.poly_ptrs[poly];
-				if (!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
-					(curr_poly->state & POLY4D_STATE_CLIPPED) ||
-					(curr_poly->state & POLY4D_STATE_BACKFACE))
-					continue;
-
-				painter.drawTriangle(curr_poly->tvlist[0].x, curr_poly->tvlist[0].y, curr_poly->tvlist[0].color,
-					curr_poly->tvlist[1].x, curr_poly->tvlist[1].y, curr_poly->tvlist[1].color,
-					curr_poly->tvlist[2].x, curr_poly->tvlist[2].y, curr_poly->tvlist[2].color);
-
-				/*apt[0].x = (LONG)curr_poly->tvlist[0].x;
-				apt[0].y = (LONG)curr_poly->tvlist[0].y;
-				apt[1].x = (LONG)curr_poly->tvlist[1].x;
-				apt[1].y = (LONG)curr_poly->tvlist[1].y;
-				apt[2].x = (LONG)curr_poly->tvlist[2].x;
-				apt[2].y = (LONG)curr_poly->tvlist[2].y;
-
-				painter.drawLine(apt[0].x, apt[0].y, apt[1].x, apt[1].y, Color(White));
-				painter.drawLine(apt[1].x, apt[1].y, apt[2].x, apt[2].y, Color(White));
-				painter.drawLine(apt[2].x, apt[2].y, apt[0].x, apt[0].y, Color(White));
-
-				MoveToEx(_hdcMem, apt[0].x, apt[0].y, NULL);
-				LineTo(_hdcMem, apt[1].x, apt[1].y);
-				MoveToEx(_hdcMem, apt[1].x, apt[1].y, NULL);
-				LineTo(_hdcMem, apt[2].x, apt[2].y);
-				MoveToEx(_hdcMem, apt[2].x, apt[2].y, NULL);
-				LineTo(_hdcMem, apt[0].x, apt[0].y);*/
-			}
-
-			BitBlt(_hdc,
-				0, 0, _width, _height,
-				_hdcMem, 0, 0, SRCCOPY);
-
-			Sleep(10);
-
-		}
-	}
-#endif
-
-// Render demos
-void LWindow::LineDemo()
+void LWindow::TriangleDemo()
 {
-	for (int i = 100, j = 100; i < 400; i++, j++)
-		painter.drawPixel(i, j, Color(ColorStyle::White));
+	painter.drawTriangle(100.0, 100.0, 200.0, 300.0, 250.0, 130.0, Color(Yellow));
+	painter.drawTriangle(300.0, 100.0, Color(Red), 
+		400.0, 300.0, Color(Green), 450.0, 130.0, Color(Blue));
 
 	BitBlt(_hdc,
 		0, 0, _width, _height,

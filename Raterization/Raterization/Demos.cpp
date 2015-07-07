@@ -8,7 +8,7 @@ void TriangleDemo()
 	Vector4D vscale(0.5, 0.5, 0.5, 1), vpos(0, 0, 0, 1), vrot(0, 0, 0, 1);
 	Camera camera;
 	RenderList4D rlist;
-	PolyFace4D poly1;
+	PolyList4D poly1;
 	Point4D poly_pos(0, 0, 100, 1);
 
 	Build_SinCos_Tables();
@@ -252,7 +252,7 @@ void TankDemo1()
 	std::cout << std::endl;
 
 	int poly = 0;
-	PPolyFace4D curr_poly = rlist.poly_ptrs[poly];
+	PPolyList4D curr_poly = rlist.poly_ptrs[poly];
 	std::cout << "curr_poly0 : (" << curr_poly->tvlist[1].x
 		<< "," << curr_poly->tvlist[1].y << ")" << std::endl;
 	poly = 19;

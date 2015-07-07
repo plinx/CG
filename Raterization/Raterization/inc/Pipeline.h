@@ -56,7 +56,7 @@ struct Poly4D
 };
 typedef Poly4D* PPoly4D;
 
-struct PolyFace4D
+struct PolyList4D
 {
 	int state;
 	int attr;
@@ -67,10 +67,10 @@ struct PolyFace4D
 	Vertex4D vlist[3];
 	Vertex4D tvlist[3];
 
-	PolyFace4D* next = NULL;
-	PolyFace4D* prev = NULL;
+	PolyList4D* next = NULL;
+	PolyList4D* prev = NULL;
 };
-typedef PolyFace4D* PPolyFace4D;
+typedef PolyList4D* PPolyList4D;
 
 struct Object4D
 {
@@ -112,8 +112,8 @@ struct RenderList4D
 	int attr;
 	int num_polys;
 
-	PPolyFace4D poly_ptrs[RENDERLIST4D_MAX_POLYS];
-	PolyFace4D poly_data[RENDERLIST4D_MAX_POLYS];
+	PPolyList4D poly_ptrs[RENDERLIST4D_MAX_POLYS];
+	PolyList4D poly_data[RENDERLIST4D_MAX_POLYS];
 
 	RenderList4D() { num_polys = 0; }
 	~RenderList4D() = default;
@@ -327,7 +327,7 @@ inline void RenderList4D::rotate(PMatrix4x4 m, TransformMode mode)
 	case TRANSFORM_LOCAL_ONLY:
 		for (int poly = 0; poly < num_polys; poly++)
 		{
-			PPolyFace4D curr_poly = poly_ptrs[poly];
+			PPolyList4D curr_poly = poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
 				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -344,7 +344,7 @@ inline void RenderList4D::rotate(PMatrix4x4 m, TransformMode mode)
 	case TRANSFORM_TRANS_ONLY:
 		for (int poly = 0; poly < num_polys; poly++)
 		{
-			PPolyFace4D curr_poly = poly_ptrs[poly];
+			PPolyList4D curr_poly = poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
 				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -360,7 +360,7 @@ inline void RenderList4D::rotate(PMatrix4x4 m, TransformMode mode)
 	case TRANSFORM_LOCAL_TO_TRANS:
 		for (int poly = 0; poly < num_polys; poly++)
 		{
-			PPolyFace4D curr_poly = poly_ptrs[poly];
+			PPolyList4D curr_poly = poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
 				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -384,7 +384,7 @@ inline void RenderList4D::to_World(PPoint4D pos, TransformMode mode)
 	{
 		for (int poly = 0; poly < num_polys; poly++)
 		{
-			PPolyFace4D curr_poly = poly_ptrs[poly];
+			PPolyList4D curr_poly = poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
 				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -402,7 +402,7 @@ inline void RenderList4D::to_World(PPoint4D pos, TransformMode mode)
 	{
 		for (int poly = 0; poly < num_polys; poly++)
 		{
-			PPolyFace4D curr_poly = poly_ptrs[poly];
+			PPolyList4D curr_poly = poly_ptrs[poly];
 
 			if ((curr_poly == NULL) ||
 				!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -497,8 +497,8 @@ inline int Load_Object4D_PLG(PObject4D obj, std::string fpath,
 inline int Compare_avgz(const void* arg1, const void* arg2)
 {
 	float z1, z2;
-	PPolyFace4D poly1 = *((PPolyFace4D*)arg1);
-	PPolyFace4D poly2 = *((PPolyFace4D*)arg2);
+	PPolyList4D poly1 = *((PPolyList4D*)arg1);
+	PPolyList4D poly2 = *((PPolyList4D*)arg2);
 
 	z1 = (float)0.333 * (poly1->tvlist[0].z + poly1->tvlist[1].z + poly1->tvlist[2].z);
 	z2 = (float)0.333 * (poly2->tvlist[0].z + poly2->tvlist[1].z + poly2->tvlist[2].z);
@@ -513,7 +513,7 @@ inline int Compare_avgz(const void* arg1, const void* arg2)
 
 inline void RenderList4D::zsort()
 {
-	qsort(poly_ptrs, this->num_polys, sizeof(PPolyFace4D), Compare_avgz);
+	qsort(poly_ptrs, this->num_polys, sizeof(PPolyList4D), Compare_avgz);
 }
 
 #endif

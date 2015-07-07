@@ -294,7 +294,7 @@ inline void Camera::from_World(PRenderList4D rlist)
 {
 	for (int poly = 0; poly < rlist->num_polys; poly++)
 	{
-		PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+		PPolyList4D curr_poly = rlist->poly_ptrs[poly];
 
 		if ((curr_poly == NULL) ||
 			!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -390,7 +390,7 @@ inline void Camera::remove_Backfaces(PRenderList4D rlist)
 {
 	for (int poly = 0; poly < rlist->num_polys; poly++)
 	{
-		PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+		PPolyList4D curr_poly = rlist->poly_ptrs[poly];
 
 		if ((curr_poly == NULL) ||
 			!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -436,7 +436,7 @@ inline void Camera::to_Perspective(PRenderList4D rlist)
 {
 	for (int poly = 0; poly < rlist->num_polys; poly++)
 	{
-		PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+		PPolyList4D curr_poly = rlist->poly_ptrs[poly];
 
 		if ((curr_poly == NULL) ||
 			!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
@@ -457,7 +457,7 @@ inline void Camera::to_Screen(PRenderList4D rlist)
 {
 	for (int poly = 0; poly < rlist->num_polys; poly++)
 	{
-		PPolyFace4D curr_poly = rlist->poly_ptrs[poly];
+		PPolyList4D curr_poly = rlist->poly_ptrs[poly];
 
 		if ((curr_poly == NULL) ||
 			!(curr_poly->state & POLY4D_STATE_ACTIVE) ||
